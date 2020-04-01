@@ -14,7 +14,7 @@ import com.royware.corona.services.CustomerService;
  * REST controller to get customer information from the customers database table
  * and return a JSON string of basic customer information (name, e-mail, phone, username)
  */
-@ComponentScan(basePackages = {"edu.gcu.cst341"})
+@ComponentScan(basePackages = {"com.royware.corona"})
 @RestController
 public class CustomerRestController {
 	@Autowired

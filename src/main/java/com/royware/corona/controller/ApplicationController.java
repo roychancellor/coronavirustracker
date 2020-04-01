@@ -39,12 +39,14 @@ import com.royware.corona.viewforms.PasswordForm;
 @Scope("session")
 //Give access to the customer object throughout the session
 @SessionAttributes("customer")
-public class LoginController {
-	//Allows Spring to take over control of making these objects
+public class ApplicationController {
+	//Allow Spring to take over control of making these objects
 	@Autowired
 	LoginService LoginService;
+	
 	@Autowired
 	CustomerService CustomerService;
+	
 	@Autowired
 	BankService BankService;
 	
