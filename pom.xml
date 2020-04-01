@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.gcu.cst341</groupId>
-  <artifactId>BankingAppLinuxTomcat</artifactId>
+  <artifactId>coronavirustracker</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>BakingAppLinuxTomcat</name>
+  <name>coronavirustracker</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -104,7 +104,7 @@
 	</dependency>
 </dependencies>
 <build>
-   <finalName>bank</finalName>
+   <finalName>coronatracker</finalName>
    <pluginManagement>
        <plugins>
            <plugin>
@@ -124,7 +124,7 @@
                <version>2.2</version>
                <configuration>
                    <path>/</path>
-                   <port>5000</port>
+                   <port>8080</port>
                    <contextReloadable>true</contextReloadable>
                </configuration>
            </plugin>
