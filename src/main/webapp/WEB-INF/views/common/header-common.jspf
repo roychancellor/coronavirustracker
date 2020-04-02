@@ -2,8 +2,8 @@
 	<h2>Coronavirus Dashboard Generator<img src="${pageContext.request.contextPath}/resources/images/world-icon.png"/></h2>
 </header>
 <nav>
-	<div><a href="${pageContext.request.contextPath}/home-page">Home</a></div>
-	<div><a href="${pageContext.request.contextPath}/about-dashboard">About</a></div>
+	<div><a href="${pageContext.request.contextPath}/corona">Home</a></div>
+	<div><a href="${pageContext.request.contextPath}/about">About</a></div>
 	<div><a href="${pageContext.request.contextPath}/commentary">Commentary</a></div>
 	<div><a href="${pageContext.request.contextPath}/math">The Math</a></div>
 </nav>

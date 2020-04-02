@@ -19,7 +19,7 @@
 			<h1>About</h1>
 			<h3>Dashboard generator program for displaying coronavirus data in the best way possible.</h3>
 			<p>
-			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/home-page">Return to Home Page</a></p>
+			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/corona">Return to Home Page</a></p>
 		</section>
 		<%@ include file="common/footer-common.jspf" %>
 	</div>

@@ -19,7 +19,7 @@
 			<h1>The Math Behind the Charts</h1>
 			<h3>More than you probably wanted to know...</h3>
 			<p>
-			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/home-page">Return to Home</a></p>
+			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/corona">Return to Home</a></p>
 		</section>
 		<%@ include file="common/footer-common.jspf" %>
 	</div>

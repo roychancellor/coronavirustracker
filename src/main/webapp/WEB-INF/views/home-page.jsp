@@ -16,7 +16,7 @@
 
 <body>
 	<div class="container">
-		<%@ include file="common/header-common-login.jspf" %>
+		<%@ include file="common/header-common.jspf" %>
 		<section>
 			<h1>Coronavirus Dashboard Creator</h1>
 			<region:form modelAttribute="region" action="${pageContext.request.contextPath}/dashboard" method="POST">
@@ -29,23 +29,23 @@
 				  </thead>
 				  <tbody>
 				    <tr class="info">
-				      <td><input class="btn btn-info btn-lg" type="submit" value="us">United States</td>
+				      <td><input class="btn btn-info btn-lg" name="region" value="us" type="submit">United States</td>
 				      <td>Click this button to make a dashboard for the entire United States.</td>
 				    </tr>
 				    <tr class="danger">
-				      <td><input class="btn btn-danger btn-lg" type="submit" value="us_no_ny">US without NY</td>
+				      <td><input class="btn btn-danger btn-lg" name="region" value="us_no_ny" type="submit">US no NY</td>
 				      <td>Click this button to make a dashboard for the United States, excluding New York.</td>
 				    </tr>
 				    <tr class="danger">
-				      <td><input class="btn btn-danger btn-lg" type="submit" value="ny">New York</td>
+				      <td><input class="btn btn-danger btn-lg" name="region" value="ny" type="submit">New York</td>
 				      <td>Click this button to make a dashboard for the state of New York.</td>
 				    </tr>
 				    <tr class="danger">
-				      <td><input class="btn btn-danger btn-lg" type="submit" value="az">Arizona</td>
+				      <td><input class="btn btn-danger btn-lg" name="region" value="az" type="submit">Arizona</td>
 				      <td>Click this button to make a dashboard for the state of Arizona.</td>
 				    </tr>
 				    <tr class="warning">
-				      <td><input class="btn btn-warning btn-lg" type="submit" value="italy">Italy</td>
+				      <td><input class="btn btn-warning btn-lg" name="region" value="italy" type="submit">Italy</td>
 				      <td>Click this button to make a dashboard for the country of Italy.</td>
 				    </tr>
 				  </tbody>

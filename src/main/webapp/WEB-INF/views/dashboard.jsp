@@ -32,7 +32,7 @@
 					href="${pageContext.request.contextPath}/chart-info">Chart Info</a>
 			</p>
 			<p><a style="font-size:1.5em" class="btn btn-warning"
-					href="${pageContext.request.contextPath}/home">Return Home</a>
+					href="${pageContext.request.contextPath}/corona">Return Home</a>
 			</p>
 		</section>
 		<%@ include file="common/footer-common.jspf" %>

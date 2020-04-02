@@ -79,6 +79,24 @@ public class DashboardController {
 		return new PasswordForm();
 	}
 	
+	private static final String HOME_PAGE = "home-page";
+	private static final String ABOUT_PAGE = "about-dashboard";
+	private static final String MATH_PAGE = "math";
+	private static final String COMMENTARY_PAGE = "commentary";
+	private static final String DASHBOARD_PAGE = "dashboard";
+	private static final String CHART_INFO_PAGE = "chart-info";
+	
+	/**
+	 * HTTP GET request handler for /corona to direct to the home page jsp
+	 * @param map the current ModelMap
+	 * @return a string for the home page jsp
+	 */
+	@RequestMapping(value = "/corona", method = RequestMethod.GET)
+	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
+		map.addAttribute("region", region);
+		return HOME_PAGE;
+	}
+	
 	/**
 	 * HTTP POST handler for a region dashboard
 	 * @param region the selected geographic region for the dashboard
@@ -86,14 +104,135 @@ public class DashboardController {
 	 * @return the jsp file name (dashboard)
 	 */
 	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)
-	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {
-		String jspToAccess = "dashboard";
-		
+	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		System.out.println("Making dashboard for region: " + region);
+		return DASHBOARD_PAGE;
+	}
+	
+	/**
+	 * HTTP GET request handler for /about to direct to the about-dashboard jsp
+	 * @param map the current ModelMap
+	 * @return a string for the home page jsp
+	 */
+	@RequestMapping(value = "/about", method = RequestMethod.GET)
+	public String showAboutPage(ModelMap map) {		
+		return ABOUT_PAGE;
+	}
+	
+	/**
+	 * HTTP GET request handler for /commentary to direct to the commentary jsp
+	 * @param map the current ModelMap
+	 * @return a string for the commentary jsp
+	 */
+	@RequestMapping(value = "/commentary", method = RequestMethod.GET)
+	public String showCommentaryPage(ModelMap map) {		
+		return COMMENTARY_PAGE;
+	}
+	
+	/**
+	 * HTTP GET request handler for /math to direct to the math jsp
+	 * @param map the current ModelMap
+	 * @return a string for the math jsp
+	 */
+	@RequestMapping(value = "/math", method = RequestMethod.GET)
+	public String showMathPage(ModelMap map) {		
+		return MATH_PAGE;
+	}
+	
+	/**
+	 * HTTP GET request handler for /chart-info to direct to the chart-info jsp
+	 * @param map the current ModelMap
+	 * @return a string for the chart-info jsp
+	 */
+	@RequestMapping(value = "/chart-info", method = RequestMethod.GET)
+	public String showChartInfoPage(ModelMap map) {		
+		return CHART_INFO_PAGE;
+	}
+	
+	/**
+	 * HTTP GET handler for deposit transactions
+	 * @param customer the current logged-in Customer object
+	 * @param map the ModelMap
+	 * @return the jsp file name (deposit-bank if customer logged in)
+	 */
+	@RequestMapping(value = "/deposit-bankkkk", method = RequestMethod.GET)
+	public String showDepositScreennnn(@ModelAttribute("customer") Customer customer, ModelMap map) {
+		String jspToAccess = "deposit-bank";
+		
+		//Verify there is a logged-in customer
+		if(customer.getCustId() != 0) {
+			System.out.println("/deposit-bank GET: customer =\n" + customer.toString());
+			//Update all dashboard parameters
+			updateDashboardModel(customer, map);
+			//Add a new AmountForm object for validating the amount the customer enters
+			map.addAttribute("amount", new AmountForm());
+		}
+		else {
+			jspToAccess = "login";
+		}
 		
 		return jspToAccess;
 	}
-	
+
+	/**
+	 * HTTP POST handler for processing the deposit form
+	 * @param customer the current logged-in Customer object
+	 * @param accountType the account type from the radio button ("chk", "sav", or "loan")
+	 * @param amountStr a String representation of the deposit amount
+	 * that will be converted to double if possible
+	 * @param br the BindingResult object for the AmountForm object
+	 * @param map the ModelMap
+	 * @return the jsp file name to go to depending on the result
+	 */
+	@RequestMapping(value = "/deposit-bankkkk", method = RequestMethod.POST)
+	public String processDeposittttt(
+		@ModelAttribute("customer") Customer customer,
+		@RequestParam("account") String accountType,
+		@Valid @ModelAttribute("amount") AmountForm amountStr,
+		BindingResult br,
+		ModelMap map) {
+		
+		String jspToAccess = "login";
+		
+		System.out.println("/deposit-bank POST: amount = " + amountStr);
+		System.out.println("/deposit-bank POST: br.hasErrors is: " + br.hasErrors() + " " + br.toString());
+		double amount;
+		//If the form had errors or if the form input could not be converted to a number,
+		//go back to the form so the customer can make corrections
+        if (br.hasErrors() || (amount = BankService.stringToDouble(amountStr.getAmount())) < 0.01) {
+        	map.addAttribute("errormessage", "Amount must be at least $0.01");
+			//Update all dashboard parameters
+			updateDashboardModel(customer, map);
+            jspToAccess = "deposit-bank";
+        }
+		else {
+			//Verify there is a logged-in customer
+			if(customer.getCustId() != 0) {
+				jspToAccess = "dashboard";
+				
+				//If account type is loan, validate the payment amount before doing the deposit
+				//If amount is invalid, show the error page
+				if(accountType.equals("loan")
+					&& !BankService.validateCashAdvancePayment(customer, amount)) {
+					//Populate the information needed for the error page
+					populatePaymentErrorModel(customer.getLoan().getAccountBalance(), amount, map);
+					map.addAttribute("geturl", "deposit-bank");
+					jspToAccess = "loan-payment-bank-error";
+				}
+				else {
+					//Do the deposit and update the dashboard values
+					BankService.doTransaction(customer, accountType, Account.DEPOSIT, amount);
+				}
+				
+				//Update all dashboard parameters
+				updateDashboardModel(customer, map);
+			}
+			else {
+				jspToAccess = "redirect:/login";
+			}
+		}
+		return jspToAccess;
+	}	
 	/**
 	 * HTTP GET request handler for /newcustomer to direct to the new customer jsp
 	 * @param map the current ModelMap
