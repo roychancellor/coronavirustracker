@@ -10,7 +10,7 @@
 	<spring:url value="/resources/images/header.jpg" var="headerImg" />
 	<spring:url value="/resources/images/footer.jpg" var="footerImg" />
 	<meta charset="UTF-8">
-	<title>Settings</title>
+	<title>Home Page</title>
 	<link rel="stylesheet" href="${mainCss}" />
 </head>
 

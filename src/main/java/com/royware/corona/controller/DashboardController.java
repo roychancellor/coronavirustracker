@@ -80,6 +80,21 @@ public class DashboardController {
 	}
 	
 	/**
+	 * HTTP POST handler for a region dashboard
+	 * @param region the selected geographic region for the dashboard
+	 * @param map the ModelMap
+	 * @return the jsp file name (dashboard)
+	 */
+	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)
+	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {
+		String jspToAccess = "dashboard";
+		
+		System.out.println("Making dashboard for region: " + region);
+		
+		return jspToAccess;
+	}
+	
+	/**
 	 * HTTP GET request handler for /newcustomer to direct to the new customer jsp
 	 * @param map the current ModelMap
 	 * @return a string for the customer-new jsp
@@ -250,7 +265,7 @@ public class DashboardController {
 	 * @param map the ModelMap
 	 * @return the jsp file name (dashboard if customer is logged in)
 	 */
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+	@RequestMapping(value = "/dashboardddd", method = RequestMethod.GET)
 	public String showDashboardScreen(@ModelAttribute("customer") Customer customer, ModelMap map) {
 		String jspToAccess = "dashboard";
 		
