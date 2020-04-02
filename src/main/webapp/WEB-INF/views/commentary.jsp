@@ -8,7 +8,7 @@
 	<spring:url value="/resources/images/header.jpg" var="headerImg" />
 	<spring:url value="/resources/images/footer.jpg" var="footerImg" />
 	<meta charset="UTF-8">
-	<title>About</title>
+	<title>Commentary</title>
 	<link rel="stylesheet" href="${mainCss}" />
 </head>
 
@@ -16,13 +16,10 @@
 	<div class="container">
 		<%@ include file="common/header-common.jspf" %>
 		<section>
-			<h1>About</h1>
-			<h3>Banking Application built for CST-341 in the Java Certificate Program.</h3>
+			<h1>Commentry</h1>
+			<h3>The ramblings of the guy who created this site.</h3>
 			<p>
-			<hr>
-			Technology stack: HTML, CSS, Bootstrap, Spring, Java, JDBC, MySQL</p>
-			<hr>
-			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/dashboard">Return to Dashboard</a></p>
+			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/home-page">Return to Home Page</a></p>
 		</section>
 		<%@ include file="common/footer-common.jspf" %>
 	</div>
