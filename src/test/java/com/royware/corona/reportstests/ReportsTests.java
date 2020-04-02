@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.royware.corona.model.Account;
 import com.royware.corona.model.Customer;
-import com.royware.corona.services.BankService;
+import com.royware.corona.services.BankTransactionService;
 import com.royware.corona.services.CustomerService;
-import com.royware.corona.services.DataService;
+import com.royware.corona.services.DatabaseService;
 import com.royware.corona.services.LoginService;
 
 /**
@@ -22,17 +22,17 @@ import com.royware.corona.services.LoginService;
 public class ReportsTests {
 	private CustomerService cs;
 	private Customer testCust;
-	private DataService ds;
+	private DatabaseService ds;
 	private LoginService ls;
-	private BankService bs;
+	private BankTransactionService bs;
 	
 	@Before
 	public void beforeTest() {
 		cs = new CustomerService();
-		ds = new DataService();
+		ds = new DatabaseService();
 		testCust = new Customer();
 		ls = new LoginService();
-		bs = new BankService();
+		bs = new BankTransactionService();
 	}
 
 	@Test

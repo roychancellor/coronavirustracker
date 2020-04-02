@@ -3,7 +3,7 @@ package com.royware.corona.services;
 /**
  * Class contains constants for use with SQL queries
  */
-public class DbConstants {
+public class DbConstantAndQueryService {
 	/**
 	 * String constants used throughout the application for SQL commands
 	 */

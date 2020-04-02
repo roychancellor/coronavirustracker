@@ -17,22 +17,22 @@ import com.royware.corona.model.Account;
 import com.royware.corona.model.Customer;
 import com.royware.corona.model.Loan;
 import com.royware.corona.model.Transaction;
-import com.royware.corona.services.BankService;
+import com.royware.corona.services.BankTransactionService;
 import com.royware.corona.services.CustomerService;
-import com.royware.corona.services.DataService;
+import com.royware.corona.services.DatabaseService;
 
 public class TransactionTests {
 	private CustomerService cs;
 	private Customer testCust;
-	private DataService ds;
-	private BankService bs;
+	private DatabaseService ds;
+	private BankTransactionService bs;
 	
 	@Before
 	public void beforeTest() {
 		cs = new CustomerService();
-		ds = new DataService();
+		ds = new DatabaseService();
 		testCust = new Customer();
-		bs = new BankService();
+		bs = new BankTransactionService();
 	}
 
 	@Test

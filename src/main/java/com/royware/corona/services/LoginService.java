@@ -18,7 +18,7 @@ public class LoginService {
 		int customerId = 0;
 		//Query the credentials database for the customer credentials
 		System.out.println("validateCredentials opening a DB connection");
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		if(ds.isConnectedToDb()) {
 			//Look up the customer by username; if found, continue validating credentials
 			customerId = ds.dbRetrieveCustomerByUsername(username);

@@ -22,7 +22,7 @@ import com.royware.corona.model.Checking;
 import com.royware.corona.model.Customer;
 import com.royware.corona.model.Loan;
 import com.royware.corona.model.Transaction;
-import com.royware.corona.services.BankService;
+import com.royware.corona.services.BankTransactionService;
 import com.royware.corona.services.CustomerService;
 import com.royware.corona.services.LoginService;
 import com.royware.corona.viewforms.AmountForm;
@@ -39,7 +39,7 @@ import com.royware.corona.viewforms.PasswordForm;
 @Scope("session")
 //Give access to the customer object throughout the session
 @SessionAttributes("customer")
-public class ApplicationController {
+public class DashboardController {
 	//Allow Spring to take over control of making these objects
 	@Autowired
 	LoginService LoginService;
@@ -48,7 +48,7 @@ public class ApplicationController {
 	CustomerService CustomerService;
 	
 	@Autowired
-	BankService BankService;
+	BankTransactionService BankService;
 	
 	//Spring will make these objects when needed and will keep customer in the session
 	//until the session is completed

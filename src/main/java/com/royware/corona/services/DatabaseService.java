@@ -18,7 +18,7 @@ import com.royware.corona.model.Transaction;
 /**
  * Class contains SQL CRUD functions for the banking application
 */
-public class DataService {
+public class DatabaseService {
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rs;
@@ -31,7 +31,7 @@ public class DataService {
 	/**
 	 * No-argument constructor for class: Opens a MySQL database and creates a Statement object
 	 */
-	public DataService() {
+	public DatabaseService() {
 		this.verboseSQL = true;
 		this.productionDb = true;
 		if(connectToDatabase()) {
@@ -124,14 +124,14 @@ public class DataService {
 		
 		//Get the database connection from the user
 		if(isProductionDb()) {
-			dbURL = DbConstants.DB_URL_AWSDB;
-			dbUser = DbConstants.USER_NAME_AWS;
-			dbPassword = DbConstants.PASSWORD_AWS;
+			dbURL = DbConstantAndQueryService.DB_URL_AWSDB;
+			dbUser = DbConstantAndQueryService.USER_NAME_AWS;
+			dbPassword = DbConstantAndQueryService.PASSWORD_AWS;
 		}
 		else {
-			dbURL = DbConstants.DB_URL_LOCALDB;
-			dbUser = DbConstants.USER_NAME_LOCAL;
-			dbPassword = DbConstants.PASSWORD_LOCAL;
+			dbURL = DbConstantAndQueryService.DB_URL_LOCALDB;
+			dbUser = DbConstantAndQueryService.USER_NAME_LOCAL;
+			dbPassword = DbConstantAndQueryService.PASSWORD_LOCAL;
 		}
 
 		//Open connection to database
@@ -179,11 +179,11 @@ public class DataService {
 	public void close() {
 		try {
 			if(verboseSQL) System.out.print("\nClosing connection and de-registering driver to "
-				+ (this.isProductionDb() ? DbConstants.DB_URL_AWSDB : DbConstants.DB_URL_LOCALDB));
+				+ (this.isProductionDb() ? DbConstantAndQueryService.DB_URL_AWSDB : DbConstantAndQueryService.DB_URL_LOCALDB));
 			this.conn.close();
 			try {
 	            java.sql.Driver mySqlDriver =
-	            	DriverManager.getDriver(this.isProductionDb() ? DbConstants.DB_URL_AWSDB : DbConstants.DB_URL_LOCALDB);
+	            	DriverManager.getDriver(this.isProductionDb() ? DbConstantAndQueryService.DB_URL_AWSDB : DbConstantAndQueryService.DB_URL_LOCALDB);
 	            DriverManager.deregisterDriver(mySqlDriver);
 	        }
 			catch (SQLException ex) {
@@ -211,7 +211,7 @@ public class DataService {
 			//SEARCH FOR THE USERNAME
 			try {
 				//Prepare the SQL statement
-				sql = conn.prepareStatement(DbConstants.GET_CUSTOMER_BY_USERNAME);
+				sql = conn.prepareStatement(DbConstantAndQueryService.GET_CUSTOMER_BY_USERNAME);
 	
 				//Populate statement parameters
 				sql.setString(1, usernameToCheck);
@@ -247,7 +247,7 @@ public class DataService {
 			
 			//WRITE TO CUSTOMERS TABLE
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
+			sql = conn.prepareStatement(DbConstantAndQueryService.CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
 
 			//Populate statement parameters
 			sql.setString(1, lastName);
@@ -287,7 +287,7 @@ public class DataService {
 		int numRec = 0;
 		try {
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.CREATE_CREDENTIALS);
+			sql = conn.prepareStatement(DbConstantAndQueryService.CREATE_CREDENTIALS);
 	
 			//Populate statement parameters
 			sql.setInt(1, cust.getCustId());
@@ -320,7 +320,7 @@ public class DataService {
 		String[] keys = {null, null};
 		try {
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.RETRIEVE_CREDENTIALS_BY_CUSTOMER_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.RETRIEVE_CREDENTIALS_BY_CUSTOMER_ID);
 	
 			//Populate statement parameters
 			sql.setInt(1, customerId);
@@ -329,8 +329,8 @@ public class DataService {
 			//Execute SQL statement
 			rs = sql.executeQuery();
 			if(rs.next()) {
-				keys[0] = rs.getString(DbConstants.CUSTOMER_PASSWORD_SALT);
-				keys[1] = rs.getString(DbConstants.CUSTOMER_PASSWORD_HASH);
+				keys[0] = rs.getString(DbConstantAndQueryService.CUSTOMER_PASSWORD_SALT);
+				keys[1] = rs.getString(DbConstantAndQueryService.CUSTOMER_PASSWORD_HASH);
 				if(verboseSQL) System.out.println("...Success, customer credentials retrieved from credentials table.");
 			}
 			
@@ -352,7 +352,7 @@ public class DataService {
 		int numRec = 0;
 		try {
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.CREATE_CUSTOMER_ACCOUNTS);
+			sql = conn.prepareStatement(DbConstantAndQueryService.CREATE_CUSTOMER_ACCOUNTS);
 			if(verboseSQL) printSQL();
 	
 			//Populate statement parameters
@@ -390,7 +390,7 @@ public class DataService {
 		int numRec = 0;
 		try {
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.CREATE_CUSTOMER_TRANSACTIONS);
+			sql = conn.prepareStatement(DbConstantAndQueryService.CREATE_CUSTOMER_TRANSACTIONS);
 	
 			//Populate statement parameters
 			sql.setInt(1, custId);
@@ -425,7 +425,7 @@ public class DataService {
 			//GET THE CUSTOMER INFORMATION
 			try {
 				//Prepare the SQL statement
-				sql = conn.prepareStatement(DbConstants.GET_CUSTOMER_BY_ID);
+				sql = conn.prepareStatement(DbConstantAndQueryService.GET_CUSTOMER_BY_ID);
 	
 				//Populate statement parameters
 				sql.setInt(1, customerIdToRetrieve);
@@ -465,7 +465,7 @@ public class DataService {
 			//GET THE CUSTOMER BALANCE INFORMATION
 			try {
 				//Prepare the SQL statement
-				sql = conn.prepareStatement(DbConstants.GET_CUSTOMER_ACCOUNTS_BY_ID);
+				sql = conn.prepareStatement(DbConstantAndQueryService.GET_CUSTOMER_ACCOUNTS_BY_ID);
 	
 				//Populate statement parameters
 				sql.setInt(1, cust.getCustId());
@@ -503,7 +503,7 @@ public class DataService {
 		try {
 			//WRITE TO CUSTOMER_TRANSACTIONS TABLE
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.UPDATE_TRANSACTION);
+			sql = conn.prepareStatement(DbConstantAndQueryService.UPDATE_TRANSACTION);
 
 			//Populate statement parameters
 			sql.setInt(1, customerId);
@@ -533,7 +533,7 @@ public class DataService {
 			//GET THE CUSTOMER INFORMATION
 			try {
 				//Prepare the SQL statement
-				sql = conn.prepareStatement(DbConstants.GET_CUSTOMER_TRANSACTIONS_BY_ID);
+				sql = conn.prepareStatement(DbConstantAndQueryService.GET_CUSTOMER_TRANSACTIONS_BY_ID);
 	
 				//Populate statement parameters
 				sql.setInt(1, custId);
@@ -573,7 +573,7 @@ public class DataService {
 		List <Customer> customerList = new ArrayList<Customer>();
 		try {
 			//Prepare the SQL statement
-			String sql = DbConstants.GET_CUSTOMERS_UNORDERED;
+			String sql = DbConstantAndQueryService.GET_CUSTOMERS_UNORDERED;
 			if(verboseSQL) System.out.println("Executing SQL: " + sql);
 			
 			//Execute SQL statement and get a result set
@@ -583,10 +583,10 @@ public class DataService {
 			while(this.rs.next()) {
 				//Read the fields in the current record and store in new Customer object
 				Customer cust = new Customer(
-					rs.getInt(DbConstants.CUSTOMER_ID),
-					rs.getString(DbConstants.CUSTOMER_LAST_NAME),
-					rs.getString(DbConstants.CUSTOMER_FIRST_NAME),
-					rs.getDate(DbConstants.CUSTOMER_DATE_OPENED)
+					rs.getInt(DbConstantAndQueryService.CUSTOMER_ID),
+					rs.getString(DbConstantAndQueryService.CUSTOMER_LAST_NAME),
+					rs.getString(DbConstantAndQueryService.CUSTOMER_FIRST_NAME),
+					rs.getDate(DbConstantAndQueryService.CUSTOMER_DATE_OPENED)
 				);
 				
 				//Add the customer to the list of customers
@@ -614,7 +614,7 @@ public class DataService {
 	public int dbRetrieveCustomerByLoginCredentials(String username, String hashedSalt, String hashedPassword) {
 		try {
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.GET_CUSTOMER_ID_FROM_CREDENTIALS);
+			sql = conn.prepareStatement(DbConstantAndQueryService.GET_CUSTOMER_ID_FROM_CREDENTIALS);
 			
 			//Populate statement parameters
 			sql.setString(1, username);
@@ -674,9 +674,9 @@ public class DataService {
 			
 			//Prepare the SQL statement to UPDATE an account balance by customer id
 			final String UPDATE_BALANCE_BY_ID =
-				"UPDATE " + DbConstants.DB_NAME + "." + DbConstants.CUSTOMER_ACCOUNTS_TABLE
+				"UPDATE " + DbConstantAndQueryService.DB_NAME + "." + DbConstantAndQueryService.CUSTOMER_ACCOUNTS_TABLE
 				+ " SET " + accountField + "=?"
-				+ " WHERE " + DbConstants.CUSTOMER_ID + "=?";
+				+ " WHERE " + DbConstantAndQueryService.CUSTOMER_ID + "=?";
 			
 			sql = conn.prepareStatement(UPDATE_BALANCE_BY_ID);
 			sql.setDouble(1, accountBalance);
@@ -707,7 +707,7 @@ public class DataService {
 		try {
 			//UPDATE THE CUSTOMERS TABLE
 			//Prepare the SQL statement to UPDATE a customer record by customerId
-			sql = conn.prepareStatement(DbConstants.UPDATE_CUSTOMER_CONTACT_BY_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.UPDATE_CUSTOMER_CONTACT_BY_ID);
 			sql.setString(1, cust.getEmailAddress());
 			sql.setString(2, cust.getPhoneNumber());
 			sql.setInt(3, cust.getCustId());
@@ -737,7 +737,7 @@ public class DataService {
 		try {
 			//UPDATE THE CUSTOMER_CREDENTIALS TABLE
 			//Prepare the SQL statement to UPDATE a customer credentials record by customerId
-			sql = conn.prepareStatement(DbConstants.UPDATE_CREDENTIALS_BY_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.UPDATE_CREDENTIALS_BY_ID);
 			sql.setString(1, cust.getUsername());
 			sql.setString(2, cust.getHashedSalt());
 			sql.setString(3, cust.getPassword());
@@ -772,7 +772,7 @@ public class DataService {
 			
 			//DELETE FROM THE CUSTOMERS TABLE
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.DELETE_CUSTOMER_BY_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.DELETE_CUSTOMER_BY_ID);
 
 			//Populate statement parameters
 			sql.setInt(1, customerId);
@@ -797,7 +797,7 @@ public class DataService {
 		try {
 			//DELETE FROM THE CUSTOMER_TRANSACTIONS TABLE
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.DELETE_CUSTOMER_TRANSACTIONS_BY_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.DELETE_CUSTOMER_TRANSACTIONS_BY_ID);
 
 			//Populate statement parameters
 			sql.setInt(1, customerId);
@@ -821,7 +821,7 @@ public class DataService {
 		try {
 			//DELETE FROM THE CUSTOMER_ACCOUNTSS TABLE
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.DELETE_CUSTOMER_ACCOUNTS_BY_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.DELETE_CUSTOMER_ACCOUNTS_BY_ID);
 
 			//Populate statement parameters
 			sql.setInt(1, customerId);
@@ -845,7 +845,7 @@ public class DataService {
 		try {
 			//DELETE FROM THE CREDENTIALS TABLE
 			//Prepare the SQL statement
-			sql = conn.prepareStatement(DbConstants.DELETE_CUSTOMER_CREDENTIALS_BY_ID);
+			sql = conn.prepareStatement(DbConstantAndQueryService.DELETE_CUSTOMER_CREDENTIALS_BY_ID);
 
 			//Populate statement parameters
 			sql.setInt(1, customerId);

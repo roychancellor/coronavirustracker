@@ -12,17 +12,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.royware.corona.model.Customer;
-import com.royware.corona.services.DataService;
+import com.royware.corona.services.DatabaseService;
 import com.royware.corona.services.LoginService;
 
 public class ExistingCustomerTests {
 	private Customer testCust;
-	private DataService ds;
+	private DatabaseService ds;
 	private LoginService ls;
 	
 	@Before
 	public void beforeTest() {
-		ds = new DataService();
+		ds = new DatabaseService();
 		testCust = new Customer();
 		ls = new LoginService();
 	}

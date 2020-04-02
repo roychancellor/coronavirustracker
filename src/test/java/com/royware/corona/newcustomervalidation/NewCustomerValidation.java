@@ -13,17 +13,17 @@ import org.junit.Test;
 
 import com.royware.corona.model.Customer;
 import com.royware.corona.services.CustomerService;
-import com.royware.corona.services.DataService;
+import com.royware.corona.services.DatabaseService;
 
 public class NewCustomerValidation {
 	private CustomerService cs;
 	private Customer testCust;
-	private DataService ds;
+	private DatabaseService ds;
 	
 	@Before
 	public void beforeTest() {
 		cs = new CustomerService();
-		ds = new DataService();
+		ds = new DatabaseService();
 		testCust = new Customer();
 	}
 

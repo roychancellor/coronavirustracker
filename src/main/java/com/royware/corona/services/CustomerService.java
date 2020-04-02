@@ -15,7 +15,7 @@ public class CustomerService {
 	 * @return true if the username is found; false if not
 	 */
 	public boolean userNameExists(String usernameToCheck) {
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		if(ds.dbRetrieveCustomerByUsername(usernameToCheck) > 0) {
 			ds.close();
 			return true;
@@ -35,7 +35,7 @@ public class CustomerService {
 		int dbCustId = 0;
 		
 		//Open a connection to the database
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		
 		//Create the customer in the customers table
 		dbCustId = ds.dbCreateCustomer(cust.getLastName(), cust.getFirstName(), cust.getEmailAddress(), cust.getPhoneNumber());
@@ -99,7 +99,7 @@ public class CustomerService {
 	 * @return the number of records written (should be 3 if successful)
 	 */
 	private int createOpeningBalanceTransactions(int dbCustId, Customer cust) {
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		int numRec = 0;
 		
 		//Write the opening balance transactions to the database
@@ -130,7 +130,7 @@ public class CustomerService {
 		Customer customer;
 		
 		//Open a connection to the database
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 
 		//Get the customer information
 		customer = ds.dbRetrieveCustomerById(custId);
@@ -179,7 +179,7 @@ public class CustomerService {
 		int dbCustId = 0;
 		
 		//Open a connection to the database
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		
 		//Update the customer in the customers table
 		int numRec = ds.dbUpdateCustomerContactInfo(cust);
@@ -213,7 +213,7 @@ public class CustomerService {
 	public int deleteExistingCustomer(Customer cust) {
 		int numRec = 0;
 		int customerId = cust.getCustId();
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		
 		//Verify the customer with the passed-in id exists
 		if(ds.dbRetrieveCustomerById(customerId) == null) {

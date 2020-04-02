@@ -19,7 +19,7 @@ import com.royware.corona.model.Transaction;
  * The actual account computations occur in the account classes Checking, Saving, and Loan
  */
 @Service
-public class BankService {
+public class BankTransactionService {
 
 	//Format for dates and money outputs in all classes
 	private DecimalFormat money = new DecimalFormat();
@@ -27,7 +27,7 @@ public class BankService {
 	public final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy");
 
 	//Constructor
-	public BankService() {
+	public BankTransactionService() {
 		money.applyPattern(MONEY_FORMAT);
 	}
 	
@@ -73,7 +73,7 @@ public class BankService {
 		}
 
 		//Do the transaction
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		int numRec = 0;
 		
 		//Update the current Customer model object
@@ -103,7 +103,7 @@ public class BankService {
 	 */
 	public int doCheckingOverdraft(Customer cust) {
 		//If an overdraft occurred, write the overdraft transaction
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		int numRec = ds.dbAddTransaction(
 			cust.getCustId(),
 			new Transaction(new Date(),
@@ -150,7 +150,7 @@ public class BankService {
 		boolean validAmount = false;
 		
 		//Get the account balances of record from the database
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		boolean dbSuccess = ds.dbRetrieveCustomerBalancesById(cust);
 		ds.close();
 		
@@ -214,7 +214,7 @@ public class BankService {
 	
 	public int doEndOfMonth(Customer cust) {
 		int numRec = 0;
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		
 		//Get current balances from the database
 		if(ds.dbRetrieveCustomerBalancesById(cust)) {
@@ -281,7 +281,7 @@ public class BankService {
 	 * @return a list of transaction objects
 	 */
 	public List<Transaction> retrieveCustomerTransactions(int custId) {
-		DataService ds = new DataService();
+		DatabaseService ds = new DatabaseService();
 		List<Transaction> transList = ds.dbRetrieveTransactionsById(custId);
 		ds.close();
 
