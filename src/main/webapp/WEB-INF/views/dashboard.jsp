@@ -16,7 +16,7 @@
 
 <body>
 	<div class="container">
-		<%@ include file="common/header-common.jspf" %>
+		<!-- <%@ include file="common/header-common.jspf" %> -->
 		<section>
 			<h1>Dashboard for <strong style="color:#522398">${region}</strong></h1>
 			<h2 style="text-align:left"><strong>Cases as a Function of Time</strong></h2>
@@ -35,7 +35,7 @@
 					href="${pageContext.request.contextPath}/corona">Return Home</a>
 			</p>
 		</section>
-		<%@ include file="common/footer-common.jspf" %>
+		<!-- <%@ include file="common/footer-common.jspf" %> -->
 	</div>
 	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
