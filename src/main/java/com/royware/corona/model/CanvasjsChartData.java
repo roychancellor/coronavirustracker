@@ -10,6 +10,7 @@ public class CanvasjsChartData {
 	static Map<Object,Object> map = null;
 	static List<List<Map<Object,Object>>> list = new ArrayList<List<Map<Object,Object>>>();
 	static List<Map<Object,Object>> dataPoints1 = new ArrayList<Map<Object,Object>>();
+	static List<Map<Object,Object>> dataPoints2 = new ArrayList<Map<Object,Object>>();
 	
 	static {
 		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 92.9);dataPoints1.add(map);
@@ -66,7 +67,62 @@ public class CanvasjsChartData {
 		map = new HashMap<Object,Object>(); map.put("x", 2.75); map.put("y", 17.17);dataPoints1.add(map);
 		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 81.3);dataPoints1.add(map);
 		
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 97.9);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 1); map.put("y", 62.1);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 1.75); map.put("y", 36.05);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3.75); map.put("y", 16.59);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 5.75); map.put("y", 13.025);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.875); map.put("y", 68.6);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.25); map.put("y", 26.4);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3.25); map.put("y", 19.25);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 5.25); map.put("y", 13.475);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 68.8);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 1.75); map.put("y", 31.8);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.75); map.put("y", 21.46);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 4.75); map.put("y", 12.125);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.625); map.put("y", 72.3);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 1.25); map.put("y", 46);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.25); map.put("y", 26.15);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 4.25); map.put("y", 13.175);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86.5);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 18.12);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 64.9);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 19.62);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 1.5); map.put("y", 41.9);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 6); map.put("y", 10.44);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 17.56);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 6); map.put("y", 10.44);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 1.5); map.put("y", 37);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 18.95);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 80.8);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2); map.put("y", 25);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 4); map.put("y", 15.42);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 64.5);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2); map.put("y", 26.67);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 5); map.put("y", 13.55);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 67);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.25); map.put("y", 25.2);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3.75); map.put("y", 12.76);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 5.75); map.put("y", 8.75);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 16.81);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 59.7);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.5); map.put("y", 28.7);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 4); map.put("y", 16.55);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 66.3);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.5); map.put("y", 22.7);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 4); map.put("y", 8.74);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.75); map.put("y", 64.2);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.5); map.put("y", 21.3);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 4); map.put("y", 13.62);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 6); map.put("y", 9.87);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 19.62);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86.7);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 2.75); map.put("y", 22.17);dataPoints2.add(map);
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86.3);dataPoints2.add(map);
+		
 		list.add(dataPoints1);
+		list.add(dataPoints2);
 	}
  
 	public static List<List<Map<Object, Object>>> getCanvasjsDataList() {

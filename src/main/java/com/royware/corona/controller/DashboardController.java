@@ -1,5 +1,6 @@
 package com.royware.corona.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,10 +60,18 @@ public class DashboardController {
 		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
 		System.out.println("STUB-OUT: Making dashboard for region: " + region);
 		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
-		map.addAttribute("dataPointsList", canvasjsDataList);
+		List<List<List<Map<Object, Object>>>> dataPointsList = new ArrayList<>();
+		dataPointsList.add(canvasjsDataList);
+		dataPointsList.add(canvasjsDataList);
+		dataPointsList.add(canvasjsDataList);
+		dataPointsList.add(canvasjsDataList);
+		dataPointsList.add(canvasjsDataList);
+		dataPointsList.add(canvasjsDataList);
+
+		map.addAttribute("dataSets", dataPointsList);
 		///////////
-//		return DASHBOARD_PAGE;
-		return "aaachartdemo";
+		return DASHBOARD_PAGE;
+//		return "aaachartdemo";
 	}
 	
 	/**
