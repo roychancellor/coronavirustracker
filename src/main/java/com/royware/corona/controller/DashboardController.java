@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.royware.corona.interfaces.CanvasjsChartService;
 import com.royware.corona.services.DashboardService;
 
 /**
@@ -21,6 +22,9 @@ import com.royware.corona.services.DashboardService;
 public class DashboardController {
 	@Autowired
 	DashboardService dashboardService;
+	
+	@Autowired
+	private CanvasjsChartService canvasjsChartService;
 	
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
@@ -52,7 +56,8 @@ public class DashboardController {
 		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
 		System.out.println("STUB-OUT: Making dashboard for region: " + region);
 		///////////
-		return DASHBOARD_PAGE;
+//		return DASHBOARD_PAGE;
+		return "aaachartdemo";
 	}
 	
 	/**
