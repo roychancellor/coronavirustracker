@@ -1,5 +1,8 @@
 package com.royware.corona.controller;
 
+import java.util.List;
+import java.util.Map;
+
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -55,6 +58,8 @@ public class DashboardController {
 		///////////
 		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
 		System.out.println("STUB-OUT: Making dashboard for region: " + region);
+		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
+		map.addAttribute("dataPointsList", canvasjsDataList);
 		///////////
 //		return DASHBOARD_PAGE;
 		return "aaachartdemo";
