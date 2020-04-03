@@ -27,7 +27,7 @@ public class DashboardController {
 	DashboardService dashboardService;
 	
 	@Autowired
-	private CanvasjsChartService canvasjsChartService;
+	CanvasjsChartService canvasjsChartService;
 	
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
