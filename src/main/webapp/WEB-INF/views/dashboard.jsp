@@ -96,7 +96,7 @@
 			var xValue;
 			var yValue;
 			 
-			<chart:forEach items="${dataSets}" var="dataset">
+			<chart:forEach items="${dashboardDataSetsList}" var="dataset">
 				<chart:forEach items="${dataset}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");

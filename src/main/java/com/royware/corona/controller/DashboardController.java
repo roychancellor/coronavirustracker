@@ -56,22 +56,26 @@ public class DashboardController {
 	 */
 	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
-		///////////
 		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
 		System.out.println("STUB-OUT: Making dashboard for region: " + region);
+		
+		//Make chart data sets
+		//TODO: Write methods for making chart data for each type of chart
 		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
-		List<List<List<Map<Object, Object>>>> dataPointsList = new ArrayList<>();
-		dataPointsList.add(canvasjsDataList);
-		dataPointsList.add(canvasjsDataList);
-		dataPointsList.add(canvasjsDataList);
-		dataPointsList.add(canvasjsDataList);
-		dataPointsList.add(canvasjsDataList);
-		dataPointsList.add(canvasjsDataList);
+		
+		//Store chart data sets in a list to pass to the JSP
+		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
+		dashboardDataSetsList.add(canvasjsDataList);
+		dashboardDataSetsList.add(canvasjsDataList);
+		dashboardDataSetsList.add(canvasjsDataList);
+		dashboardDataSetsList.add(canvasjsDataList);
+		dashboardDataSetsList.add(canvasjsDataList);
+		dashboardDataSetsList.add(canvasjsDataList);
 
-		map.addAttribute("dataSets", dataPointsList);
-		///////////
+		//Update the model map with all data sets for rendering on the JSP page
+		map.addAttribute("dataSets", dashboardDataSetsList);
+		
 		return DASHBOARD_PAGE;
-//		return "aaachartdemo";
 	}
 	
 	/**
