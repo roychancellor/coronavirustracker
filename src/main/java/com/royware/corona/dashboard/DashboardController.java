@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.royware.corona.dashboard.interfaces.CanvasjsChartListBuilder;
 import com.royware.corona.dashboard.interfaces.CanvasjsChartService;
 import com.royware.corona.dashboard.interfaces.DashboardService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
@@ -32,7 +33,7 @@ import com.royware.corona.dashboard.model.UnitedStatesData;
 @EnableWebMvc
 public class DashboardController {
 	@Autowired
-	CanvasjsChartService canvasjsChartService;
+	CanvasjsChartService chartService;
 	
 	@Autowired
 	DashboardService dashService;
@@ -78,8 +79,7 @@ public class DashboardController {
 		}
 		
 		//TODO: Write methods for making chart data for each type of chart
-//		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
-		List<List<Map<Object, Object>>> canvasjsDataList = dashService.makeXYScatterChartDataforUSPositiveCases(usData);
+		List<List<Map<Object, Object>>> canvasjsDataList = chartService.getCanvasjsChartData(usData);
 		
 		//Store chart data sets in a list to pass to the JSP
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
@@ -91,7 +91,7 @@ public class DashboardController {
 		dashboardDataSetsList.add(canvasjsDataList);
 
 		//Update the model map with all data sets for rendering on the JSP page
-		map.addAttribute("dataSetsList", dashboardDataSetsList);
+		map.addAttribute("dashboardDataSetsList", dashboardDataSetsList);
 		
 		return DASHBOARD_PAGE;
 	}

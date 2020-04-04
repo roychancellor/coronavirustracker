@@ -21,7 +21,7 @@ public class CanvasjsChartServiceImpl implements CanvasjsChartService {
 	}
  
 	@Override
-	public List<Map<Object, Object>> getCanvasjsChartData(UnitedStatesData[] usd) {
+	public List<List<Map<Object, Object>>> getCanvasjsChartData(UnitedStatesData[] usd) {
 		return canvasjsChartDao.getCanvasjsChartData(usd);
 	}
  

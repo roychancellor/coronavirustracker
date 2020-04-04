@@ -9,5 +9,5 @@ import com.royware.corona.dashboard.model.UnitedStatesData;
 
 @Service
 public interface CanvasjsChartService {
-	List<Map<Object, Object>> getCanvasjsChartData(UnitedStatesData[] usd);
+	List<List<Map<Object, Object>>> getCanvasjsChartData(UnitedStatesData[] usd);
 }

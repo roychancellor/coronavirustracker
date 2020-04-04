@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 @Service
-public interface CanvasjsChartDao {
-	List<List<Map<Object, Object>>> getCanvasjsChartData(UnitedStatesData[] usd);
+public interface CanvasjsChartListBuilder {
+	public List<List<Map<Object, Object>>> makeXYScatterChartDataforUSPositiveCases(UnitedStatesData[] usData);
 }

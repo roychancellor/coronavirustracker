@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.CanvasjsChartDao;
+import com.royware.corona.dashboard.interfaces.CanvasjsChartListBuilder;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 @Service
@@ -15,8 +16,8 @@ public class CanvasjsChartDaoImpl implements CanvasjsChartDao {
 	CanvasjsChartListBuilder chartBuilder;
 	
 	@Override
-	public List<Map<Object, Object>> getCanvasjsChartData(UnitedStatesData[] usd) {
-		return chartBuilder.getCanvasjsScatterLists(usd);
+	public List<List<Map<Object, Object>>> getCanvasjsChartData(UnitedStatesData[] usd) {
+		return chartBuilder.makeXYScatterChartDataforUSPositiveCases(usd);
 	}
  
 }

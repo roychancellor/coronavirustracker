@@ -1,10 +1,5 @@
 package com.royware.corona.dashboard.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +12,10 @@ import com.royware.corona.dashboard.interfaces.DashboardService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 /**
- * Provides service methods for all dashboard operations in the main controller
+ * Provides service methods for getting dashboard data from external sources
  */
 @Service
 public class DashboardServiceImpl implements DashboardService {
-	@Autowired
-	CanvasjsChartDaoImpl chartDao;
-	
 	@Autowired
 	RestTemplate restTemplate;
 	
@@ -31,9 +23,6 @@ public class DashboardServiceImpl implements DashboardService {
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-	
-//	public DashboardServiceImpl() {
-//	}
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 
@@ -49,30 +38,5 @@ public class DashboardServiceImpl implements DashboardService {
 		}
 		
 		return usData;
-	}
-	
-	public List<List<Map<Object, Object>>> makeXYScatterChartDataforUSPositiveCases(UnitedStatesData[] usData) {
-		Map<Object, Object> xyPair;
-		List<Map<Object, Object>> xyList = new ArrayList<>();
-		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
-		int startDate = usData[usData.length - 1].getDate();
-		for(UnitedStatesData usd : usData) {
-			xyPair = new HashMap<>();
-			xyPair.put("x", usd.getDate() - startDate);
-			xyPair.put("y", usd.getPositive());
-			xyList.add(xyPair);
-		}
-		scatterChartDataList.add(xyList);
-
-		for(UnitedStatesData usd : usData) {
-			xyPair = new HashMap<>();
-			xyPair.put("x", usd.getDate() - startDate);
-			xyPair.put("y", usd.getPositive() * 1.05);
-			xyList.add(xyPair);
-		}
-		scatterChartDataList.add(xyList);
-
-		return scatterChartDataList;
-	}
-
+	}	
 }
