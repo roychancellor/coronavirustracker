@@ -12,12 +12,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.royware.corona.dashboard.interfaces.CanvasjsChartListBuilder;
 import com.royware.corona.dashboard.interfaces.CanvasjsChartService;
 import com.royware.corona.dashboard.interfaces.DashboardService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
@@ -52,7 +51,7 @@ public class DashboardController {
 	 * @param map the current ModelMap
 	 * @return a string for the home page jsp
 	 */
-	@RequestMapping(value = "/corona", method = RequestMethod.GET)
+	@GetMapping(value = "/corona")
 	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
 		map.addAttribute("region", region);
 		return HOME_PAGE;
@@ -64,7 +63,7 @@ public class DashboardController {
 	 * @param map the ModelMap
 	 * @return the jsp file name (dashboard)
 	 */
-	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)
+	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
 		log.info("STUB-OUT: Making dashboard for region: " + region);
@@ -101,7 +100,7 @@ public class DashboardController {
 	 * @param map the current ModelMap
 	 * @return a string for the home page jsp
 	 */
-	@RequestMapping(value = "/about", method = RequestMethod.GET)
+	@GetMapping(value = "/about")
 	public String showAboutPage(ModelMap map) {		
 		return ABOUT_PAGE;
 	}
@@ -111,7 +110,7 @@ public class DashboardController {
 	 * @param map the current ModelMap
 	 * @return a string for the commentary jsp
 	 */
-	@RequestMapping(value = "/commentary", method = RequestMethod.GET)
+	@GetMapping(value = "/commentary")
 	public String showCommentaryPage(ModelMap map) {		
 		return COMMENTARY_PAGE;
 	}
@@ -121,7 +120,7 @@ public class DashboardController {
 	 * @param map the current ModelMap
 	 * @return a string for the math jsp
 	 */
-	@RequestMapping(value = "/math", method = RequestMethod.GET)
+	@GetMapping(value = "/math")
 	public String showMathPage(ModelMap map) {		
 		return MATH_PAGE;
 	}
@@ -131,7 +130,7 @@ public class DashboardController {
 	 * @param map the current ModelMap
 	 * @return a string for the chart-info jsp
 	 */
-	@RequestMapping(value = "/chart-info", method = RequestMethod.GET)
+	@GetMapping(value = "/chart-info")
 	public String showChartInfoPage(ModelMap map) {		
 		return CHART_INFO_PAGE;
 	}
