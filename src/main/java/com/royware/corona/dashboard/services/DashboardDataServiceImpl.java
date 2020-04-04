@@ -8,14 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.interfaces.DashboardService;
+import com.royware.corona.dashboard.interfaces.DashboardDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.model.WorldData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
 @Service
-public class DashboardServiceImpl implements DashboardService {
+public class DashboardDataServiceImpl implements DashboardDataService {
 	@Autowired
 	RestTemplate restTemplate;
 	
@@ -38,5 +39,23 @@ public class DashboardServiceImpl implements DashboardService {
 		}
 		
 		return usData;
-	}	
+	}
+
+	@Override
+	public UnitedStatesData[] getAllUsDataExcludingState(String stateAbbreviation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UnitedStatesData[] getSingleUsStateData(String stateAbbreviation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WorldData[] getSingleNonUsCountryData(String countryName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

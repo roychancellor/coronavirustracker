@@ -7,17 +7,24 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.interfaces.CanvasjsChartListBuilder;
+import com.royware.corona.dashboard.interfaces.DashboardChartListBuilder;
+import com.royware.corona.dashboard.interfaces.DashboardDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
  
 @Service
-public class CanvasjsChartListBuilderImpl implements CanvasjsChartListBuilder {
+public class DashboardChartListBuilderImpl implements DashboardChartListBuilder {
+	@Autowired
+	DashboardDataService dataService;
+	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
  
-	public List<List<Map<Object, Object>>> makeXYScatterChartDataforUSPositiveCases(UnitedStatesData[] usData) {
+	public List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList() {
+		UnitedStatesData[] usData = dataService.getAllUsData();
+		
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> xyList1 = new ArrayList<>();
 		List<Map<Object, Object>> xyList2 = new ArrayList<>();
@@ -52,6 +59,36 @@ public class CanvasjsChartListBuilderImpl implements CanvasjsChartListBuilder {
 		}
 
 		return scatterChartDataList;
+	}
+
+	@Override
+	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

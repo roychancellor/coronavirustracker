@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.royware.corona.dashboard.interfaces.CanvasjsChartService;
-import com.royware.corona.dashboard.interfaces.DashboardService;
+import com.royware.corona.dashboard.interfaces.DashboardChartService;
+import com.royware.corona.dashboard.interfaces.DashboardDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 /**
@@ -32,10 +32,10 @@ import com.royware.corona.dashboard.model.UnitedStatesData;
 @EnableWebMvc
 public class DashboardController {
 	@Autowired
-	CanvasjsChartService chartService;
+	DashboardChartService chartService;
 	
 	@Autowired
-	DashboardService dashService;
+	DashboardDataService dashService;
 	
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
@@ -78,7 +78,7 @@ public class DashboardController {
 		}
 		
 		//TODO: Write methods for making chart data for each type of chart
-		List<List<Map<Object, Object>>> canvasjsDataList = chartService.getCanvasjsChartData(usData);
+		List<List<Map<Object, Object>>> canvasjsDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
 		
 		//Store chart data sets in a list to pass to the JSP
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
