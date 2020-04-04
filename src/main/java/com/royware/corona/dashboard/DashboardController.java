@@ -58,39 +58,33 @@ public class DashboardController {
 	}
 	
 	/**
-	 * HTTP POST handler for a region dashboard
+	 * HTTP POST handler for making a region dashboard
 	 * @param region the selected geographic region for the dashboard
 	 * @param map the ModelMap
 	 * @return the jsp file name (dashboard)
 	 */
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
-		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
 		log.info("STUB-OUT: Making dashboard for region: " + region);
-		
-		//Make chart data sets
-		
-		//US Data
-		UnitedStatesData[] usData = dashService.getAllUsData();
-		log.info("The US data object array is:");
-		for(UnitedStatesData usd : usData) {
-			log.info(usd.toString());
-		}
-		
+				
 		//TODO: Write methods for making chart data for each type of chart
-		List<List<Map<Object, Object>>> canvasjsDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
-		
-		//Store chart data sets in a list to pass to the JSP
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
-		dashboardDataSetsList.add(canvasjsDataList);
-		dashboardDataSetsList.add(canvasjsDataList);
-		dashboardDataSetsList.add(canvasjsDataList);
-		dashboardDataSetsList.add(canvasjsDataList);
-		dashboardDataSetsList.add(canvasjsDataList);
-		dashboardDataSetsList.add(canvasjsDataList);
-
+		List<List<Map<Object, Object>>> chartDataList;
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit();
+		dashboardDataSetsList.add(chartDataList);
+		
 		//Update the model map with all data sets for rendering on the JSP page
-		map.addAttribute("dashboardDataSetsList", dashboardDataSetsList);
+		map.addAttribute("allDashboardData", dashboardDataSetsList);
 		
 		return DASHBOARD_PAGE;
 	}
