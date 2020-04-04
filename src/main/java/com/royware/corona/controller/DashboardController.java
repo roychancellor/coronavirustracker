@@ -1,19 +1,23 @@
+//MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 package com.royware.corona.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-//MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.interfaces.CanvasjsChartService;
+import com.royware.corona.model.UnitedStatesData;
 import com.royware.corona.services.DashboardService;
 
 /**
@@ -22,7 +26,6 @@ import com.royware.corona.services.DashboardService;
  * All return statements are the names of Java Server Page (jsp) files
  */
 @Controller
-@Scope("session")
 public class DashboardController {
 	@Autowired
 	DashboardService dashboardService;
@@ -30,12 +33,23 @@ public class DashboardController {
 	@Autowired
 	CanvasjsChartService canvasjsChartService;
 	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@Bean
+	public RestTemplate restTemplate(/*RestTemplateBuilder builder*/) {
+//		return builder.build();
+		return new RestTemplate();
+	}
+
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
 	private static final String MATH_PAGE = "math";
 	private static final String COMMENTARY_PAGE = "commentary";
 	private static final String DASHBOARD_PAGE = "dashboard";
 	private static final String CHART_INFO_PAGE = "chart-info";
+	
+	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -57,9 +71,17 @@ public class DashboardController {
 	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		//ALL METHODS FOR MAKING DASHBOARDS CALLED FROM HERE
-		System.out.println("STUB-OUT: Making dashboard for region: " + region);
+		log.info("STUB-OUT: Making dashboard for region: " + region);
 		
 		//Make chart data sets
+		
+		//US Data
+		UnitedStatesData[] usData = restTemplate.getForObject("https://covidtracking.com/api/us/daily", UnitedStatesData[].class);
+		log.info("The US data object array is:");
+		for(UnitedStatesData usd : usData) {
+			log.info(usd.toString());
+		}
+		
 		//TODO: Write methods for making chart data for each type of chart
 		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
 		
