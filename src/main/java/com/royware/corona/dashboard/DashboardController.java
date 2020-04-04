@@ -1,5 +1,5 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
-package com.royware.corona.controller;
+package com.royware.corona.dashboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,17 +8,18 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.royware.corona.interfaces.CanvasjsChartService;
-import com.royware.corona.model.UnitedStatesData;
-import com.royware.corona.services.DashboardService;
+import com.royware.corona.dashboard.interfaces.CanvasjsChartService;
+import com.royware.corona.dashboard.interfaces.DashboardService;
+import com.royware.corona.dashboard.model.UnitedStatesData;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
@@ -26,22 +27,16 @@ import com.royware.corona.services.DashboardService;
  * All return statements are the names of Java Server Page (jsp) files
  */
 @Controller
+@ComponentScan("com.royware.corona")
+@Configuration
+@EnableWebMvc
 public class DashboardController {
-	@Autowired
-	DashboardService dashboardService;
-	
 	@Autowired
 	CanvasjsChartService canvasjsChartService;
 	
 	@Autowired
-	RestTemplate restTemplate;
+	DashboardService dashService;
 	
-	@Bean
-	public RestTemplate restTemplate(/*RestTemplateBuilder builder*/) {
-//		return builder.build();
-		return new RestTemplate();
-	}
-
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
 	private static final String MATH_PAGE = "math";
@@ -76,14 +71,15 @@ public class DashboardController {
 		//Make chart data sets
 		
 		//US Data
-		UnitedStatesData[] usData = restTemplate.getForObject("https://covidtracking.com/api/us/daily", UnitedStatesData[].class);
+		UnitedStatesData[] usData = dashService.getAllUsData();
 		log.info("The US data object array is:");
 		for(UnitedStatesData usd : usData) {
 			log.info(usd.toString());
 		}
 		
 		//TODO: Write methods for making chart data for each type of chart
-		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
+//		List<List<Map<Object, Object>>> canvasjsDataList = canvasjsChartService.getCanvasjsChartData();
+		List<List<Map<Object, Object>>> canvasjsDataList = dashService.makeXYScatterChartDataforUSPositiveCases(usData);
 		
 		//Store chart data sets in a list to pass to the JSP
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
@@ -95,7 +91,7 @@ public class DashboardController {
 		dashboardDataSetsList.add(canvasjsDataList);
 
 		//Update the model map with all data sets for rendering on the JSP page
-		map.addAttribute("dataSets", dashboardDataSetsList);
+		map.addAttribute("dataSetsList", dashboardDataSetsList);
 		
 		return DASHBOARD_PAGE;
 	}

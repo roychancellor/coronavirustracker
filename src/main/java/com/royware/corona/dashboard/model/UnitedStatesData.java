@@ -1,4 +1,4 @@
-package com.royware.corona.model;
+package com.royware.corona.dashboard.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

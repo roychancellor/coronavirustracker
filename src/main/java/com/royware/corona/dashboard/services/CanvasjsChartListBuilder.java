@@ -1,11 +1,13 @@
-package com.royware.corona.model;
+package com.royware.corona.dashboard.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.royware.corona.dashboard.model.UnitedStatesData;
  
-public class CanvasjsChartData {
+public class CanvasjsChartListBuilder {
  
 	static Map<Object,Object> map = null;
 	static List<List<Map<Object,Object>>> list = new ArrayList<List<Map<Object,Object>>>();
@@ -119,13 +121,19 @@ public class CanvasjsChartData {
 		map = new HashMap<Object,Object>(); map.put("x", 3); map.put("y", 19.62);dataPoints2.add(map);
 		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86.7);dataPoints2.add(map);
 		map = new HashMap<Object,Object>(); map.put("x", 2.75); map.put("y", 22.17);dataPoints2.add(map);
-		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86.3);dataPoints2.add(map);
-		
-		list.add(dataPoints1);
-		list.add(dataPoints2);
+		map = new HashMap<Object,Object>(); map.put("x", 0.5); map.put("y", 86.3);dataPoints2.add(map);		
 	}
  
-	public static List<List<Map<Object, Object>>> getCanvasjsDataList() {
-		return list;
+	public List<Map<Object,Object>> getCanvasjsScatterLists(UnitedStatesData[] usData) {
+		Map<Object,Object> map = null;
+		List<Map<Object,Object>> dataPoints = new ArrayList<Map<Object,Object>>();
+		
+		for(UnitedStatesData usd : usData) {
+			map = new HashMap<Object,Object>();
+			map.put("x", usd.getDate());
+			map.put("y", usd.getPositive());
+			dataPoints.add(map);		
+		}
+		return dataPoints;
 	}
 }
