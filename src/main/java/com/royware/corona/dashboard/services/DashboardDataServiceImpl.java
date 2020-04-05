@@ -40,31 +40,31 @@ public class DashboardDataServiceImpl implements DashboardDataService {
 	 * Gets all US data and returns it as an array of objects
 	 * @return JSON array of UnitedStatesData objects
 	 */
-	public UnitedStatesCases[] getAllUsData() {
+	public List<UnitedStatesCases> getAllUsData() {
 		UnitedStatesCases[] usData = restTemplate.getForObject("https://covidtracking.com/api/us/daily", UnitedStatesCases[].class);
 		log.info("The US data object array is:");
 		for(UnitedStatesCases usd : usData) {
 			log.info(usd.toString());
 		}
 		
-		return usData;
+		return Arrays.asList(usData);
 	}
 
 	@Override
-	public UnitedStatesCases[] getAllUsDataExcludingState(String stateAbbreviation) {
+	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateAbbreviation) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
-		UnitedStatesCases[] usDataExcludingState = getAllUsData();
-		UnitedStatesCases[] stateDataToExclude = getSingleUsStateData(stateAbbreviation);
+		List<UnitedStatesCases> usDataExcludingState = getAllUsData();
+		List<UnitedStatesCases> stateDataToExclude = getSingleUsStateData(stateAbbreviation);
 		
-		for(int i = 0; i < usDataExcludingState.length; i++) {
-			usDataExcludingState[i].setTotalPositiveCases(
-				usDataExcludingState[i].getTotalPositiveCases() - stateDataToExclude[i].getTotalPositiveCases()
+		for(int i = 0; i < usDataExcludingState.size(); i++) {
+			usDataExcludingState.get(i).setTotalPositiveCases(
+				usDataExcludingState.get(i).getTotalPositiveCases() - stateDataToExclude.get(i).getTotalPositiveCases()
 			);
-			usDataExcludingState[i].setTotalNegativeCases(
-				usDataExcludingState[i].getTotalNegativeCases() - stateDataToExclude[i].getTotalNegativeCases()
+			usDataExcludingState.get(i).setTotalNegativeCases(
+				usDataExcludingState.get(i).getTotalNegativeCases() - stateDataToExclude.get(i).getTotalNegativeCases()
 			);
-			usDataExcludingState[i].setTotalDeaths(
-				usDataExcludingState[i].getTotalDeaths() - stateDataToExclude[i].getTotalDeaths()
+			usDataExcludingState.get(i).setTotalDeaths(
+				usDataExcludingState.get(i).getTotalDeaths() - stateDataToExclude.get(i).getTotalDeaths()
 			);
 		}
 		
@@ -72,7 +72,7 @@ public class DashboardDataServiceImpl implements DashboardDataService {
 	}
 
 	@Override
-	public UnitedStatesCases[] getSingleUsStateData(String stateAbbreviation) {
+	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		UnitedStatesCases[] stateData = restTemplate.getForObject(
 			"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation,
 			UnitedStatesCases[].class
@@ -82,7 +82,7 @@ public class DashboardDataServiceImpl implements DashboardDataService {
 			log.info(state.toString());
 		}
 		
-		return stateData;
+		return Arrays.asList(stateData);
 	}
 
 	@Override
