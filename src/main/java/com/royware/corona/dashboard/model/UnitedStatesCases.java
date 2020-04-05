@@ -11,7 +11,7 @@ public class UnitedStatesCases implements CanonicalCases {
 	@JsonProperty("negative") private int totalNegativeCases;
 	@JsonProperty("death") private int totalDeaths;
 	@JsonProperty("state") private String regionString;
-	
+		
 	public UnitedStatesCases() {
 		super();
 	}

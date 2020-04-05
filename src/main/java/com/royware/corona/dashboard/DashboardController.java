@@ -116,7 +116,7 @@ public class DashboardController {
 		List<List<Map<Object, Object>>> chartDataList;
 		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
 		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		chartDataList = chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList);
 		dashboardDataSetsList.add(chartDataList);
 		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
 		dashboardDataSetsList.add(chartDataList);

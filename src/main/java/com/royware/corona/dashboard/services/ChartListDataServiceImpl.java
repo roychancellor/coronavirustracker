@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.DashboardController;
@@ -33,30 +34,63 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 20;
+	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 
 	/**
 	 * Gets all US data and returns it as an array of objects
 	 * @return JSON array of UnitedStatesData objects
 	 */
 	public List<UnitedStatesCases> getAllUsData() {
-		UnitedStatesCases[] usData = restTemplate.getForObject(
-				"https://covidtracking.com/api/us/daily",
-				UnitedStatesCases[].class
-		);
-		log.info("The US data object array is:");
-		for(UnitedStatesCases usd : usData) {
-			log.info(usd.toString());
-		}
+		UnitedStatesCases[] usData = null;
+		int tries = 0;
+		do {
+			try {
+				log.info("***** ABOUT TO HIT ENDPOINT FOR UNITED STATES DATA *****");
+				usData = restTemplate.getForObject(
+						"https://covidtracking.com/api/us/daily",
+						UnitedStatesCases[].class
+				);
+				log.info("The US data object array is:");
+				for(UnitedStatesCases usd : usData) {
+					log.info(usd.toString());
+				}
+				log.info("***** GOT THROUGH PARSING UNITED STATES DATA *****");
+			} catch(RestClientException e) {
+				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
+				e.printStackTrace();
+				usData = null;
+				tries++;
+			}
+		} while(tries <= 3 && usData == null);
 		
 		return Arrays.asList(usData);
 	}
 
 	@Override
 	public List<WorldCases> getAllWorldData() {
-		WorldRecords worldData = restTemplate.getForObject(
-				"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
-				WorldRecords.class
-		);
+		WorldRecords worldData = null;
+		int tries = 0;
+		do {	
+			try {
+				log.info("***** ABOUT TO HIT ENDPOINT FOR ALL WORLD DATA *****");
+				worldData = restTemplate.getForObject(
+						"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
+						WorldRecords.class
+				);
+				
+				log.info("The World data object array is:");
+				for(WorldCases wc : worldData.getRecords()) {
+					log.info(wc.toString());
+				}
+				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
+			} catch (RestClientException e) {
+				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
+				e.printStackTrace();
+				tries++;
+				worldData = null;
+			}
+		} while (tries <= 3 && worldData == null);
 		
 		return Arrays.asList(worldData.getRecords());
 	}
@@ -64,7 +98,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	@Override
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		UnitedStatesCases[] stateData = restTemplate.getForObject(
-				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation,
+				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
 				UnitedStatesCases[].class
 		);
 		
@@ -94,11 +128,32 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 
 	@Override
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
+		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
+		//Because the country data returns daily new cases and deaths, need to compute the totals by day
+		int positiveCases = 0;
+		int negativeCases = 0;
+		int totalDeaths = 0;
 		casesInOneCountry = getAllWorldData()
 				.stream()
-				.filter(x -> x.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode))
+				.filter(wc -> {
+					return wc.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode)
+							&& wc.getDailyNewCases() >= MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION;
+				})
 				.collect(Collectors.toList());
+		
+		WorldCases wc;
+		for(int i = casesInOneCountry.size() - 1; i >= 0; i--) {
+			wc = casesInOneCountry.get(i);
+			positiveCases += wc.getDailyNewCases();
+			negativeCases += wc.getDailyNewCases();  //DELETE THIS LATER...DON'T USE NEGATIVES FOR ANYTHING
+			totalDeaths += wc.getDailyNewDeaths();
+			if(positiveCases >= MINIMUM_TOTAL_CASES_FOR_INCLUSION) {
+				wc.setTotalPositiveCases(positiveCases);
+				wc.setTotalNegativeCases(negativeCases);
+				wc.setTotalDeaths(totalDeaths);
+			}
+		}
 		
 		return casesInOneCountry;
 	}

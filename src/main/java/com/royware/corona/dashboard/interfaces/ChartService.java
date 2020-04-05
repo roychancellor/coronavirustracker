@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ChartService {
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFit(List<T> regionCaseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getDailyRateOfChangeOfCasesWithMovingAverage(List<T> regionCaseList);
 }

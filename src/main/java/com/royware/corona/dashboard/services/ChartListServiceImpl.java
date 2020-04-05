@@ -43,17 +43,18 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataList.add(caseList);
 
 		//TODO: Figure out how to make the exponential regression fit data and populate it here
-		//For now, just duplicate the U.S. data with a multiplier of 2
+		//For now, just make a generic exponential model: 100*exp(0.02*t)
 		dayIndex = regionCaseList.size();
-		for(CanonicalCases cc : regionCaseList) {
+		while(dayIndex >= 0) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", cc.getTotalPositiveCases() * 2);
+			xyPair.put("y", 100 * Math.exp(0.15 * dayIndex));
 			expFitList.add(xyPair);
 			dayIndex--;
 		}
 		scatterChartDataList.add(expFitList);
 		
+		log.info("***** CASES VERSUS TIME *****");
 		int i = 0;
 		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
 			log.info("LIST: " + i);
@@ -68,16 +69,30 @@ public class ChartListServiceImpl implements ChartListService {
 
 	@Override
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> regionCaseList) {
+		log.info("***** RATE OF CHANGE OF CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> caseList = new ArrayList<>();
-		List<Map<Object, Object>> expFitList = new ArrayList<>();
+		List<Map<Object, Object>> movingAverageList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
 		int dayIndex = regionCaseList.size();
-		for(CanonicalCases cc : regionCaseList) {
+		log.info("dayIndex: " + dayIndex + ", regionCaseList.size() = " + regionCaseList.size());
+		CanonicalCases ccToday;
+		CanonicalCases ccYesterday;
+		Map<Integer, Double> dailyPctChgCases = new HashMap<>();
+		double percentChange = 0;
+		for(int c = regionCaseList.size() - 2; c >= 0; c--) {
+			ccToday = regionCaseList.get(c + 1);  //list is in reverse time order
+			ccYesterday = regionCaseList.get(c);
+			percentChange = (ccToday.getTotalPositiveCases() - ccYesterday.getTotalPositiveCases())
+					* 100.0
+					/ ccYesterday.getTotalPositiveCases();
+			log.info(ccToday.getTotalPositiveCases() + ", " + ccYesterday.getTotalPositiveCases() + ", percentChange: " + percentChange);
+			dailyPctChgCases.put(dayIndex - 1, percentChange);
+			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", cc.getTotalPositiveCases());
+			xyPair.put("y", percentChange);
 			caseList.add(xyPair);
 			dayIndex--;
 		}
@@ -85,15 +100,31 @@ public class ChartListServiceImpl implements ChartListService {
 
 		//TODO: Figure out how to make the MOVING AVERAGE and populate it here
 		dayIndex = regionCaseList.size();
-		for(CanonicalCases cc : regionCaseList) {
+		double movingAverage = 0;
+		for(int c = regionCaseList.size() - 1; c >= 4; c--) {
+			movingAverage = (
+					dailyPctChgCases.get(dayIndex - 1) +
+					dailyPctChgCases.get(dayIndex - 2) +
+					dailyPctChgCases.get(dayIndex - 3) +
+					dailyPctChgCases.get(dayIndex - 4)
+			) / 4.0;
+			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", cc.getTotalPositiveCases() * 2);
-			expFitList.add(xyPair);
+			xyPair.put("y", movingAverage);
+			movingAverageList.add(xyPair);
 			dayIndex--;
 		}
-		scatterChartDataList.add(expFitList);
+		scatterChartDataList.add(movingAverageList);
 
+		int i = 0;
+		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
+			log.info("LIST: " + i);
+			for(Map<Object, Object> map : xyl) {
+				log.info(map.get("x") + ", " + map.get("y"));
+			}
+			i++;
+		}
 		return scatterChartDataList;
 	}
 
