@@ -1,5 +1,8 @@
 package com.royware.corona.dashboard.interfaces;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public interface CanonicalCases {
 	public int getDate();
 	public int getTotalPositiveCases();

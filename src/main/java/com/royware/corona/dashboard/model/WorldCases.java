@@ -1,27 +1,28 @@
 package com.royware.corona.dashboard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorldCases implements CanonicalCases {
-	@JsonProperty("dateRep") private int date;
+	@JsonProperty("dateRep") private String stringDate;
 	@JsonProperty("cases") private int dailyNewCases;
 	@JsonProperty("deaths") private int dailyNewDeaths;
 	@JsonProperty("countryTerritoryCode") private String regionAbbrev;
 	@JsonProperty("popData2018") private long population2018;
 	
-	private int totalPositiveCases;
-	private int totalNegativeCases;
-	private int totalDeaths;
+	@JsonIgnore private int totalPositiveCases;
+	@JsonIgnore private int totalNegativeCases;
+	@JsonIgnore private int totalDeaths;
 	
 	public WorldCases() {
 		super();
 	}
 
-	public int getDate() {
-		return date;
+	public String getStringDate() {
+		return stringDate;
 	}
 
 	public int getDailyNewCases() {
@@ -42,38 +43,50 @@ public class WorldCases implements CanonicalCases {
 	}
 
 	@Override
+	@JsonIgnore
+	public int getDate() {
+		return Integer.parseInt(stringDate.replace("/", ""));
+	}
+
+	@Override
+	@JsonIgnore
 	public int getTotalPositiveCases() {
 		return totalPositiveCases;
 	}
 
 	@Override
+	@JsonIgnore
 	public void setTotalPositiveCases(int positiveCases) {
 		this.totalPositiveCases = positiveCases;
 	}
 
 	@Override
+	@JsonIgnore
 	public int getTotalNegativeCases() {
 		return totalNegativeCases;
 	}
 
 	@Override
+	@JsonIgnore
 	public void setTotalNegativeCases(int negativeCases) {
 		this.totalNegativeCases = negativeCases;
 	}
 
 	@Override
+	@JsonIgnore
 	public int getTotalDeaths() {
 		return totalDeaths;
 	}
 
 	@Override
+	@JsonIgnore
 	public void setTotalDeaths(int totalDeaths) {
 		this.totalDeaths = totalDeaths;
 	}
 
 	@Override
 	public String toString() {
-		return "WorldCases [dateDDMMYYYY=" + date + ", dailyNewCases=" + dailyNewCases + ", dailyNewDeaths="
+		return "WorldCases [dateDDMMYYYY=" + stringDate + ", dailyNewCases=" + dailyNewCases + ", dailyNewDeaths="
 				+ dailyNewDeaths + ", countryAbbrev=" + regionAbbrev + ", population2018=" + population2018 + "]";
 	}
 
@@ -81,11 +94,14 @@ public class WorldCases implements CanonicalCases {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((regionAbbrev == null) ? 0 : regionAbbrev.hashCode());
 		result = prime * result + dailyNewCases;
 		result = prime * result + dailyNewDeaths;
-		result = prime * result + date;
 		result = prime * result + (int) (population2018 ^ (population2018 >>> 32));
+		result = prime * result + ((regionAbbrev == null) ? 0 : regionAbbrev.hashCode());
+		result = prime * result + ((stringDate == null) ? 0 : stringDate.hashCode());
+		result = prime * result + totalDeaths;
+		result = prime * result + totalNegativeCases;
+		result = prime * result + totalPositiveCases;
 		return result;
 	}
 
@@ -98,19 +114,30 @@ public class WorldCases implements CanonicalCases {
 		if (getClass() != obj.getClass())
 			return false;
 		WorldCases other = (WorldCases) obj;
+		if (dailyNewCases != other.dailyNewCases)
+			return false;
+		if (dailyNewDeaths != other.dailyNewDeaths)
+			return false;
+		if (population2018 != other.population2018)
+			return false;
 		if (regionAbbrev == null) {
 			if (other.regionAbbrev != null)
 				return false;
 		} else if (!regionAbbrev.equals(other.regionAbbrev))
 			return false;
-		if (dailyNewCases != other.dailyNewCases)
+		if (stringDate == null) {
+			if (other.stringDate != null)
+				return false;
+		} else if (!stringDate.equals(other.stringDate))
 			return false;
-		if (dailyNewDeaths != other.dailyNewDeaths)
+		if (totalDeaths != other.totalDeaths)
 			return false;
-		if (date != other.date)
+		if (totalNegativeCases != other.totalNegativeCases)
 			return false;
-		if (population2018 != other.population2018)
+		if (totalPositiveCases != other.totalPositiveCases)
 			return false;
 		return true;
 	}
+
+
 }

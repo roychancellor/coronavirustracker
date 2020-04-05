@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.model.WorldCases;
+import com.royware.corona.dashboard.model.WorldRecords;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
 
 /**
@@ -52,12 +53,12 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 
 	@Override
 	public List<WorldCases> getAllWorldData() {
-		WorldCases[] worldData = restTemplate.getForObject(
+		WorldRecords worldData = restTemplate.getForObject(
 				"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
-				WorldCases[].class
+				WorldRecords.class
 		);
 		
-		return Arrays.asList(worldData);
+		return Arrays.asList(worldData.getRecords());
 	}
 
 	@Override
