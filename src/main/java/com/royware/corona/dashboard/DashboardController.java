@@ -19,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.interfaces.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.DashboardDataService;
-import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.model.UnitedStatesCases;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
