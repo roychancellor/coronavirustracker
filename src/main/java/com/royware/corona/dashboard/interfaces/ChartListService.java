@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface DashboardChartListBuilder {
+public interface ChartListService {
 	public List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList();
 	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList();
 	public List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList();

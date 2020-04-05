@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.security.auth.x500.X500Principal;
 
-import org.omg.CORBA.WCharSeqHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.interfaces.DashboardDataService;
+import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.model.WorldCases;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
-import com.royware.corona.dashboard.model.WorldData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
 @Service
-public class DashboardDataServiceImpl implements DashboardDataService {
+public class ChartListDataServiceImpl implements ChartListDataService {
 	@Autowired
 	RestTemplate restTemplate;
 	

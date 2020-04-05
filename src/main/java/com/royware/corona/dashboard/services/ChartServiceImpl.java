@@ -6,15 +6,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.DashboardChartDao;
-import com.royware.corona.dashboard.interfaces.DashboardChartService;
+import com.royware.corona.dashboard.interfaces.ChartServiceDao;
+import com.royware.corona.dashboard.interfaces.ChartService;
 
 @Service
-public class DashbaordChartServiceImpl implements DashboardChartService {
+public class ChartServiceImpl implements ChartService {
 	@Autowired
-	private DashboardChartDao canvasjsChartDao;
+	private ChartServiceDao canvasjsChartDao;
  
-	public void setCanvasjsChartDao(DashboardChartDao canvasjsChartDao) {
+	public void setCanvasjsChartDao(ChartServiceDao canvasjsChartDao) {
 		this.canvasjsChartDao = canvasjsChartDao;
 	}
  

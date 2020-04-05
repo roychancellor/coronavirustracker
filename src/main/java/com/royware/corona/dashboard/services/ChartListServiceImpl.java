@@ -11,25 +11,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.interfaces.DashboardChartListBuilder;
-import com.royware.corona.dashboard.interfaces.DashboardDataService;
+import com.royware.corona.dashboard.interfaces.ChartListService;
+import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
  
 @Service
-public class DashboardChartListBuilderImpl implements DashboardChartListBuilder {
+public class ChartListServiceImpl implements ChartListService {
 	@Autowired
-	DashboardDataService dataService;
+	ChartListDataService dataService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
  
 	public List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList() {
-		UnitedStatesCases[] usData = dataService.getAllUsData();
+		List<UnitedStatesCases> usData = dataService.getAllUsData();
 		
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> xyList1 = new ArrayList<>();
 		List<Map<Object, Object>> xyList2 = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
-		int day = usData.length;
+		int day = usData.size();
 		for(UnitedStatesCases usd : usData) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", day);
@@ -39,7 +39,7 @@ public class DashboardChartListBuilderImpl implements DashboardChartListBuilder 
 		}
 		scatterChartDataList.add(xyList1);
 
-		day = usData.length;
+		day = usData.size();
 		for(UnitedStatesCases usd : usData) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", day);

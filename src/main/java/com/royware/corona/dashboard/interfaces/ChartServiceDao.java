@@ -6,6 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface DashboardChartDao {
+public interface ChartServiceDao {
 	List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList();
 }

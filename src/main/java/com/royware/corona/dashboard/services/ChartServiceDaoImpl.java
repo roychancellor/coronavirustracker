@@ -6,17 +6,17 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.DashboardChartDao;
-import com.royware.corona.dashboard.interfaces.DashboardChartListBuilder;
+import com.royware.corona.dashboard.interfaces.ChartServiceDao;
+import com.royware.corona.dashboard.interfaces.ChartListService;
 
 @Service
-public class DashboardChartDaoImpl implements DashboardChartDao {
+public class ChartServiceDaoImpl implements ChartServiceDao {
 	@Autowired
-	DashboardChartListBuilder chartBuilder;
+	ChartListService chartService;
 	
 	@Override
 	public List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList() {
-		return chartBuilder.makeTotalCasesVersusTimeWithExponentialFitList();
+		return chartService.makeTotalCasesVersusTimeWithExponentialFitList();
 	}
  
 }
