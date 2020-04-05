@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.interfaces.ChartService;
 import com.royware.corona.dashboard.model.DataListBean;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
@@ -37,6 +38,9 @@ public class DashboardController {
 	ChartService chartService;
 	
 	@Autowired
+	ChartListDataService dataService;
+	
+	@Autowired
 	DataListBean dataListsBean;
 	
 	private static final String HOME_PAGE = "home-page";
@@ -45,10 +49,15 @@ public class DashboardController {
 	private static final String COMMENTARY_PAGE = "commentary";
 	private static final String DASHBOARD_PAGE = "dashboard";
 	private static final String CHART_INFO_PAGE = "chart-info";
+	private static final String REGION_US = "us";
+	private static final String REGION_US_NO_NY = "us_no_ny";
+	private static final String REGION_NY = "ny";
+	private static final String REGION_AZ = "az";
+	private static final String REGION_ITA = "ita";
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	private List<UnitedStatesCases> usCases;
-	private List<WorldCases> worldCases;
+	private List<UnitedStatesCases> usCaseList;
+	private List<WorldCases> worldCaseList;
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -58,6 +67,11 @@ public class DashboardController {
 	@GetMapping(value = "/corona")
 	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
 		map.addAttribute("region", region);
+		map.addAttribute("us", REGION_US);
+		map.addAttribute("us_no_ny", REGION_US_NO_NY);
+		map.addAttribute("ny", REGION_NY);
+		map.addAttribute("az", REGION_AZ);
+		map.addAttribute("ita", REGION_ITA);
 		return HOME_PAGE;
 	}
 	
@@ -69,29 +83,51 @@ public class DashboardController {
 	 */
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
-		log.info("STUB-OUT: Making dashboard for region: " + region);
-				
-		//TODO: Write methods for making chart data for each type of chart
-		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
-		List<List<Map<Object, Object>>> chartDataList;
-		usCases = dataListsBean.getUsData();
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
-		dashboardDataSetsList.add(chartDataList);
+		log.info("STUB-OUT: Making dashboard for region: " + region);		
 		
-		//Update the model map with all data sets for rendering on the JSP page
-		map.addAttribute("allDashboardData", dashboardDataSetsList);
+		switch(region) {
+		case REGION_US:
+			usCaseList = dataService.getAllUsData();
+			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			break;
+		case REGION_US_NO_NY:
+			usCaseList = dataService.getAllUsDataExcludingState(REGION_NY);
+			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			break;
+		case REGION_NY:
+			usCaseList = dataService.getSingleUsStateData(REGION_NY);
+			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			break;
+		case REGION_AZ:
+			usCaseList = dataService.getSingleUsStateData(REGION_AZ);
+			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			break;
+		case REGION_ITA:
+			worldCaseList = dataService.getSingleNonUsCountryData(REGION_ITA);
+			map.addAttribute("allDashboardData", makeChartListsForRendering(worldCaseList));
+			break;
+		}
 		
 		return DASHBOARD_PAGE;
+	}
+
+	private <T extends CanonicalCases> List<List<List<Map<Object, Object>>>> makeChartListsForRendering(List<T> caseList) {
+		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
+		List<List<Map<Object, Object>>> chartDataList;
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		dashboardDataSetsList.add(chartDataList);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
+		dashboardDataSetsList.add(chartDataList);
+		
+		return dashboardDataSetsList;
 	}
 	
 	/**

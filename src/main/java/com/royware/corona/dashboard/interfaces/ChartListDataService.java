@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.model.WorldCases;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.WorldCases;
 
 @Service
 public interface ChartListDataService {
