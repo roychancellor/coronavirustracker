@@ -48,6 +48,20 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
+	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
+		UnitedStatesCases[] stateData = restTemplate.getForObject(
+			"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation,
+			UnitedStatesCases[].class
+		);
+		log.info("The US data object array is:");
+		for(UnitedStatesCases state : stateData) {
+			log.info(state.toString());
+		}
+		
+		return Arrays.asList(stateData);
+	}
+
+	@Override
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateAbbreviation) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		List<UnitedStatesCases> usDataExcludingState = getAllUsData();
@@ -66,20 +80,6 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		}
 		
 		return usDataExcludingState;
-	}
-
-	@Override
-	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
-		UnitedStatesCases[] stateData = restTemplate.getForObject(
-			"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation,
-			UnitedStatesCases[].class
-		);
-		log.info("The US data object array is:");
-		for(UnitedStatesCases state : stateData) {
-			log.info(state.toString());
-		}
-		
-		return Arrays.asList(stateData);
 	}
 
 	@Override

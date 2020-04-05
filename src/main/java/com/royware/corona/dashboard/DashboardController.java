@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.interfaces.ChartService;
-import com.royware.corona.dashboard.interfaces.ChartListDataService;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
@@ -33,9 +31,6 @@ import com.royware.corona.dashboard.model.UnitedStatesCases;
 public class DashboardController {
 	@Autowired
 	ChartService chartService;
-	
-	@Autowired
-	ChartListDataService dashService;
 	
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
