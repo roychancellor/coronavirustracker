@@ -10,7 +10,7 @@ public class WorldCases implements CanonicalCases {
 	@JsonProperty("dateRep") private String stringDate;
 	@JsonProperty("cases") private int dailyNewCases;
 	@JsonProperty("deaths") private int dailyNewDeaths;
-	@JsonProperty("countryTerritoryCode") private String regionAbbrev;
+	@JsonProperty("countryterritoryCode") private String regionAbbrev;
 	@JsonProperty("popData2018") private long population2018;
 	
 	@JsonIgnore private int totalPositiveCases;
