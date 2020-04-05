@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.interfaces.ChartListService;
+import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
 import com.royware.corona.dashboard.model.DataListBean;
@@ -26,7 +27,7 @@ public class ChartListServiceImpl implements ChartListService {
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
-	public List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList() {
+	public <T> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(CanonicalCases T) {
 		//Get all the U.S. data
 		List<UnitedStatesCases> usData = dataListBean.getUsData();
 		
@@ -70,7 +71,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList() {
+	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(CanonicalCases T) {
 		//Get all the U.S. data
 		List<UnitedStatesCases> usData = dataListBean.getUsData();
 		
@@ -105,25 +106,25 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList() {
+	public <T> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(CanonicalCases T) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList() {
+	public <T> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(CanonicalCases T) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList() {
+	public <T> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(CanonicalCases T) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList() {
+	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(CanonicalCases T) {
 		// TODO Auto-generated method stub
 		return null;
 	}

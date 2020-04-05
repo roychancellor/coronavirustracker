@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ChartListService {
-	public List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList();
-	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList();
-	public List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList();
-	public List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList();
-	public List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList();
-	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList();
+	public <T> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(CanonicalCases T);
+	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(CanonicalCases T);
+	public <T> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(CanonicalCases T);
+	public <T> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(CanonicalCases T);
+	public <T> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(CanonicalCases T);
+	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(CanonicalCases T);
 }

@@ -94,12 +94,12 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 
 	@Override
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
-		List<WorldCases> countryCases = new ArrayList<>();
-		countryCases = getAllWorldData()
+		List<WorldCases> casesInOneCountry = new ArrayList<>();
+		casesInOneCountry = getAllWorldData()
 				.stream()
 				.filter(x -> x.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode))
 				.collect(Collectors.toList());
 		
-		return countryCases;
+		return casesInOneCountry;
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.ChartServiceDao;
+import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartService;
 
 @Service
@@ -19,8 +20,8 @@ public class ChartServiceImpl implements ChartService {
 	}
  
 	@Override
-	public List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFit() {
-		return serviceDao.getTotalCasesVersusTimeWithExponentialFitList();
+	public <T> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFit(CanonicalCases cases) {
+		return serviceDao.getTotalCasesVersusTimeWithExponentialFitList(cases);
 	}
  
 }
