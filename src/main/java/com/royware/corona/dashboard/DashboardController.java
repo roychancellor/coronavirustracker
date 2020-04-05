@@ -19,7 +19,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartService;
+import com.royware.corona.dashboard.model.DataListBean;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.WorldCases;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
@@ -34,6 +36,9 @@ public class DashboardController {
 	@Autowired
 	ChartService chartService;
 	
+	@Autowired
+	DataListBean dataListsBean;
+	
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
 	private static final String MATH_PAGE = "math";
@@ -42,7 +47,8 @@ public class DashboardController {
 	private static final String CHART_INFO_PAGE = "chart-info";
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	private CanonicalCases canonicalCases;
+	private List<UnitedStatesCases> usCases;
+	private List<WorldCases> worldCases;
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -68,18 +74,18 @@ public class DashboardController {
 		//TODO: Write methods for making chart data for each type of chart
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
 		List<List<Map<Object, Object>>> chartDataList;
-		canonicalCases = new UnitedStatesCases();
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(canonicalCases);
+		usCases = dataListsBean.getUsData();
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
 		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(canonicalCases);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
 		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(canonicalCases);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
 		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(canonicalCases);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
 		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(canonicalCases);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
 		dashboardDataSetsList.add(chartDataList);
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(canonicalCases);
+		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(usCases);
 		dashboardDataSetsList.add(chartDataList);
 		
 		//Update the model map with all data sets for rendering on the JSP page

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ChartServiceDao {
-	public <T> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList(CanonicalCases T);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList);
 }

@@ -14,7 +14,6 @@ import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.interfaces.ChartListService;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
 import com.royware.corona.dashboard.model.DataListBean;
  
 @Service
@@ -27,20 +26,17 @@ public class ChartListServiceImpl implements ChartListService {
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
-	public <T> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(CanonicalCases T) {
-		//Get all the U.S. data
-		List<UnitedStatesCases> usData = dataListBean.getUsData();
-		
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> caseList = new ArrayList<>();
 		List<Map<Object, Object>> expFitList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
-		int dayIndex = usData.size();
-		for(UnitedStatesCases usd : usData) {
+		int dayIndex = regionCaseList.size();
+		for(CanonicalCases cc : regionCaseList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", usd.getTotalPositiveCases());
+			xyPair.put("y", cc.getTotalPositiveCases());
 			caseList.add(xyPair);
 			dayIndex--;
 		}
@@ -48,11 +44,11 @@ public class ChartListServiceImpl implements ChartListService {
 
 		//TODO: Figure out how to make the exponential regression fit data and populate it here
 		//For now, just duplicate the U.S. data with a multiplier of 2
-		dayIndex = usData.size();
-		for(UnitedStatesCases usd : usData) {
+		dayIndex = regionCaseList.size();
+		for(CanonicalCases cc : regionCaseList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", usd.getTotalPositiveCases() * 2);
+			xyPair.put("y", cc.getTotalPositiveCases() * 2);
 			expFitList.add(xyPair);
 			dayIndex--;
 		}
@@ -71,32 +67,28 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(CanonicalCases T) {
-		//Get all the U.S. data
-		List<UnitedStatesCases> usData = dataListBean.getUsData();
-		
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> regionCaseList) {
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> caseList = new ArrayList<>();
 		List<Map<Object, Object>> expFitList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
-		int dayIndex = usData.size();
-		for(UnitedStatesCases usd : usData) {
+		int dayIndex = regionCaseList.size();
+		for(CanonicalCases cc : regionCaseList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", usd.getTotalPositiveCases());
+			xyPair.put("y", cc.getTotalPositiveCases());
 			caseList.add(xyPair);
 			dayIndex--;
 		}
 		scatterChartDataList.add(caseList);
 
-		//TODO: Figure out how to make the exponential regression fit data and populate it here
-		//For now, just duplicate the U.S. data with a multiplier of 2
-		dayIndex = usData.size();
-		for(UnitedStatesCases usd : usData) {
+		//TODO: Figure out how to make the MOVING AVERAGE and populate it here
+		dayIndex = regionCaseList.size();
+		for(CanonicalCases cc : regionCaseList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", usd.getTotalPositiveCases() * 2);
+			xyPair.put("y", cc.getTotalPositiveCases() * 2);
 			expFitList.add(xyPair);
 			dayIndex--;
 		}
@@ -106,25 +98,25 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public <T> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(CanonicalCases T) {
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> regionCaseList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public <T> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(CanonicalCases T) {
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public <T> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(CanonicalCases T) {
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(List<T> regionCaseList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(CanonicalCases T) {
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionCaseList) {
 		// TODO Auto-generated method stub
 		return null;
 	}

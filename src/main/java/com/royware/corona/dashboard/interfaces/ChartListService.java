@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ChartListService {
-	public <T> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(CanonicalCases T);
-	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(CanonicalCases T);
-	public <T> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(CanonicalCases T);
-	public <T> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(CanonicalCases T);
-	public <T> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(CanonicalCases T);
-	public <T> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(CanonicalCases T);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> caseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> caseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> caseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> caseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(List<T> caseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> caseList);
 }

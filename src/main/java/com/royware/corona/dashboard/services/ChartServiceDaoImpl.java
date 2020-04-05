@@ -13,11 +13,11 @@ import com.royware.corona.dashboard.interfaces.ChartListService;
 @Service
 public class ChartServiceDaoImpl implements ChartServiceDao {
 	@Autowired
-	ChartListService chartService;
+	ChartListService chartListService;
 	
 	@Override
-	public <T> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList(CanonicalCases cases) {
-		return chartService.makeTotalCasesVersusTimeWithExponentialFitList(cases);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
+		return chartListService.makeTotalCasesVersusTimeWithExponentialFitList(regionCaseList);
 	}
  
 }

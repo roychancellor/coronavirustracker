@@ -20,8 +20,8 @@ public class ChartServiceImpl implements ChartService {
 	}
  
 	@Override
-	public <T> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFit(CanonicalCases cases) {
-		return serviceDao.getTotalCasesVersusTimeWithExponentialFitList(cases);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFit(List<T> regionCaseList) {
+		return serviceDao.getTotalCasesVersusTimeWithExponentialFitList(regionCaseList);
 	}
  
 }
