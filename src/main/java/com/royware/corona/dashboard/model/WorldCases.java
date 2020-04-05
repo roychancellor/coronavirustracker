@@ -8,7 +8,7 @@ public class WorldCases {
 	@JsonProperty("dateRep") private int dateDDMMYYYY;
 	@JsonProperty("cases") private int dailyNewCases;
 	@JsonProperty("deaths") private int dailyNewDeaths;
-	@JsonProperty("countryTerritoryCode") private String countryAbbrev;
+	@JsonProperty("countryTerritoryCode") private String countryThreeLetterCode;
 	@JsonProperty("popData2018") private long population2018;
 	
 	public WorldCases() {
@@ -35,8 +35,8 @@ public class WorldCases {
 		return 1;
 	}
 
-	public String getCountryAbbrev() {
-		return countryAbbrev;
+	public String getCountryThreeLetterCode() {
+		return countryThreeLetterCode;
 	}
 
 	public long getPopulation2018() {
@@ -46,14 +46,14 @@ public class WorldCases {
 	@Override
 	public String toString() {
 		return "WorldCases [dateDDMMYYYY=" + dateDDMMYYYY + ", dailyNewCases=" + dailyNewCases + ", dailyNewDeaths="
-				+ dailyNewDeaths + ", countryAbbrev=" + countryAbbrev + ", population2018=" + population2018 + "]";
+				+ dailyNewDeaths + ", countryAbbrev=" + countryThreeLetterCode + ", population2018=" + population2018 + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((countryAbbrev == null) ? 0 : countryAbbrev.hashCode());
+		result = prime * result + ((countryThreeLetterCode == null) ? 0 : countryThreeLetterCode.hashCode());
 		result = prime * result + dailyNewCases;
 		result = prime * result + dailyNewDeaths;
 		result = prime * result + dateDDMMYYYY;
@@ -70,10 +70,10 @@ public class WorldCases {
 		if (getClass() != obj.getClass())
 			return false;
 		WorldCases other = (WorldCases) obj;
-		if (countryAbbrev == null) {
-			if (other.countryAbbrev != null)
+		if (countryThreeLetterCode == null) {
+			if (other.countryThreeLetterCode != null)
 				return false;
-		} else if (!countryAbbrev.equals(other.countryAbbrev))
+		} else if (!countryThreeLetterCode.equals(other.countryThreeLetterCode))
 			return false;
 		if (dailyNewCases != other.dailyNewCases)
 			return false;

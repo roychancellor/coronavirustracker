@@ -86,7 +86,7 @@ public class DashboardDataServiceImpl implements DashboardDataService {
 	}
 
 	@Override
-	public List<WorldCases> getSingleNonUsCountryData(String countryName) {
+	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
 		WorldCases[] countryData = restTemplate.getForObject(
 			"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/", WorldCases[].class
 		);
@@ -94,7 +94,7 @@ public class DashboardDataServiceImpl implements DashboardDataService {
 		List<WorldCases> countryCases = new ArrayList<>();
 		countryCases = Arrays.asList(countryData)
 				.stream()
-				.filter(x -> x.getCountryAbbrev().equalsIgnoreCase(countryName))
+				.filter(x -> x.getCountryThreeLetterCode().equalsIgnoreCase(countryThreeLetterCode))
 				.collect(Collectors.toList());
 		
 		return countryCases;
