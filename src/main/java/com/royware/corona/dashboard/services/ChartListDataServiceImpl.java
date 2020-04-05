@@ -38,7 +38,10 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	 * @return JSON array of UnitedStatesData objects
 	 */
 	public List<UnitedStatesCases> getAllUsData() {
-		UnitedStatesCases[] usData = restTemplate.getForObject("https://covidtracking.com/api/us/daily", UnitedStatesCases[].class);
+		UnitedStatesCases[] usData = restTemplate.getForObject(
+				"https://covidtracking.com/api/us/daily",
+				UnitedStatesCases[].class
+		);
 		log.info("The US data object array is:");
 		for(UnitedStatesCases usd : usData) {
 			log.info(usd.toString());
@@ -48,15 +51,21 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
+	public List<WorldCases> getAllWorldData() {
+		WorldCases[] worldData = restTemplate.getForObject(
+				"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
+				WorldCases[].class
+		);
+		
+		return Arrays.asList(worldData);
+	}
+
+	@Override
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		UnitedStatesCases[] stateData = restTemplate.getForObject(
-			"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation,
-			UnitedStatesCases[].class
+				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation,
+				UnitedStatesCases[].class
 		);
-		log.info("The US data object array is:");
-		for(UnitedStatesCases state : stateData) {
-			log.info(state.toString());
-		}
 		
 		return Arrays.asList(stateData);
 	}
@@ -84,14 +93,10 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 
 	@Override
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
-		WorldCases[] countryData = restTemplate.getForObject(
-			"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/", WorldCases[].class
-		);
-		
 		List<WorldCases> countryCases = new ArrayList<>();
-		countryCases = Arrays.asList(countryData)
+		countryCases = getAllWorldData()
 				.stream()
-				.filter(x -> x.getCountryThreeLetterCode().equalsIgnoreCase(countryThreeLetterCode))
+				.filter(x -> x.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode))
 				.collect(Collectors.toList());
 		
 		return countryCases;

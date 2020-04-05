@@ -2,21 +2,22 @@ package com.royware.corona.dashboard.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.royware.corona.dashboard.interfaces.CanonicalCases;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UnitedStatesCases {
-	@JsonProperty("date") private int dateYYYMMDD;
+public class UnitedStatesCases implements CanonicalCases {
+	@JsonProperty("date") private int date;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
 	@JsonProperty("death") private int totalDeaths;
-	@JsonProperty("state") private String stateAbbrev;
+	@JsonProperty("state") private String regionString;
 	
 	public UnitedStatesCases() {
 		super();
 	}
 
-	public int getDateYYYMMDD() {
-		return dateYYYMMDD;
+	public int getDate() {
+		return date;
 	}
 
 	public int getTotalPositiveCases() {
@@ -43,35 +44,30 @@ public class UnitedStatesCases {
 		this.totalDeaths = death;
 	}
 
-	/**
-	 * @return the stateAbbrev
-	 */
-	public String getStateAbbrev() {
-		return stateAbbrev;
+	public String getRegionAbbrev() {
+		return regionString;
 	}
 
-	/**
-	 * @param stateAbbrev the stateAbbrev to set
-	 */
-	public void setStateAbbrev(String stateAbbrev) {
-		this.stateAbbrev = stateAbbrev;
+	public void setRegionAbbrev(String regionAbbrev) {
+		this.regionString = regionAbbrev;
 	}
 
 	@Override
 	public String toString() {
-		return "UnitedStatesCases [date=" + dateYYYMMDD + ", positive=" + totalPositiveCases + ", negative=" + totalNegativeCases + ", death="
-				+ totalDeaths + ", stateAbbrev=" + stateAbbrev + "]";
+		return "UnitedStatesCases [date=" + date + ", totalPositiveCases=" + totalPositiveCases
+				+ ", totalNegativeCases=" + totalNegativeCases + ", totalDeaths=" + totalDeaths + ", regionString="
+				+ regionString + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + dateYYYMMDD;
+		result = prime * result + date;
+		result = prime * result + ((regionString == null) ? 0 : regionString.hashCode());
 		result = prime * result + totalDeaths;
 		result = prime * result + totalNegativeCases;
 		result = prime * result + totalPositiveCases;
-		result = prime * result + ((stateAbbrev == null) ? 0 : stateAbbrev.hashCode());
 		return result;
 	}
 
@@ -84,7 +80,12 @@ public class UnitedStatesCases {
 		if (getClass() != obj.getClass())
 			return false;
 		UnitedStatesCases other = (UnitedStatesCases) obj;
-		if (dateYYYMMDD != other.dateYYYMMDD)
+		if (date != other.date)
+			return false;
+		if (regionString == null) {
+			if (other.regionString != null)
+				return false;
+		} else if (!regionString.equals(other.regionString))
 			return false;
 		if (totalDeaths != other.totalDeaths)
 			return false;
@@ -92,12 +93,8 @@ public class UnitedStatesCases {
 			return false;
 		if (totalPositiveCases != other.totalPositiveCases)
 			return false;
-		if (stateAbbrev == null) {
-			if (other.stateAbbrev != null)
-				return false;
-		} else if (!stateAbbrev.equals(other.stateAbbrev))
-			return false;
 		return true;
 	}
+
 
 }

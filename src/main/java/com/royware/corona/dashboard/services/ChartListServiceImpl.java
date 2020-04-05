@@ -14,40 +14,48 @@ import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.interfaces.ChartListService;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.DataListBean;
  
 @Service
 public class ChartListServiceImpl implements ChartListService {
 	@Autowired
 	ChartListDataService dataService;
 	
+	@Autowired
+	DataListBean dataListBean;
+	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
- 
+	
 	public List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList() {
-		List<UnitedStatesCases> usData = dataService.getAllUsData();
+		//Get all the U.S. data
+		List<UnitedStatesCases> usData = dataListBean.getUsData();
 		
+		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
-		List<Map<Object, Object>> xyList1 = new ArrayList<>();
-		List<Map<Object, Object>> xyList2 = new ArrayList<>();
+		List<Map<Object, Object>> caseList = new ArrayList<>();
+		List<Map<Object, Object>> expFitList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
-		int day = usData.size();
+		int dayIndex = usData.size();
 		for(UnitedStatesCases usd : usData) {
 			xyPair = new HashMap<>();
-			xyPair.put("x", day);
+			xyPair.put("x", dayIndex);
 			xyPair.put("y", usd.getTotalPositiveCases());
-			xyList1.add(xyPair);
-			day--;
+			caseList.add(xyPair);
+			dayIndex--;
 		}
-		scatterChartDataList.add(xyList1);
+		scatterChartDataList.add(caseList);
 
-		day = usData.size();
+		//TODO: Figure out how to make the exponential regression fit data and populate it here
+		//For now, just duplicate the U.S. data with a multiplier of 2
+		dayIndex = usData.size();
 		for(UnitedStatesCases usd : usData) {
 			xyPair = new HashMap<>();
-			xyPair.put("x", day);
+			xyPair.put("x", dayIndex);
 			xyPair.put("y", usd.getTotalPositiveCases() * 2);
-			xyList2.add(xyPair);
-			day--;
+			expFitList.add(xyPair);
+			dayIndex--;
 		}
-		scatterChartDataList.add(xyList2);
+		scatterChartDataList.add(expFitList);
 		
 		int i = 0;
 		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
@@ -63,8 +71,37 @@ public class ChartListServiceImpl implements ChartListService {
 
 	@Override
 	public List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList() {
-		// TODO Auto-generated method stub
-		return null;
+		//Get all the U.S. data
+		List<UnitedStatesCases> usData = dataListBean.getUsData();
+		
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		List<Map<Object, Object>> caseList = new ArrayList<>();
+		List<Map<Object, Object>> expFitList = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataList = new ArrayList<>();
+		int dayIndex = usData.size();
+		for(UnitedStatesCases usd : usData) {
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", usd.getTotalPositiveCases());
+			caseList.add(xyPair);
+			dayIndex--;
+		}
+		scatterChartDataList.add(caseList);
+
+		//TODO: Figure out how to make the exponential regression fit data and populate it here
+		//For now, just duplicate the U.S. data with a multiplier of 2
+		dayIndex = usData.size();
+		for(UnitedStatesCases usd : usData) {
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", usd.getTotalPositiveCases() * 2);
+			expFitList.add(xyPair);
+			dayIndex--;
+		}
+		scatterChartDataList.add(expFitList);
+
+		return scatterChartDataList;
 	}
 
 	@Override

@@ -12,5 +12,6 @@ public interface ChartListDataService {
 	public List<UnitedStatesCases> getAllUsData();
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation);
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateAbbreviation);
+	public List<WorldCases> getAllWorldData();
 	public List<WorldCases> getSingleNonUsCountryData(String countryName);
 }

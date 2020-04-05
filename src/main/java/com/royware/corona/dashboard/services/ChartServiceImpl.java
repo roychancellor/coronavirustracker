@@ -12,15 +12,15 @@ import com.royware.corona.dashboard.interfaces.ChartService;
 @Service
 public class ChartServiceImpl implements ChartService {
 	@Autowired
-	private ChartServiceDao canvasjsChartDao;
+	private ChartServiceDao serviceDao;
  
-	public void setCanvasjsChartDao(ChartServiceDao canvasjsChartDao) {
-		this.canvasjsChartDao = canvasjsChartDao;
+	public void setCanvasjsChartDao(ChartServiceDao serviceDao) {
+		this.serviceDao = serviceDao;
 	}
  
 	@Override
 	public List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFit() {
-		return canvasjsChartDao.getTotalCasesVersusTimeWithExponentialFitList();
+		return serviceDao.getTotalCasesVersusTimeWithExponentialFitList();
 	}
  
 }
