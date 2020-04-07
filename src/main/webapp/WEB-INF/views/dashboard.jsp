@@ -23,35 +23,40 @@
 		<div class="dashboard">
 		<table class="table table-dark">
 			<tr>
+				<td><div id="chartContainer0" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer1" style="height: 250px; width: 100%"></div></td>
+			</tr>
+			<tr>
 				<td><div id="chartContainer2" style="height: 250px; width: 100%"></div></td>
-			</tr>
-			<tr>
 				<td><div id="chartContainer3" style="height: 250px; width: 100%"></div></td>
-				<td><div id="chartContainer4" style="height: 250px; width: 100%"></div></td>
 			</tr>
 			<tr>
+				<td><div id="chartContainer4" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer5" style="height: 250px; width: 100%"></div></td>
-				<td><div id="chartContainer6" style="height: 250px; width: 100%"></div></td>
 			</tr>
 		</table>
 		</div>
 	</div>
-    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
  	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 	
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
-	addLoadEvent(makeChart("chartContainer1", "Chart 1 Title", "Chart 1 X-axis", "Chart 1 Y-axis"));
-	addLoadEvent(makeChart("chartContainer2", "Chart 2 Title", "Chart 2 X-axis", "Chart 2 Y-axis"));
-	addLoadEvent(makeChart("chartContainer3", "Chart 3 Title", "Chart 3 X-axis", "Chart 3 Y-axis"));
-	addLoadEvent(makeChart("chartContainer4", "Chart 4 Title", "Chart 4 X-axis", "Chart 4 Y-axis"));
-	addLoadEvent(makeChart("chartContainer5", "Chart 5 Title", "Chart 5 X-axis", "Chart 5 Y-axis"));
-	addLoadEvent(makeChart("chartContainer6", "Chart 6 Title", "Chart 6 X-axis", "Chart 6 Y-axis"));
+		var dataPointsArr = [[], []];
+		var chartArray = [];
 		
-	<!-- From: https://www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
+ 		makeChartDataFromJavaLists();
+ 		/* window.onload(makeChart("chartContainer0", "Chart 1 Title", "Chart 1 X-axis", "Chart 1 Y-axis", chartArray[0])); */
+ 		addLoadEvent(makeChart("chartContainer0", "Chart 1 Title", "Chart 1 X-axis", "Chart 1 Y-axis", chartArray[0]));
+ 		addLoadEvent(makeChart("chartContainer1", "Chart 2 Title", "Chart 2 X-axis", "Chart 2 Y-axis", chartArray[1]));
+		addLoadEvent(makeChart("chartContainer2", "Chart 3 Title", "Chart 3 X-axis", "Chart 3 Y-axis", chartArray[2]));
+		addLoadEvent(makeChart("chartContainer3", "Chart 4 Title", "Chart 4 X-axis", "Chart 4 Y-axis", chartArray[3]));
+		addLoadEvent(makeChart("chartContainer4", "Chart 5 Title", "Chart 5 X-axis", "Chart 5 Y-axis", chartArray[4]));
+		addLoadEvent(makeChart("chartContainer5", "Chart 6 Title", "Chart 6 X-axis", "Chart 6 Y-axis", chartArray[5]));
+		
+	<!-- From https://www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
 		function addLoadEvent(func) {
 		  var oldonload = window.onload;
 		  if (typeof window.onload != 'function') {
@@ -66,8 +71,33 @@
 		  }
 		}
 
-		function makeChart(chartContainerString, chartTitle, axisXTitle, axisYTitle) {
-			var dps = [[], []];
+		function makeChartDataFromJavaLists() {
+			var xValue;
+			var yValue;
+			<chart:forEach items="${allDashboardData}" var="dataset" varStatus="c">
+				<chart:forEach items="${dataset}" var="dataPoints" varStatus="loop">	
+					<chart:forEach items="${dataPoints}" var="dataPoint">
+						xValue = parseFloat("${dataPoint.x}");
+						yValue = parseFloat("${dataPoint.y}");
+						dataPointsArr[parseInt("${loop.index}")].push({
+							x : xValue,
+							y : yValue,
+						});
+					</chart:forEach>
+				</chart:forEach>
+				chartArray[parseInt("${c.index}")] = dataPointsArr;
+			</chart:forEach>	
+			for(var c = 0; c < chartArray.length; c++) {
+				console.log("dataset[" + c + "]:")
+				for(var i = 0; i < dataPointsArr.length; i++) {
+					for(var j = 0; j < dataPointsArr[i].length; j++) {
+						console.log(dataPointsArr[i][j]);
+					}
+				}
+			}
+		}
+		
+		function makeChart(chartContainerString, chartTitle, axisXTitle, axisYTitle, dataPointsArr) {
 			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
 				exportEnabled: true,
@@ -83,29 +113,13 @@
 				},
 				data: [{
 					type: "scatter",
-					dataPoints: dps[0]
+					dataPoints: dataPointsArr[0]
 				},
 				{
 					type: "scatter",
-					dataPoints: dps[1]
+					dataPoints: dataPointsArr[1]
 				}]
 			});
-			 
-			var xValue;
-			var yValue;
-			 
-			<chart:forEach items="${allDashboardData}" var="dataset">
-				<chart:forEach items="${dataset}" var="dataPoints" varStatus="loop">	
-					<chart:forEach items="${dataPoints}" var="dataPoint">
-						xValue = parseFloat("${dataPoint.x}");
-						yValue = parseFloat("${dataPoint.y}");
-						dps[parseInt("${loop.index}")].push({
-							x : xValue,
-							y : yValue,
-						});		
-					</chart:forEach>	
-				</chart:forEach> 
-			</chart:forEach>
 			 
 			chart.render();
 		}

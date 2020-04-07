@@ -82,8 +82,8 @@ public class ChartListServiceImpl implements ChartListService {
 		Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 		double percentChange = 0;
 		for(int c = regionCaseList.size() - 2; c >= 0; c--) {
-			ccToday = regionCaseList.get(c + 1);  //list is in reverse time order
-			ccYesterday = regionCaseList.get(c);
+			ccYesterday = regionCaseList.get(c + 1);  //list is in reverse time order
+			ccToday = regionCaseList.get(c);
 			percentChange = (ccToday.getTotalPositiveCases() - ccYesterday.getTotalPositiveCases())
 					* 100.0
 					/ ccYesterday.getTotalPositiveCases();
