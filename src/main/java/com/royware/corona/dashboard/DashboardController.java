@@ -113,24 +113,12 @@ public class DashboardController {
 
 	private <T extends CanonicalCases> List<List<List<Map<Object, Object>>>> makeChartListsForRendering(List<T> caseList) {
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
-		List<List<Map<Object, Object>>> chartDataList;
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList.clear();
-		chartDataList = chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList.clear();
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList.clear();
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList.clear();
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
-		dashboardDataSetsList.add(chartDataList);
-		chartDataList.clear();
-		chartDataList = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
-		dashboardDataSetsList.add(chartDataList);
+		dashboardDataSetsList.add(chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList));
+		dashboardDataSetsList.add(chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList));
+		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
+		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
+		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
+		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
 		
 		return dashboardDataSetsList;
 	}
