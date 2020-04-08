@@ -62,10 +62,10 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 						"https://covidtracking.com/api/us/daily",
 						UnitedStatesCases[].class
 				);
-				log.info("The US data object array is:");
-				for(UnitedStatesCases usd : usData) {
-					log.info(usd.toString());
-				}
+//				log.info("The US data object array is:");
+//				for(UnitedStatesCases usd : usData) {
+//					log.info(usd.toString());
+//				}
 				log.info("***** GOT THROUGH PARSING UNITED STATES DATA *****");
 			} catch(RestClientException e) {
 				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -77,6 +77,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		
 		List<UnitedStatesCases> usDataList = Arrays.asList(usData);
 		Collections.reverse(usDataList);
+		log.info("***** FINISHED HITTING ENDPOINT FOR UNITED STATES DATA *****");
 		return usDataList;
 	}
 
@@ -93,10 +94,10 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 						WorldRecords.class
 				);
 				
-				log.info("The World data object array is:");
-				for(WorldCases wc : worldData.getRecords()) {
-					log.info(wc.toString());
-				}
+//				log.info("The World data object array is:");
+//				for(WorldCases wc : worldData.getRecords()) {
+//					log.info(wc.toString());
+//				}
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
 			} catch (RestClientException e) {
 				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -108,16 +109,19 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		
 		List<WorldCases> worldDataList = Arrays.asList(worldData.getRecords());
 		Collections.reverse(worldDataList);
+		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA *****");
 		return worldDataList;
 	}
 
 	@Override
 	@Cacheable(key = "#stateAbbreviation", value = CACHE_NAME)
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
+		log.info("***** ABOUT TO GET STATE: " + stateAbbreviation + " ****");
 		UnitedStatesCases[] stateData = restTemplate.getForObject(
 				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
 				UnitedStatesCases[].class
 		);
+		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		
 		return Arrays.asList(stateData);
 	}
@@ -126,6 +130,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	@Cacheable(key = "#stateToExclude", value = CACHE_NAME)
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
+		log.info("***** ABOUT TO FILTER *OUT* STATE: " + stateToExclude + " ****");
 		List<UnitedStatesCases> usDataExcludingState = getAllUsData();
 		List<UnitedStatesCases> stateDataToExclude = getSingleUsStateData(stateToExclude);
 		
@@ -173,7 +178,8 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 				wc.setTotalDeaths(totalDeaths);
 			}
 		}
-		
+		log.info("***** FINISHED FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
+	
 		return casesInOneCountry;
 	}
 	
