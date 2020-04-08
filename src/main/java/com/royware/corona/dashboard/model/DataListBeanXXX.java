@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 
 @Service
-public class DataListBean {
+public class DataListBeanXXX {
 	private List<UnitedStatesCases> usData;
 	private List<WorldCases> worldData;
 	
-	public DataListBean(ChartListDataService dataService) {
+	public DataListBeanXXX(ChartListDataService dataService) {
 		this.usData = dataService.getAllUsData();
 		this.worldData = dataService.getAllWorldData();
 	}

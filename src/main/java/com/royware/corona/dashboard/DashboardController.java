@@ -2,12 +2,18 @@
 package com.royware.corona.dashboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
@@ -15,33 +21,54 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.interfaces.ChartService;
-import com.royware.corona.dashboard.model.DataListBean;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
-import com.royware.corona.dashboard.model.WorldCases;
+import com.royware.corona.dashboard.services.ChartListDataServiceImpl;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
  * Controls all HTTP GET and POST requests
  * All return statements are the names of Java Server Page (jsp) files
  */
+@Configuration
+@EnableCaching
+@EnableWebMvc
 @Controller
 @ComponentScan("com.royware.corona")
-@Configuration
-@EnableWebMvc
 public class DashboardController {
 	@Autowired
 	ChartService chartService;
 	
 	@Autowired
-	ChartListDataService dataService;
+	RestTemplate restTemplate;
 	
 	@Autowired
-	DataListBean dataListsBean;
+	ChartListDataService dataService;
+	
+//	@Autowired
+//	CacheManager cacheManager;
+	
+	@Bean
+	public ChartListDataService dataService() {
+		return new ChartListDataServiceImpl(restTemplate);
+	}
+	
+	@Bean
+    public CacheManager cacheManager() {
+        // configure and return an implementation of Spring's CacheManager SPI
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("dataCache")));
+        return cacheManager;
+    }
+	
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 	
 	private static final String HOME_PAGE = "home-page";
 	private static final String ABOUT_PAGE = "about-dashboard";
@@ -56,8 +83,6 @@ public class DashboardController {
 	private static final String REGION_ITA = "ita";
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	private List<UnitedStatesCases> usCaseList;
-	private List<WorldCases> worldCaseList;
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -87,24 +112,19 @@ public class DashboardController {
 		
 		switch(region) {
 		case REGION_US:
-			usCaseList = dataService.getAllUsData();
-			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getAllUsData()));
 			break;
 		case REGION_US_NO_NY:
-			usCaseList = dataService.getAllUsDataExcludingState(REGION_NY);
-			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getAllUsDataExcludingState(REGION_NY)));
 			break;
 		case REGION_NY:
-			usCaseList = dataService.getSingleUsStateData(REGION_NY);
-			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getSingleUsStateData(REGION_NY)));
 			break;
 		case REGION_AZ:
-			usCaseList = dataService.getSingleUsStateData(REGION_AZ);
-			map.addAttribute("allDashboardData", makeChartListsForRendering(usCaseList));
+			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getSingleUsStateData(REGION_AZ)));
 			break;
 		case REGION_ITA:
-			worldCaseList = dataService.getSingleNonUsCountryData(REGION_ITA);
-			map.addAttribute("allDashboardData", makeChartListsForRendering(worldCaseList));
+			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getSingleNonUsCountryData(REGION_ITA)));
 			break;
 		}
 		

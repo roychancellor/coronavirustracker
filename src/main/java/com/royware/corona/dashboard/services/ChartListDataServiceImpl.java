@@ -2,14 +2,14 @@ package com.royware.corona.dashboard.services;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -25,12 +25,17 @@ import com.royware.corona.dashboard.model.UnitedStatesCases;
  */
 @Service
 public class ChartListDataServiceImpl implements ChartListDataService {
-	@Autowired
-	RestTemplate restTemplate;
-	
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+//	@Autowired
+//	RestTemplate restTemplate;
+//	
+//	@Bean
+//	public RestTemplate restTemplate() {
+//		return new RestTemplate();
+//	}
+
+	private RestTemplate restTemplate;
+	public ChartListDataServiceImpl(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
@@ -41,6 +46,8 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	 * Gets all US data and returns it as an array of objects
 	 * @return JSON array of UnitedStatesData objects
 	 */
+	@Override
+	@Cacheable(key = "#root.methodName", value = "dataCache")
 	public List<UnitedStatesCases> getAllUsData() {
 		UnitedStatesCases[] usData = null;
 		int tries = 0;
@@ -64,10 +71,13 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 			}
 		} while(tries <= 3 && usData == null);
 		
-		return Arrays.asList(usData);
+		List<UnitedStatesCases> usDataList = Arrays.asList(usData);
+		Collections.reverse(usDataList);
+		return usDataList;
 	}
 
 	@Override
+	@Cacheable(key = "#root.methodName", value = "dataCache")
 	public List<WorldCases> getAllWorldData() {
 		WorldRecords worldData = null;
 		int tries = 0;
@@ -92,10 +102,13 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 			}
 		} while (tries <= 3 && worldData == null);
 		
-		return Arrays.asList(worldData.getRecords());
+		List<WorldCases> worldDataList = Arrays.asList(worldData.getRecords());
+		Collections.reverse(worldDataList);
+		return worldDataList;
 	}
 
 	@Override
+	@Cacheable(key = "#stateAbbreviation", value = "dataCache")
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		UnitedStatesCases[] stateData = restTemplate.getForObject(
 				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
@@ -106,10 +119,11 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateAbbreviation) {
+	@Cacheable(key = "#stateToExclude", value = "dataCache")
+	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		List<UnitedStatesCases> usDataExcludingState = getAllUsData();
-		List<UnitedStatesCases> stateDataToExclude = getSingleUsStateData(stateAbbreviation);
+		List<UnitedStatesCases> stateDataToExclude = getSingleUsStateData(stateToExclude);
 		
 		for(int i = 0; i < usDataExcludingState.size(); i++) {
 			usDataExcludingState.get(i).setTotalPositiveCases(
@@ -127,6 +141,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
+	@Cacheable(key = "#countryThreeLetterCode", value = "dataCache")
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();

@@ -5,10 +5,10 @@ com/royware/corona/dashboard/services/ChartServiceDaoImpl.class
 com/royware/corona/dashboard/interfaces/ChartListService.class
 com/royware/corona/dashboard/model/UnitedStatesCases.class
 com/royware/corona/dashboard/model/WorldCases.class
-com/royware/corona/dashboard/model/DataListBean.class
 com/royware/corona/dashboard/interfaces/ChartListDataService.class
 com/royware/corona/dashboard/services/ChartListServiceImpl.class
 com/royware/corona/dashboard/interfaces/ChartService.class
 com/royware/corona/dashboard/interfaces/ChartServiceDao.class
 com/royware/corona/dashboard/services/ChartListDataServiceImpl.class
 com/royware/corona/dashboard/DashboardController.class
+com/royware/corona/dashboard/model/DataListBeanXXX.class
