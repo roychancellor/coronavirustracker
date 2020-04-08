@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -41,13 +43,15 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 20;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
+	private static final long CACHE_EVICT_PERIOD_MILLISECONDS = 3 * 60 * 60 * 1000;  //every 3 hours
+	private static final String CACHE_NAME = "dataCache";
 
 	/**
 	 * Gets all US data and returns it as an array of objects
 	 * @return JSON array of UnitedStatesData objects
 	 */
 	@Override
-	@Cacheable(key = "#root.methodName", value = "dataCache")
+	@Cacheable(key = "#root.methodName", value = CACHE_NAME)
 	public List<UnitedStatesCases> getAllUsData() {
 		UnitedStatesCases[] usData = null;
 		int tries = 0;
@@ -77,7 +81,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	@Cacheable(key = "#root.methodName", value = "dataCache")
+	@Cacheable(key = "#root.methodName", value = CACHE_NAME)
 	public List<WorldCases> getAllWorldData() {
 		WorldRecords worldData = null;
 		int tries = 0;
@@ -108,7 +112,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	@Cacheable(key = "#stateAbbreviation", value = "dataCache")
+	@Cacheable(key = "#stateAbbreviation", value = CACHE_NAME)
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		UnitedStatesCases[] stateData = restTemplate.getForObject(
 				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
@@ -119,7 +123,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	@Cacheable(key = "#stateToExclude", value = "dataCache")
+	@Cacheable(key = "#stateToExclude", value = CACHE_NAME)
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		List<UnitedStatesCases> usDataExcludingState = getAllUsData();
@@ -141,7 +145,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	@Cacheable(key = "#countryThreeLetterCode", value = "dataCache")
+	@Cacheable(key = "#countryThreeLetterCode", value = CACHE_NAME)
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
@@ -171,5 +175,10 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		}
 		
 		return casesInOneCountry;
+	}
+	
+	@CacheEvict(allEntries = true, cacheNames = {CACHE_NAME})
+	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
+	public void cacheEvict() {
 	}
 }
