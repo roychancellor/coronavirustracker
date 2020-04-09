@@ -115,9 +115,11 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
 				UnitedStatesCases[].class
 		);
+		List<UnitedStatesCases> stateDataList = Arrays.asList(stateData);
+		Collections.reverse(stateDataList);
 		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		
-		return Arrays.asList(stateData);
+		return stateDataList;
 	}
 
 	@Override
@@ -149,9 +151,6 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
-		int positiveCases = 0;
-		int negativeCases = 0;
-		int totalDeaths = 0;
 		casesInOneCountry = getAllWorldData()
 				.stream()
 				.filter(wc -> {
@@ -161,6 +160,9 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 				.collect(Collectors.toList());
 		
 		WorldCases wc;
+		int positiveCases = 0;
+		int negativeCases = 0;
+		int totalDeaths = 0;
 		for(int i = casesInOneCountry.size() - 1; i >= 0; i--) {
 			wc = casesInOneCountry.get(i);
 			positiveCases += wc.getDailyNewCases();
