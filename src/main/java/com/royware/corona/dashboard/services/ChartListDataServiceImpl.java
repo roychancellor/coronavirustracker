@@ -1,5 +1,6 @@
 package com.royware.corona.dashboard.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,10 +65,6 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 						"https://covidtracking.com/api/us/daily",
 						UnitedStatesCases[].class
 				);
-//				log.info("The US data object array is:");
-//				for(UnitedStatesCases usd : usData) {
-//					log.info(usd.toString());
-//				}
 				log.info("***** GOT THROUGH PARSING UNITED STATES DATA *****");
 			} catch(RestClientException e) {
 				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -94,12 +91,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 				worldData = restTemplate.getForObject(
 						"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
 						WorldRecords.class
-				);
-				
-//				log.info("The World data object array is:");
-//				for(WorldCases wc : worldData.getRecords()) {
-//					log.info(wc.toString());
-//				}
+				);				
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
 			} catch (RestClientException e) {
 				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -188,5 +180,14 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	@CacheEvict(allEntries = true, cacheNames = {CACHE_NAME})
 	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
 	public void cacheEvict() {
+		log.info("CACHES EVICTED AT: " + LocalDateTime.now());
+		log.info("Repopulating caches...");
+		repopulateCaches();
+	}
+	
+	private void repopulateCaches() {
+		getAllUsData();
+		getAllWorldData();
+		log.info("DONE REPOPULATING CACHES");
 	}
 }
