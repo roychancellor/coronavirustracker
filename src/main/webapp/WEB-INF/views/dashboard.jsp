@@ -48,14 +48,14 @@
 		
  		makeChartDataFromJavaLists();
  		
- 		addLoadEvent(makeChart("chartContainer0", "Chart 1 Title", "Chart 1 X-axis", "Chart 1 Y-axis", chartArray[0]));
- 		addLoadEvent(makeChart("chartContainer1", "Chart 2 Title", "Chart 2 X-axis", "Chart 2 Y-axis", chartArray[1]));
-		addLoadEvent(makeChart("chartContainer2", "Chart 3 Title", "Chart 3 X-axis", "Chart 3 Y-axis", chartArray[2]));
-		addLoadEvent(makeChart("chartContainer3", "Chart 4 Title", "Chart 4 X-axis", "Chart 4 Y-axis", chartArray[3]));
-		addLoadEvent(makeChart("chartContainer4", "Chart 5 Title", "Chart 5 X-axis", "Chart 5 Y-axis", chartArray[4]));
-		addLoadEvent(makeChart("chartContainer5", "Chart 6 Title", "Chart 6 X-axis", "Chart 6 Y-axis", chartArray[5]));
+ 		addLoadEvent(makeChart("chartContainer0", "${chart1.chartTitle}", "${chart1.xAxisTitle}", "${chart1.yAxisTitle}", chartArray[0]));
+ 		addLoadEvent(makeChart("chartContainer1", "${chart2.chartTitle}", "${chart2.xAxisTitle}", "${chart2.yAxisTitle}", chartArray[1]));
+		addLoadEvent(makeChart("chartContainer2", "${chart3.chartTitle}", "${chart3.xAxisTitle}", "${chart3.yAxisTitle}", chartArray[2]));
+		addLoadEvent(makeChart("chartContainer3", "${chart4.chartTitle}", "${chart4.xAxisTitle}", "${chart4.yAxisTitle}", chartArray[3]));
+		addLoadEvent(makeChart("chartContainer4", "${chart5.chartTitle}", "${chart5.xAxisTitle}", "${chart5.yAxisTitle}", chartArray[4]));
+		addLoadEvent(makeChart("chartContainer5", "${chart6.chartTitle}", "${chart6.xAxisTitle}", "${chart6.yAxisTitle}", chartArray[5]));
 		
-	<!-- From https://www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
+	<!-- From h t t p s www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
 		function addLoadEvent(func) {
 		  var oldonload = window.onload;
 		  if (typeof window.onload != 'function') {

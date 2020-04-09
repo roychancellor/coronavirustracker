@@ -9,13 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.interfaces.ChartListService;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
  
 @Service
 public class ChartListServiceImpl implements ChartListService {
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(ChartListServiceImpl.class);
 	private static final int MOVING_AVERAGE_SIZE = 4;
 	
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
@@ -47,14 +46,14 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataList.add(expFitList);
 		
 		log.info("***** CASES VERSUS TIME *****");
-		int i = 0;
-		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
-			log.info("LIST: " + i);
-			for(Map<Object, Object> map : xyl) {
-				log.info(map.get("x") + ", " + map.get("y"));
-			}
-			i++;
-		}
+//		int i = 0;
+//		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
+//			log.info("LIST: " + i);
+//			for(Map<Object, Object> map : xyl) {
+//				log.info(map.get("x") + ", " + map.get("y"));
+//			}
+//			i++;
+//		}
 
 		return scatterChartDataList;
 	}
@@ -77,7 +76,7 @@ public class ChartListServiceImpl implements ChartListService {
 			ccYesterday = regionCaseList.get(c - 1).getTotalPositiveCases();
 			ccToday = regionCaseList.get(c).getTotalPositiveCases();
 			percentChange = (ccToday - ccYesterday) * 100.0 / ccYesterday;
-			log.info(ccToday + ", " + ccYesterday + ", percentChange: " + percentChange);
+//			log.info(ccToday + ", " + ccYesterday + ", percentChange: " + percentChange);
 			dailyPctChgCases.put(dayIndex, percentChange);
 			
 			xyPair = new HashMap<>();
@@ -104,14 +103,14 @@ public class ChartListServiceImpl implements ChartListService {
 		}
 		scatterChartDataList.add(movingAverageList);
 
-		int i = 0;
-		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
-			log.info("LIST: " + i);
-			for(Map<Object, Object> map : xyl) {
-				log.info(map.get("x") + ", " + map.get("y"));
-			}
-			i++;
-		}
+//		int i = 0;
+//		for(List<Map<Object, Object>> xyl : scatterChartDataList) {
+//			log.info("LIST: " + i);
+//			for(Map<Object, Object> map : xyl) {
+//				log.info(map.get("x") + ", " + map.get("y"));
+//			}
+//			i++;
+//		}
 		return scatterChartDataList;
 	}
 

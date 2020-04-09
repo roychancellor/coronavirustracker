@@ -27,6 +27,7 @@ import com.royware.corona.dashboard.model.UnitedStatesCases;
  */
 @Service
 public class ChartListDataServiceImpl implements ChartListDataService {
+//Leave these commented out for troubleshooting later. Just use normal object creation by constructor for now.
 //	@Autowired
 //	RestTemplate restTemplate;
 //	
@@ -36,6 +37,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 //	}
 
 	private RestTemplate restTemplate;
+	
 	public ChartListDataServiceImpl(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}

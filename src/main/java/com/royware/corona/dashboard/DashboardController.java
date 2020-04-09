@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.interfaces.ChartService;
+import com.royware.corona.dashboard.model.ChartConfig;
 import com.royware.corona.dashboard.services.ChartListDataServiceImpl;
 
 /**
@@ -48,9 +49,6 @@ public class DashboardController {
 	
 	@Autowired
 	ChartListDataService dataService;
-	
-//	@Autowired
-//	CacheManager cacheManager;
 	
 	@Bean
 	public ChartListDataService dataService() {
@@ -128,7 +126,18 @@ public class DashboardController {
 			break;
 		}
 		
+		configureDashboardCharts(map);
+		
 		return DASHBOARD_PAGE;
+	}
+	
+	private void configureDashboardCharts(ModelMap map) {
+		map.addAttribute("chart1", new ChartConfig("title 1", "x title", "y title", "scatter"));
+		map.addAttribute("chart2", new ChartConfig("title 2", "x title", "y title", "scatter"));
+		map.addAttribute("chart3", new ChartConfig("title 3", "x title", "y title", "scatter"));
+		map.addAttribute("chart4", new ChartConfig("title 4", "x title", "y title", "scatter"));
+		map.addAttribute("chart5", new ChartConfig("title 5", "x title", "y title", "scatter"));
+		map.addAttribute("chart6", new ChartConfig("title 6", "x title", "y title", "scatter"));
 	}
 
 	private <T extends CanonicalCases> List<List<List<Map<Object, Object>>>> makeChartListsForRendering(List<T> caseList) {
