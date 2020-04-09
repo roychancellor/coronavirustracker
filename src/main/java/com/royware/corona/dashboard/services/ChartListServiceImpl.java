@@ -59,7 +59,6 @@ public class ChartListServiceImpl implements ChartListService {
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
-//		List<Map<Object, Object>> movingAverageList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		int ccToday;
 		int ccYesterday;
@@ -79,20 +78,6 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-//		double movingAverage;
-//		for(int day = MOVING_AVERAGE_SIZE; day <= dailyPctChgCases.size(); day++) {
-//			movingAverage = 0;
-//			for(int d = day; d > day - MOVING_AVERAGE_SIZE; d--) {
-//				movingAverage += dailyPctChgCases.get(d);
-//			}
-//			movingAverage /= 4.0;
-//			
-//			xyPair = new HashMap<>();
-//			xyPair.put("x", day);
-//			xyPair.put("y", movingAverage);
-//			movingAverageList.add(xyPair);
-//		}
-//		scatterChartDataLists.add(movingAverageList);
 		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgCases, MOVING_AVERAGE_SIZE));
 
 		log.info("***** DONE MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME *****");
@@ -106,7 +91,6 @@ public class ChartListServiceImpl implements ChartListService {
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
-//		List<Map<Object, Object>> movingAverageList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		Map<Integer, Double> dailyAccelCases = new HashMap<>();
 		double pccToday;
@@ -126,24 +110,29 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-//		double movingAverage;
-//		for(int day = MOVING_AVERAGE_SIZE + 1; day <= dailyAccelCases.size(); day++) {
-//			movingAverage = 0;
-//			for(int d = day; d > day - MOVING_AVERAGE_SIZE; d--) {
-//				movingAverage += dailyAccelCases.get(d);
-//			}
-//			movingAverage /= 4.0;
-//			
-//			xyPair = new HashMap<>();
-//			xyPair.put("x", day);
-//			xyPair.put("y", movingAverage);
-//			movingAverageList.add(xyPair);
-//		}
 		scatterChartDataLists.add(makeMovingAverageList(dailyAccelCases, MOVING_AVERAGE_SIZE + 1));
 
 		log.info("***** DONE MAKING ACCELERATION OF DAILY CASES VERSUS TIME *****");
 
 		return scatterChartDataLists;
+	}
+	
+	@Override
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(List<T> regionCaseList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionCaseList) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	List<Map<Object, Object>> makeMovingAverageList(Map<Integer, Double> caseList, int startDay) {
@@ -166,24 +155,4 @@ public class ChartListServiceImpl implements ChartListService {
 		
 		return movingAverageList;
 	}
-
-
-	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

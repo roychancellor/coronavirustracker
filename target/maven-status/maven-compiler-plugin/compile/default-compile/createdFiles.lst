@@ -11,4 +11,3 @@ com/royware/corona/dashboard/interfaces/ChartService.class
 com/royware/corona/dashboard/interfaces/ChartServiceDao.class
 com/royware/corona/dashboard/services/ChartListDataServiceImpl.class
 com/royware/corona/dashboard/DashboardController.class
-com/royware/corona/dashboard/model/DataListBeanXXX.class
