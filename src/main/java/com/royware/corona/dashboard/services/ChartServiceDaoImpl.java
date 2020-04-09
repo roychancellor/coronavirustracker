@@ -33,21 +33,18 @@ public class ChartServiceDaoImpl implements ChartServiceDao {
 	@Override
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getChangeInTotalCasesVersusCaseswithExponentialLineList(
 			List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
+		return chartListService.makeChangeInTotalCasesVersusCaseswithExponentialLineList(regionCaseList);
 	}
 
 	@Override
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getChangeInTotalDeathsVersusDeathsswithExponentialLineList(
 			List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
+		return chartListService.makeChangeInTotalDeathsVersusDeathsswithExponentialLineList(regionCaseList);
 	}
 
 	@Override
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getDailyRateOfChangeOfDeathsWithMovingAverageList(
 			List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
+		return chartListService.makeDailyRateOfChangeOfDeathsWithMovingAverageList(regionCaseList);
 	}
 }

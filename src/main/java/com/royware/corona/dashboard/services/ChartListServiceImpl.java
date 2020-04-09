@@ -17,7 +17,6 @@ public class ChartListServiceImpl implements ChartListService {
 	private static final Logger log = LoggerFactory.getLogger(ChartListServiceImpl.class);
 	private static final int MOVING_AVERAGE_SIZE = 4;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
-//	private Map<Integer, Double> dailyAccelCases = new HashMap<>();
 	
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
 		log.info("***** MAKING CASES VERSUS TIME *****");
