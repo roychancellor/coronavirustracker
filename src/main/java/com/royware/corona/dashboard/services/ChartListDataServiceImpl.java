@@ -54,8 +54,8 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	 * @return JSON array of UnitedStatesData objects
 	 */
 	@Override
-	@Cacheable(key = "#root.methodName", value = CACHE_NAME)
-	public List<UnitedStatesCases> getAllUsData() {
+	@Cacheable(key = "#cacheKey", value = CACHE_NAME)
+	public List<UnitedStatesCases> getAllUsData(String cacheKey) {
 		UnitedStatesCases[] usData = null;
 		int tries = 0;
 		do {
@@ -81,8 +81,8 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	@Cacheable(key = "#root.methodName", value = CACHE_NAME)
-	public List<WorldCases> getAllWorldData() {
+	@Cacheable(key = "#cacheKey", value = CACHE_NAME)
+	public List<WorldCases> getAllWorldData(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
 		do {	
@@ -95,16 +95,13 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
 			} catch (RestClientException e) {
 				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
-				e.printStackTrace();
 				tries++;
 				worldData = null;
 			}
 		} while (tries <= 3 && worldData == null);
 		
-		List<WorldCases> worldDataList = Arrays.asList(worldData.getRecords());
-		Collections.reverse(worldDataList);
 		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA *****");
-		return worldDataList;
+		return Arrays.asList(worldData.getRecords());
 	}
 
 	@Override
@@ -123,11 +120,11 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-	@Cacheable(key = "#stateToExclude", value = CACHE_NAME)
+//	@Cacheable(key = "#stateToExclude", value = CACHE_NAME)
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		log.info("***** ABOUT TO FILTER *OUT* STATE: " + stateToExclude + " ****");
-		List<UnitedStatesCases> usDataExcludingState = getAllUsData();
+		List<UnitedStatesCases> usDataExcludingState = getAllUsData("COVID_TRACKING");
 		List<UnitedStatesCases> stateDataToExclude = getSingleUsStateData(stateToExclude);
 		
 		for(int i = 0; i < usDataExcludingState.size(); i++) {
@@ -151,7 +148,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
-		casesInOneCountry = getAllWorldData()
+		casesInOneCountry = getAllWorldData("EURO_CDC")
 				.stream()
 				.filter(wc -> {
 					return wc.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode)
@@ -159,19 +156,26 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 				})
 				.collect(Collectors.toList());
 		
+		Collections.reverse(casesInOneCountry);
+		
+//		log.info("COUNTRY DATA:");
 		WorldCases wc;
 		int positiveCases = 0;
 		int negativeCases = 0;
 		int totalDeaths = 0;
-		for(int i = casesInOneCountry.size() - 1; i >= 0; i--) {
+		for(int i = 0; i < casesInOneCountry.size(); i++) {
 			wc = casesInOneCountry.get(i);
 			positiveCases += wc.getDailyNewCases();
 			negativeCases += wc.getDailyNewCases();  //DELETE THIS LATER...DON'T USE NEGATIVES FOR ANYTHING
 			totalDeaths += wc.getDailyNewDeaths();
+//			log.info("date: " + wc.getDate() + ", cases: " + wc.getDailyNewCases() + ", totalCases: " + positiveCases);
 			if(positiveCases >= MINIMUM_TOTAL_CASES_FOR_INCLUSION) {
 				wc.setTotalPositiveCases(positiveCases);
 				wc.setTotalNegativeCases(negativeCases);
 				wc.setTotalDeaths(totalDeaths);
+			} else {
+				wc.setTotalPositiveCases(wc.getDailyNewCases());
+				wc.setTotalDeaths(wc.getDailyNewDeaths());
 			}
 		}
 		log.info("***** FINISHED FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
@@ -188,8 +192,8 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 	
 	private void repopulateCaches() {
-		getAllUsData();
-		getAllWorldData();
+		getAllUsData("COVID_TRACKING");
+		getAllWorldData("EURO_CDC");
 		log.info("DONE REPOPULATING CACHES");
 	}
 }

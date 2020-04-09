@@ -110,7 +110,7 @@ public class DashboardController {
 		
 		switch(region) {
 		case REGION_US:
-			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getAllUsData()));
+			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getAllUsData("COVID_TRACKING")));
 			break;
 		case REGION_US_NO_NY:
 			map.addAttribute("allDashboardData", makeChartListsForRendering(dataService.getAllUsDataExcludingState(REGION_NY)));
@@ -142,9 +142,9 @@ public class DashboardController {
 
 	private <T extends CanonicalCases> List<List<List<Map<Object, Object>>>> makeChartListsForRendering(List<T> caseList) {
 		List<List<List<Map<Object, Object>>>> dashboardDataSetsList = new ArrayList<>();
-		dashboardDataSetsList.add(chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList));
-		dashboardDataSetsList.add(chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList));
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
+		dashboardDataSetsList.add(chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList));
+		dashboardDataSetsList.add(chartService.getDailyAccelerationOfCasesWithMovingAverage(caseList));
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
