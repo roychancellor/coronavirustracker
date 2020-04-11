@@ -17,6 +17,7 @@ public class ChartListServiceImpl implements ChartListService {
 	private static final Logger log = LoggerFactory.getLogger(ChartListServiceImpl.class);
 	private static final int MOVING_AVERAGE_SIZE = 4;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
+	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 	
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
 		log.info("***** MAKING CASES VERSUS TIME *****");
@@ -118,8 +119,35 @@ public class ChartListServiceImpl implements ChartListService {
 	
 	@Override
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("***** MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		List<Map<Object, Object>> dataList = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		int ccToday;
+		int ccYesterday;
+		double changeInCases = 0;
+		dailyChgCases.clear();
+		for(int day = 1; day < regionCaseList.size(); day++) {
+			ccYesterday = regionCaseList.get(day - 1).getTotalPositiveCases();
+			ccToday = regionCaseList.get(day).getTotalPositiveCases();
+			changeInCases = ccToday - ccYesterday;
+			dailyChgCases.put(day, changeInCases);
+			
+			xyPair = new HashMap<>();
+			xyPair.put("x", ccToday);
+			xyPair.put("y", changeInCases);
+			dataList.add(xyPair);
+		}
+		scatterChartDataLists.add(dataList);
+
+		//make the EXPONENTIAL (will show as straight line on log-log graph)
+		double k = 0.3;
+		scatterChartDataLists.add(makeExponentialLineList(dailyChgCases, k));
+
+		log.info("***** DONE MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
+
+		return scatterChartDataLists;
 	}
 
 	@Override
@@ -132,6 +160,22 @@ public class ChartListServiceImpl implements ChartListService {
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionCaseList) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	List<Map<Object, Object>> makeExponentialLineList(Map<Integer, Double> caseList, double k) {
+		List<Map<Object, Object>> expLineList = new ArrayList<>();
+		Map<Object, Object> xyPair;
+		
+		xyPair = new HashMap<>();
+		xyPair.put("x", caseList.get(1));
+		xyPair.put("y", k * caseList.get(1));
+		expLineList.add(xyPair);
+		xyPair = new HashMap<>();
+		xyPair.put("x", caseList.get(caseList.size()));
+		xyPair.put("y", k * caseList.get(caseList.size()));
+		expLineList.add(xyPair);
+		
+		return expLineList;
 	}
 	
 	List<Map<Object, Object>> makeMovingAverageList(Map<Integer, Double> caseList, int startDay) {

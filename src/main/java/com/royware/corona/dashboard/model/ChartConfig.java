@@ -4,11 +4,19 @@ public class ChartConfig {
 	private String chartTitle;
 	private String xAxisTitle;
 	private String yAxisTitle;
+	private String xAxisLogarithmic;
+	private String yAxisLogarithmic;
 	private String chartType;
-	private String xAxisType;
-	private String yAxisType;
 	private String xAxisPosition;
 	private String yAxisPosition;
+	private String xAxisGridlinesDisplay;
+	private String yAxisGridlinesDisplay;
+	private String showLegend;
+	private int dataPointSize;
+	private String dataPointStyle;
+	private String dataPointColorString;
+	private int lineWidth;
+	private int lineColor;
 	
 	public ChartConfig() {
 		
@@ -53,20 +61,20 @@ public class ChartConfig {
 		this.chartType = chartType;
 	}
 
-	public String getxAxisType() {
-		return xAxisType;
+	public String getxAxisLogarithmic() {
+		return xAxisLogarithmic;
 	}
 
-	public void setxAxisType(String xAxisType) {
-		this.xAxisType = xAxisType;
+	public void setxAxisLogarithmic(String xAxisLogarithmic) {
+		this.xAxisLogarithmic = xAxisLogarithmic;
 	}
 
-	public String getyAxisType() {
-		return yAxisType;
+	public String getyAxisLogarithmic() {
+		return yAxisLogarithmic;
 	}
 
-	public void setyAxisType(String yAxisType) {
-		this.yAxisType = yAxisType;
+	public void setyAxisLogarithmic(String yAxisLogarithmic) {
+		this.yAxisLogarithmic = yAxisLogarithmic;
 	}
 
 	public String getxAxisPosition() {
@@ -83,6 +91,70 @@ public class ChartConfig {
 
 	public void setyAxisPosition(String yAxisPosition) {
 		this.yAxisPosition = yAxisPosition;
+	}
+
+	public String isxAxisGridlinesDisplay() {
+		return xAxisGridlinesDisplay;
+	}
+
+	public void setxAxisGridlinesDisplay(String xAxisGridlinesDisplay) {
+		this.xAxisGridlinesDisplay = xAxisGridlinesDisplay;
+	}
+
+	public String isyAxisGridlinesDisplay() {
+		return yAxisGridlinesDisplay;
+	}
+
+	public void setyAxisGridlinesDisplay(String yAxisGridlinesDisplay) {
+		this.yAxisGridlinesDisplay = yAxisGridlinesDisplay;
+	}
+
+	public String isShowLegend() {
+		return showLegend;
+	}
+
+	public void setShowLegend(String showLegend) {
+		this.showLegend = showLegend;
+	}
+
+	public int getDataPointSize() {
+		return dataPointSize;
+	}
+
+	public void setDataPointSize(int dataPointSize) {
+		this.dataPointSize = dataPointSize;
+	}
+
+	public String getDataPointStyle() {
+		return dataPointStyle;
+	}
+
+	public void setDataPointStyle(String dataPointStyle) {
+		this.dataPointStyle = dataPointStyle;
+	}
+
+	public String getDataPointColorString() {
+		return dataPointColorString;
+	}
+
+	public void setDataPointColorString(String dataPointColorString) {
+		this.dataPointColorString = dataPointColorString;
+	}
+
+	public int getLineWidth() {
+		return lineWidth;
+	}
+
+	public void setLineWidth(int lineWidth) {
+		this.lineWidth = lineWidth;
+	}
+
+	public int getLineColor() {
+		return lineColor;
+	}
+
+	public void setLineColor(int lineColor) {
+		this.lineColor = lineColor;
 	}
 	
 	

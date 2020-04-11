@@ -23,16 +23,16 @@
 		<div class="dashboard">
 		<table class="table table-dark">
 			<tr>
-				<td><div id="chartContainer0" style="height: 250px; width: 100%"></div></td>
-				<td><div id="chartContainer1" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer11" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer12" style="height: 250px; width: 100%"></div></td>
 			</tr>
 			<tr>
-				<td><div id="chartContainer2" style="height: 250px; width: 100%"></div></td>
-				<td><div id="chartContainer3" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer21" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer22" style="height: 250px; width: 100%"></div></td>
 			</tr>
 			<tr>
-				<td><div id="chartContainer4" style="height: 250px; width: 100%"></div></td>
-				<td><div id="chartContainer5" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer31" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer32" style="height: 250px; width: 100%"></div></td>
 			</tr>
 		</table>
 		</div>
@@ -44,18 +44,80 @@
 	
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
+		var containers = [];
+ 		var configObjects = [];
 		var chartArray = [];
 		
- 		makeChartDataFromJavaLists();
+		var mapArr = new Map();
+		mapArr.set("0", "11");
+		mapArr.set("1", "12");
+		mapArr.set("2", "21");
+		mapArr.set("3", "22");
+		mapArr.set("4", "31");
+		mapArr.set("5", "32");
  		
- 		addLoadEvent(makeChart("chartContainer0", "${chart1.chartTitle}", "${chart1.xAxisTitle}", "${chart1.yAxisTitle}", chartArray[0]));
- 		addLoadEvent(makeChart("chartContainer1", "${chart2.chartTitle}", "${chart2.xAxisTitle}", "${chart2.yAxisTitle}", chartArray[1]));
-		addLoadEvent(makeChart("chartContainer2", "${chart3.chartTitle}", "${chart3.xAxisTitle}", "${chart3.yAxisTitle}", chartArray[2]));
-		addLoadEvent(makeChart("chartContainer3", "${chart4.chartTitle}", "${chart4.xAxisTitle}", "${chart4.yAxisTitle}", chartArray[3]));
-		addLoadEvent(makeChart("chartContainer4", "${chart5.chartTitle}", "${chart5.xAxisTitle}", "${chart5.yAxisTitle}", chartArray[4]));
-		addLoadEvent(makeChart("chartContainer5", "${chart6.chartTitle}", "${chart6.xAxisTitle}", "${chart6.yAxisTitle}", chartArray[5]));
+		//ACTIONS
+		makeChartDataFromJavaLists();
+		makeChartConfigs(); 		
+ 		for(var i = 0; i < 6; i++) {
+ 			addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
+ 		}
+ 		//END ACTIONS
+ 		
+		function makeChartConfigs() {
+	 		<chart:forEach items = "${configList}" var = "config" varStatus = "loop">
+ 				containers[parseInt("${loop.index}")] = "chartContainer" + mapArr.get("${loop.index}");
+	 			
+ 				configObjects[parseInt("${loop.index}")] = {
+	 				chartTitle: "${config.chartTitle}",
+	 				xAxisTitle: "${config.xAxisTitle}",
+	 				yAxisTitle: "${config.yAxisTitle}",
+	 				xAxisLogarithmic: "${config.xAxisLogarithmic}" == "true",
+					yAxisLogarithmic: "${config.yAxisLogarithmic}" == "true"
+	 			};
+	 		</chart:forEach>
+		}
+ 		
+		function makeChart(chartContainerString, config, dataPointsArr) {
+ 			var chart = new CanvasJS.Chart(chartContainerString, {
+				animationEnabled: true,
+				exportEnabled: true,
+				theme: 'light2', //light1, dark1, dark2
+				title: {
+					text: config.chartTitle,
+					fontSize: 14
+				},
+				axisY: {
+					title: config.yAxisTitle,
+					logarithmic: config.yAxisLogarithmic
+				},
+				axisX: {
+					title: config.xAxisTitle,
+					logarithmic: config.xAxisLogarithmic
+				},
+				data: [{
+					type: "scatter",
+					pointRadius: 1,
+					pointHoverRadius: 5,
+					fill: true,
+					tension: 0,
+					showLine: false,
+					dataPoints: dataPointsArr[0]
+				},
+				{
+					type: "line",
+					markerSize: 0,
+					pointHoverRadius: 5,
+					fill: false,
+					tension: 0.4,
+					showLine: true,
+					dataPoints: dataPointsArr[1]
+				}]
+			});
+			chart.render();
+		}
 		
-	<!-- From h t t p s www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
+	//<!-- From h t t p s www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
 		function addLoadEvent(func) {
 		  var oldonload = window.onload;
 		  if (typeof window.onload != 'function') {
@@ -79,9 +141,10 @@
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");
+						
 						dataPointsArr[parseInt("${loop.index}")].push({
-							x : xValue,
-							y : yValue,
+							x: xValue,
+							y: yValue,
 						});
 					</chart:forEach>
 				</chart:forEach>
@@ -101,32 +164,33 @@
 			}
 		}
 		
-		function makeChart(chartContainerString, chartTitle, axisXTitle, axisYTitle, dataPointsArr) {
-			var chart = new CanvasJS.Chart(chartContainerString, {
-				animationEnabled: true,
-				exportEnabled: true,
-				theme: "light2", //light1, dark1, dark2
-				title: {
-					text: chartTitle
-				},
-				axisY: {
-					title: axisYTitle
-				},
-				axisX: {
-					title: axisXTitle
-				},
-				data: [{
+/* 				data: [{
 					type: "scatter",
-					dataPoints: dataPointsArr[0]
+					dataPoints: dataPointsArr[0],
+					pointRadius: 1
 				},
 				{
 					type: "scatter",
-					dataPoints: dataPointsArr[1]
-				}]
-			});
+					dataPoints: dataPointsArr[1],
+					pointRadius: 0,
+					borderWidth: 2
+				}],
+ */				/* options: {
+					elements: {
+						point: {
+							radius: 1
+						},
+						line: {
+							tension: 0.4,
+							borderWidth: 1,
+							borderColor: 'rgba(50,50,50,0.1)'
+						}
+					}
+				} */
+			/* }); */
 			 
-			chart.render();
-		}
+			/* chart.render(); */
+/* 		} */
 	</script>
 </body>
 </html>

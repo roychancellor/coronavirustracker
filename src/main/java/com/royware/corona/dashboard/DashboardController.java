@@ -126,18 +126,75 @@ public class DashboardController {
 			break;
 		}
 		
-		configureDashboardCharts(map);
+		configureDashboardCharts(map, region);
 		
 		return DASHBOARD_PAGE;
 	}
 	
-	private void configureDashboardCharts(ModelMap map) {
-		map.addAttribute("chart1", new ChartConfig("title 1", "x title", "y title", "scatter"));
-		map.addAttribute("chart2", new ChartConfig("title 2", "x title", "y title", "scatter"));
-		map.addAttribute("chart3", new ChartConfig("title 3", "x title", "y title", "scatter"));
-		map.addAttribute("chart4", new ChartConfig("title 4", "x title", "y title", "scatter"));
-		map.addAttribute("chart5", new ChartConfig("title 5", "x title", "y title", "scatter"));
-		map.addAttribute("chart6", new ChartConfig("title 6", "x title", "y title", "scatter"));
+	private void configureDashboardCharts(ModelMap map, String region) {
+		ChartConfig timeHistoryOfCasesChartConfig = new ChartConfig("Time History of Total Cases in " + region,
+				"Days Since Cases > 0", "Total Cases", "scatter");
+		timeHistoryOfCasesChartConfig.setxAxisPosition("bottom");
+		timeHistoryOfCasesChartConfig.setxAxisLogarithmic("false");
+		timeHistoryOfCasesChartConfig.setyAxisPosition("left");
+		timeHistoryOfCasesChartConfig.setyAxisLogarithmic("false");
+		timeHistoryOfCasesChartConfig.setShowLegend("true");
+		timeHistoryOfCasesChartConfig.setDataPointSize(1);
+		
+		ChartConfig rateOfChangeOfCasesChartConfig = new ChartConfig("Rate of Change of Cases in " + region,
+				"Days Since Cases > 0", "Percent Change in New Cases", "scatter");
+		rateOfChangeOfCasesChartConfig.setxAxisPosition("bottom");
+		rateOfChangeOfCasesChartConfig.setxAxisLogarithmic("false");
+		rateOfChangeOfCasesChartConfig.setyAxisPosition("left");
+		rateOfChangeOfCasesChartConfig.setyAxisLogarithmic("false");
+		rateOfChangeOfCasesChartConfig.setShowLegend("true");
+		rateOfChangeOfCasesChartConfig.setDataPointSize(1);
+		
+		ChartConfig accelerationOfCasesChartConfig = new ChartConfig("Acceleration of Cases in " + region,
+				"Days Since Cases > 0", "Percent Change in the Rate of New Cases", "scatter");
+		accelerationOfCasesChartConfig.setxAxisPosition("bottom");
+		accelerationOfCasesChartConfig.setxAxisLogarithmic("false");
+		accelerationOfCasesChartConfig.setyAxisPosition("left");
+		accelerationOfCasesChartConfig.setyAxisLogarithmic("false");
+		accelerationOfCasesChartConfig.setShowLegend("true");
+		accelerationOfCasesChartConfig.setDataPointSize(1);
+		
+		ChartConfig rateOfCasesVersusCasesChartConfig = new ChartConfig("Detecting Inflection in Cases in " + region,
+				"Total Cases", "Daily Change in Total Cases", "scatter");
+		rateOfCasesVersusCasesChartConfig.setxAxisPosition("bottom");
+		rateOfCasesVersusCasesChartConfig.setxAxisLogarithmic("true");
+		rateOfCasesVersusCasesChartConfig.setyAxisPosition("left");
+		rateOfCasesVersusCasesChartConfig.setyAxisLogarithmic("true");
+		rateOfCasesVersusCasesChartConfig.setShowLegend("true");
+		rateOfCasesVersusCasesChartConfig.setDataPointSize(1);
+		
+		ChartConfig rateOfDeathsVersusDeathsChartConfig = new ChartConfig("Detecting Inflection in Deaths in " + region,
+				"Total Deaths", "Daily Change in Total Deaths", "scatter");
+		rateOfDeathsVersusDeathsChartConfig.setxAxisPosition("bottom");
+		rateOfDeathsVersusDeathsChartConfig.setxAxisLogarithmic("true");
+		rateOfDeathsVersusDeathsChartConfig.setyAxisPosition("left");
+		rateOfDeathsVersusDeathsChartConfig.setyAxisLogarithmic("true");
+		rateOfDeathsVersusDeathsChartConfig.setShowLegend("true");
+		rateOfDeathsVersusDeathsChartConfig.setDataPointSize(1);
+		
+		ChartConfig rateOfChangeOfDeathsChartConfig = new ChartConfig("Rate of Change of Deaths in " + region,
+				"Days Since Cases > 0", "Percent Change in New Deaths", "scatter");
+		rateOfChangeOfDeathsChartConfig.setxAxisPosition("bottom");
+		rateOfChangeOfDeathsChartConfig.setxAxisLogarithmic("false");
+		rateOfChangeOfDeathsChartConfig.setyAxisPosition("left");
+		rateOfChangeOfDeathsChartConfig.setyAxisLogarithmic("false");
+		rateOfChangeOfDeathsChartConfig.setShowLegend("true");
+		rateOfChangeOfDeathsChartConfig.setDataPointSize(1);
+		
+		List<ChartConfig> chartConfigList = new ArrayList<>();
+		chartConfigList.add(timeHistoryOfCasesChartConfig);
+		chartConfigList.add(rateOfChangeOfCasesChartConfig);
+		chartConfigList.add(accelerationOfCasesChartConfig);
+		chartConfigList.add(rateOfCasesVersusCasesChartConfig);
+		chartConfigList.add(rateOfDeathsVersusDeathsChartConfig);
+		chartConfigList.add(rateOfChangeOfDeathsChartConfig);
+		
+		map.addAttribute("configList", chartConfigList);
 	}
 
 	private <T extends CanonicalCases> List<List<List<Map<Object, Object>>>> makeChartListsForRendering(List<T> caseList) {
@@ -145,7 +202,7 @@ public class DashboardController {
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
 		dashboardDataSetsList.add(chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList));
 		dashboardDataSetsList.add(chartService.getDailyAccelerationOfCasesWithMovingAverage(caseList));
-		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
+		dashboardDataSetsList.add(chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(caseList));
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
 		dashboardDataSetsList.add(chartService.getTotalCasesVersusTimeWithExponentialFit(caseList));
 		
