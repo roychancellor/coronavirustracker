@@ -48,6 +48,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final long CACHE_EVICT_PERIOD_MILLISECONDS = 3 * 60 * 60 * 1000;  //every 3 hours
 	private static final String CACHE_NAME = "dataCache";
+	private static final int US_CUTOFF_DATE = 20200304;
 
 	/**
 	 * Gets all US data and returns it as an array of objects
@@ -56,12 +57,12 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	@Override
 	@Cacheable(key = "#cacheKey", value = CACHE_NAME)
 	public List<UnitedStatesCases> getAllUsData(String cacheKey) {
-		UnitedStatesCases[] usData = null;
+		UnitedStatesCases[] usDataArray = null;
 		int tries = 0;
 		do {
 			try {
 				log.info("***** ABOUT TO HIT ENDPOINT FOR UNITED STATES DATA *****");
-				usData = restTemplate.getForObject(
+				usDataArray = restTemplate.getForObject(
 						"https://covidtracking.com/api/us/daily",
 						UnitedStatesCases[].class
 				);
@@ -69,13 +70,15 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 			} catch(RestClientException e) {
 				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
 				e.printStackTrace();
-				usData = null;
+				usDataArray = null;
 				tries++;
 			}
-		} while(tries <= 3 && usData == null);
+		} while(tries <= 3 && usDataArray == null);
 		
-		List<UnitedStatesCases> usDataList = Arrays.asList(usData);
+		List<UnitedStatesCases> usDataList = new ArrayList<>(Arrays.asList(usDataArray));
 		Collections.reverse(usDataList);
+		usDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
+		
 		log.info("***** FINISHED HITTING ENDPOINT FOR UNITED STATES DATA *****");
 		return usDataList;
 	}
@@ -108,12 +111,14 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	@Cacheable(key = "#stateAbbreviation", value = CACHE_NAME)
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		log.info("***** ABOUT TO GET STATE: " + stateAbbreviation + " ****");
-		UnitedStatesCases[] stateData = restTemplate.getForObject(
+		UnitedStatesCases[] stateDataArray = restTemplate.getForObject(
 				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
 				UnitedStatesCases[].class
 		);
-		List<UnitedStatesCases> stateDataList = Arrays.asList(stateData);
+		List<UnitedStatesCases> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
 		Collections.reverse(stateDataList);
+		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
+		
 		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		
 		return stateDataList;
