@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NamedNativeQueries;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,8 @@ public class ChartListServiceImpl implements ChartListService {
 		while(dayIndex < regionCaseList.size()) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", 100 * Math.exp(0.15 * dayIndex));
+//			xyPair.put("y", 100 * Math.exp(0.15 * dayIndex));
+			xyPair.put("y", regionCaseList.get(dayIndex).getTotalPositiveCases());
 			expFitList.add(xyPair);
 			dayIndex++;
 		}
@@ -278,15 +281,28 @@ public class ChartListServiceImpl implements ChartListService {
 	
 	List<Map<Object, Object>> makeMovingAverageList(Map<Integer, Double> caseMap, int startDayIndex, int endDayIndex) {
 		double movingAverage;
+		int divisor = 0;
+		double amountToAdd = 0;
 		List<Map<Object, Object>> movingAverageList = new ArrayList<>();
 		Map<Object, Object> xyPair;
 		
 		for(int dayIndex = startDayIndex; dayIndex < endDayIndex; dayIndex++) {
 			movingAverage = 0;
 			for(int d = dayIndex; d > dayIndex - MOVING_AVERAGE_SIZE; d--) {
-				movingAverage += caseMap.get(d);
+				amountToAdd = caseMap.get(d);
+				log.info("dayIndex: " + dayIndex + ", amountToAdd: " + amountToAdd);
+				if(!(Double.isNaN(amountToAdd) || Double.isInfinite(amountToAdd))) {
+					movingAverage += amountToAdd;
+					divisor++;
+					log.info("Success...movingAverage = " + movingAverage);
+				} else {
+					log.info("Oops...amountToAdd = " + amountToAdd);
+				}
 			}
-			movingAverage /= 4.0;
+			if(divisor > 0) {
+				movingAverage /= divisor;
+			}
+			divisor = 0;
 			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);

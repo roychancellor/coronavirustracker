@@ -88,7 +88,7 @@ public class DashboardController {
 	private static Map<String, String> abbrevToFull = new HashMap<>();
 	static {
 		abbrevToFull.put(REGION_US, "United States");
-		abbrevToFull.put(REGION_US_NO_NY, "United States wihtout New York");
+		abbrevToFull.put(REGION_US_NO_NY, "U.S. w/o New York");
 		abbrevToFull.put(REGION_NY, "New York State");
 		abbrevToFull.put(REGION_AZ, "Arizona");
 		abbrevToFull.put(REGION_ITA, "Italy");
@@ -166,7 +166,7 @@ public class DashboardController {
 		List<List<Map<Object, Object>>> dataDeathsByTime = chartService.getChangeInTotalDeathsVersusDeathsswithExponentialLine(caseList);
 		List<List<Map<Object, Object>>> dataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(caseList);
 		
-		ChartConfig configCasesByTime = new ChartConfig("Time History of Total Cases in " + region,
+		ChartConfig configCasesByTime = new ChartConfig("Total Cases in " + region,
 				"Days Since Cases > 0", "Total Cases", "scatter");
 		configCasesByTime.setxAxisPosition("bottom");
 		configCasesByTime.setxAxisLogarithmic("false");
@@ -180,7 +180,8 @@ public class DashboardController {
 		configCasesByTime.setxAxisMax(maxX / 10 * 10 + (int)Math.pow(10, (int)Math.log10(maxX)));
 		configCasesByTime.setyAxisMin(0);
 		int maxY = getMaxValueFromListOfXYMaps(dataCasesByTime.get(0));
-		configCasesByTime.setyAxisMax(maxY / 10 * 10 + (int)Math.pow(10, (int)Math.log10(maxY)));
+		int factor = (int)Math.pow(10, (int)Math.log10(maxY));
+		configCasesByTime.setyAxisMax(maxY / factor * factor + factor);
 
 		dashboardChartList.add(new DashboardChart(dataCasesByTime, configCasesByTime));
 		
@@ -199,7 +200,8 @@ public class DashboardController {
 		rateOfChangeOfCasesChartConfig.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(dataRateOfCasesByTime.get(0));
 		maxY = maxY > 100 ? 99 : maxY;
-		rateOfChangeOfCasesChartConfig.setyAxisMax(maxY / 10 * 10 + (int)Math.pow(10, (int)Math.log10(maxY)));
+		factor = (int)Math.pow(10, (int)Math.log10(maxY));
+		rateOfChangeOfCasesChartConfig.setyAxisMax(maxY / factor * factor + factor);
 
 		dashboardChartList.add(new DashboardChart(dataRateOfCasesByTime, rateOfChangeOfCasesChartConfig));
 		
@@ -219,12 +221,14 @@ public class DashboardController {
 		maxY = getMaxValueFromListOfXYMaps(dataAccelOfCasesByTime.get(0));
 		maxY = maxY > 100 ? 99 : maxY;
 		minY = minY < -100 ? -99 : minY;
-		accelerationOfCasesChartConfig.setyAxisMin(minY / 10 * 10 - (int)Math.pow(10, (int)Math.log10(minY)));
-		accelerationOfCasesChartConfig.setyAxisMax(maxY / 10 * 10 + (int)Math.pow(10, (int)Math.log10(maxY)));
+		factor = (int)Math.pow(10, (int)Math.log10(minY));
+		accelerationOfCasesChartConfig.setyAxisMin(minY / factor * factor - factor);
+		factor = (int)Math.pow(10, (int)Math.log10(maxY));
+		accelerationOfCasesChartConfig.setyAxisMax(maxY / factor * factor + factor);
 		
 		dashboardChartList.add(new DashboardChart(dataAccelOfCasesByTime, accelerationOfCasesChartConfig));
 		
-		ChartConfig rateOfCasesVersusCasesChartConfig = new ChartConfig("Detecting Inflection in Cases in " + region,
+		ChartConfig rateOfCasesVersusCasesChartConfig = new ChartConfig("Detecting Inflection of Cases in " + region,
 				"Total Cases", "Daily Change in Total Cases", "scatter");
 		rateOfCasesVersusCasesChartConfig.setxAxisPosition("bottom");
 		rateOfCasesVersusCasesChartConfig.setxAxisLogarithmic("true");
@@ -236,13 +240,15 @@ public class DashboardController {
 		rateOfCasesVersusCasesChartConfig.setxAxisMin((int)Math.pow(10, (int)Math.log10((Integer)dataRateOfCasesByCases.get(0).get(0).get("x"))));
 		rateOfCasesVersusCasesChartConfig.setxAxisMax((int)Math.pow(10,
 					1 + (int)Math.log10((Integer)dataRateOfCasesByCases.get(0).get(dataRateOfCasesByCases.get(0).size() - 1).get("x"))));
-		rateOfCasesVersusCasesChartConfig.setyAxisMin((int)Math.pow(10, (int)Math.log10((Double)dataRateOfCasesByCases.get(0).get(0).get("y"))));
+		Double minValue = (Double)dataRateOfCasesByCases.get(0).get(0).get("y");
+		int digits = minValue > 0 ? (int)Math.log10((Double)dataRateOfCasesByCases.get(0).get(0).get("y")) : 1;
+		rateOfCasesVersusCasesChartConfig.setyAxisMin((int)Math.pow(10, digits));
 		rateOfCasesVersusCasesChartConfig.setyAxisMax((int)Math.pow(10,
 					1 + (int)Math.log10((double)getMaxValueFromListOfXYMaps(dataRateOfCasesByCases.get(1)))));
 		
 		dashboardChartList.add(new DashboardChart(dataRateOfCasesByCases, rateOfCasesVersusCasesChartConfig));
 		
-		ChartConfig rateOfDeathsVersusDeathsChartConfig = new ChartConfig("Detecting Inflection in Deaths in " + region,
+		ChartConfig rateOfDeathsVersusDeathsChartConfig = new ChartConfig("Detecting Inflection of Deaths in " + region,
 				"Total Deaths", "Daily Change in Total Deaths", "scatter");
 		rateOfDeathsVersusDeathsChartConfig.setxAxisPosition("bottom");
 		rateOfDeathsVersusDeathsChartConfig.setxAxisLogarithmic("true");
@@ -254,15 +260,12 @@ public class DashboardController {
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMin((int)Math.pow(10, (int)Math.log10((Integer)dataDeathsByTime.get(0).get(0).get("x"))));
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMax((int)Math.pow(10,
 					1 + (int)Math.log10((Integer)dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("x"))));
-		rateOfDeathsVersusDeathsChartConfig.setyAxisMin((int)Math.pow(10, (int)Math.log10((Double)dataDeathsByTime.get(0).get(0).get("y"))));
+		minValue = (Double)dataDeathsByTime.get(0).get(0).get("y");
+		digits = minValue > 0 ? (int)Math.log10((Double)dataDeathsByTime.get(0).get(0).get("y")) : 1;
+		rateOfDeathsVersusDeathsChartConfig.setyAxisMin((int)Math.pow(10, digits));
 		rateOfDeathsVersusDeathsChartConfig.setyAxisMax((int)Math.pow(10,
 					1 + (int)Math.log10((double)getMaxValueFromListOfXYMaps(dataDeathsByTime.get(1)))));
 		
-		System.out.println("x min: " + rateOfDeathsVersusDeathsChartConfig.getxAxisMin());
-		System.out.println("x max: " + rateOfDeathsVersusDeathsChartConfig.getxAxisMax());
-		System.out.println("y min: " + rateOfDeathsVersusDeathsChartConfig.getyAxisMin());
-		System.out.println("y max: " + rateOfDeathsVersusDeathsChartConfig.getyAxisMax());
-
 		dashboardChartList.add(new DashboardChart(dataDeathsByTime, rateOfDeathsVersusDeathsChartConfig));
 		
 		ChartConfig rateOfChangeOfDeathsChartConfig = new ChartConfig("Rate of Change of Deaths in " + region,
@@ -280,7 +283,8 @@ public class DashboardController {
 		rateOfChangeOfDeathsChartConfig.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(dataRateOfDeathsByTime.get(0));
 		maxY = maxY > 100 ? 99 : maxY;
-		rateOfChangeOfDeathsChartConfig.setyAxisMax(maxY / 10 * 10 + (int)Math.pow(10, (int)Math.log10(maxY)));
+		factor = (int)Math.pow(10, (int)Math.log10(maxY));
+		rateOfChangeOfDeathsChartConfig.setyAxisMax(maxY / factor * factor + factor);
 		
 		dashboardChartList.add(new DashboardChart(dataRateOfDeathsByTime, rateOfChangeOfDeathsChartConfig));
 		
