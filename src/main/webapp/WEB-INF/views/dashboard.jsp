@@ -16,7 +16,7 @@
 <body>
 	<div class="container">
 		<div>
-			<h2 style="display:inline-block">Dashboard for <strong style="color:#522398">${region}</strong></h2>
+			<h2 style="display:inline-block">Dashboard for <strong style="color:#522398">${fullregion}</strong></h2>
 			<a style="font-size:1em" class="btn btn-success" href="${pageContext.request.contextPath}/chart-info">Chart Info</a>
 			<a style="font-size:1em" class="btn btn-warning" href="${pageContext.request.contextPath}/corona">Return Home</a>
 		</div>
@@ -65,15 +65,20 @@
  		//END ACTIONS
  		
 		function makeChartConfigs() {
-	 		<chart:forEach items = "${configList}" var = "config" varStatus = "loop">
+	 		<chart:forEach items = "${allDashboardCharts}" var = "config" varStatus = "loop">
  				containers[parseInt("${loop.index}")] = "chartContainer" + mapArr.get("${loop.index}");
 	 			
  				configObjects[parseInt("${loop.index}")] = {
-	 				chartTitle: "${config.chartTitle}",
-	 				xAxisTitle: "${config.xAxisTitle}",
-	 				yAxisTitle: "${config.yAxisTitle}",
-	 				xAxisLogarithmic: "${config.xAxisLogarithmic}" == "true",
-					yAxisLogarithmic: "${config.yAxisLogarithmic}" == "true"
+	 				chartTitle: "${config.chartConfig.chartTitle}",
+	 				xAxisTitle: "${config.chartConfig.xAxisTitle}",
+	 				yAxisTitle: "${config.chartConfig.yAxisTitle}",
+	 				xAxisLogarithmic: "${config.chartConfig.xAxisLogarithmic}" == "true",
+					yAxisLogarithmic: "${config.chartConfig.yAxisLogarithmic}" == "true",
+					xGridDashType: "${config.chartConfig.xGridDashType}",
+					xMinimum: parseInt("${config.chartConfig.xAxisMin}"),
+					xMaximum: parseInt("${config.chartConfig.xAxisMax}"),
+					yMinimum: parseInt("${config.chartConfig.yAxisMin}"),
+					yMaximum: parseInt("${config.chartConfig.yAxisMax}")
 	 			};
 	 		</chart:forEach>
 		}
@@ -89,11 +94,16 @@
 				},
 				axisY: {
 					title: config.yAxisTitle,
-					logarithmic: config.yAxisLogarithmic
+					logarithmic: config.yAxisLogarithmic,
+					minimum: config.yMinimum,
+					maximum: config.yMaximum
 				},
 				axisX: {
 					title: config.xAxisTitle,
-					logarithmic: config.xAxisLogarithmic
+					logarithmic: config.xAxisLogarithmic,
+					minimum: config.xMinimum,
+					maximum: config.xMaximum,
+					gridDashType: config.xGridDashType
 				},
 				data: [{
 					type: "scatter",
@@ -135,9 +145,9 @@
 		function makeChartDataFromJavaLists() {
 			var xValue;
 			var yValue;
-			<chart:forEach items="${allDashboardData}" var="dataset" varStatus="c">
+			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
 				var dataPointsArr = [[], []];
-				<chart:forEach items="${dataset}" var="dataPoints" varStatus="loop">	
+				<chart:forEach items="${dataset.chartLists}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");
@@ -163,34 +173,6 @@
 				}
 			}
 		}
-		
-/* 				data: [{
-					type: "scatter",
-					dataPoints: dataPointsArr[0],
-					pointRadius: 1
-				},
-				{
-					type: "scatter",
-					dataPoints: dataPointsArr[1],
-					pointRadius: 0,
-					borderWidth: 2
-				}],
- */				/* options: {
-					elements: {
-						point: {
-							radius: 1
-						},
-						line: {
-							tension: 0.4,
-							borderWidth: 1,
-							borderColor: 'rgba(50,50,50,0.1)'
-						}
-					}
-				} */
-			/* }); */
-			 
-			/* chart.render(); */
-/* 		} */
 	</script>
 </body>
 </html>

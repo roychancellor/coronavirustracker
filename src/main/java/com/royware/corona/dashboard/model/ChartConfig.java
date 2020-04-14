@@ -17,6 +17,14 @@ public class ChartConfig {
 	private String dataPointColorString;
 	private int lineWidth;
 	private int lineColor;
+	private String xNumberFormat;
+	private String yNumberFormat;
+	private int xAxisMin = 0;
+	private int xAxisMax = 60;
+	private int yAxisMin = 0;
+	private int yAxisMax = 100;
+	private String xGridDashType;
+	private String yGridDashType;
 	
 	public ChartConfig() {
 		
@@ -155,6 +163,70 @@ public class ChartConfig {
 
 	public void setLineColor(int lineColor) {
 		this.lineColor = lineColor;
+	}
+
+	public String getxNumberFormat() {
+		return xNumberFormat;
+	}
+
+	public void setxNumberFormat(String xNumberFormat) {
+		this.xNumberFormat = xNumberFormat;
+	}
+
+	public String getyNumberFormat() {
+		return yNumberFormat;
+	}
+
+	public void setyNumberFormat(String yNumberFormat) {
+		this.yNumberFormat = yNumberFormat;
+	}
+
+	public int getxAxisMin() {
+		return xAxisMin;
+	}
+
+	public void setxAxisMin(int xAxisMin) {
+		this.xAxisMin = xAxisMin;
+	}
+
+	public int getxAxisMax() {
+		return xAxisMax;
+	}
+
+	public void setxAxisMax(int xAxisMax) {
+		this.xAxisMax = xAxisMax;
+	}
+
+	public int getyAxisMin() {
+		return yAxisMin;
+	}
+
+	public void setyAxisMin(int yAxisMin) {
+		this.yAxisMin = yAxisMin;
+	}
+
+	public int getyAxisMax() {
+		return yAxisMax;
+	}
+
+	public void setyAxisMax(int yAxisMax) {
+		this.yAxisMax = yAxisMax;
+	}
+
+	public String getxGridDashType() {
+		return xGridDashType;
+	}
+
+	public void setxGridDashType(String xGridDashType) {
+		this.xGridDashType = xGridDashType;
+	}
+
+	public String getyGridDashType() {
+		return yGridDashType;
+	}
+
+	public void setyGridDashType(String yGridDashType) {
+		this.yGridDashType = yGridDashType;
 	}
 	
 	

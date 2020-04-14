@@ -119,6 +119,10 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
 		
+		for(UnitedStatesCases usc:stateDataList) {
+			log.info(usc.toString());
+		}
+		
 		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		
 		return stateDataList;
