@@ -23,8 +23,11 @@ public class ChartConfig {
 	private int xAxisMax = 60;
 	private int yAxisMin = 0;
 	private int yAxisMax = 100;
+	private int xAxisInterval;
+	private int yAxisInterval;
 	private String xGridDashType;
 	private String yGridDashType;
+	private String yAxisNumberSuffix;
 	
 	public ChartConfig() {
 		
@@ -213,6 +216,22 @@ public class ChartConfig {
 		this.yAxisMax = yAxisMax;
 	}
 
+	public int getxAxisInterval() {
+		return xAxisInterval;
+	}
+
+	public void setxAxisInterval(int xAxisInterval) {
+		this.xAxisInterval = xAxisInterval;
+	}
+
+	public int getyAxisInterval() {
+		return yAxisInterval;
+	}
+
+	public void setyAxisInterval(int yAxisInterval) {
+		this.yAxisInterval = yAxisInterval;
+	}
+
 	public String getxGridDashType() {
 		return xGridDashType;
 	}
@@ -227,6 +246,14 @@ public class ChartConfig {
 
 	public void setyGridDashType(String yGridDashType) {
 		this.yGridDashType = yGridDashType;
+	}
+
+	public String getyAxisNumberSuffix() {
+		return yAxisNumberSuffix;
+	}
+
+	public void setyAxisNumberSuffix(String yAxisNumberSuffix) {
+		this.yAxisNumberSuffix = yAxisNumberSuffix;
 	}
 	
 	

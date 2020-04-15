@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.NamedNativeQueries;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -294,9 +292,9 @@ public class ChartListServiceImpl implements ChartListService {
 				if(!(Double.isNaN(amountToAdd) || Double.isInfinite(amountToAdd))) {
 					movingAverage += amountToAdd;
 					divisor++;
-					log.info("Success...movingAverage = " + movingAverage);
+					//log.info("Success...movingAverage = " + movingAverage);
 				} else {
-					log.info("Oops...amountToAdd = " + amountToAdd);
+					log.info("Oops...amountToAdd is not a real number, it is " + amountToAdd + ", so it will NOT be in the moving average.");
 				}
 			}
 			if(divisor > 0) {

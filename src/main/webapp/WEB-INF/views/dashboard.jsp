@@ -78,7 +78,9 @@
 					xMinimum: parseInt("${config.chartConfig.xAxisMin}"),
 					xMaximum: parseInt("${config.chartConfig.xAxisMax}"),
 					yMinimum: parseInt("${config.chartConfig.yAxisMin}"),
-					yMaximum: parseInt("${config.chartConfig.yAxisMax}")
+					yMaximum: parseInt("${config.chartConfig.yAxisMax}"),
+					yInterval: parseInt("${config.chartConfig.yAxisInterval}"),
+					yNumberSuffix: "${config.chartConfig.yAxisNumberSuffix}"
 	 			};
 	 		</chart:forEach>
 		}
@@ -96,7 +98,9 @@
 					title: config.yAxisTitle,
 					logarithmic: config.yAxisLogarithmic,
 					minimum: config.yMinimum,
-					maximum: config.yMaximum
+					maximum: config.yMaximum,
+					interval: config.yInterval,
+					suffix: config.yNumberSuffix
 				},
 				axisX: {
 					title: config.xAxisTitle,
