@@ -14,14 +14,76 @@
 
 <body>
 	<div class="container">
-		<%@ include file="common/header-common.jspf" %>
-		<section>
-			<h1>About</h1>
-			<h3>Dashboard generator program for displaying coronavirus data in the best way possible.</h3>
-			<p>
-			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/corona">Return to Home Page</a></p>
-		</section>
-		<%@ include file="common/footer-common.jspf" %>
+		<div>
+			<h2 style="display:inline-block"><strong style="color:#522398">About this site</strong></h2>
+			<a class="btn btn-success" onClick="history.back()">Return to Home Page</a>
+		</div>
+		<div class="dashboard">
+		<table class="table table-dark">
+			<tr>
+				<td class="col-md-2">
+				<div id="chartContainer11" style="height: 120px; width: 100%">
+				<h3 style="color:#522398;">Why another Coronavirus site?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">There are certainly far more flashy sites
+				out there that are more visually appealing and dynamic. This site has a different purpose. Here, I am attempting to look at the data
+				a little differently than the other sites to help satisfy my curiosity and inform my own
+				opinions about when it is safe to "go back into the water", as it were.</p>
+				</div>
+				</td>
+				<td class="col-md-2">
+				<div id="chartContainer12" style="height: 120px; width: 100%">
+				<h3 style="color:#522398;">What are the data sources?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">All United States data comes from
+				<a href="https://covidtracking.com">The COVID Tracking Project</a> which offers some really sweet APIs for easy access of the data by a computer. This site
+				seems to be gathering data in a serious way, attempting to be as accurate as possible. Data for any other countries comes from
+				<a href="https://opendata.ecdc.europa.eu/covid19/casedistribution/json/">European Center for Disease Control</a> which offers
+				a similar type of API, but with the whole world lumped into one file (makes it slower).</p>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer21" style="height: 100px; width: 100%">
+				<h3 style="color:#522398;">Why such a limited selection of regions?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">Mainly due to my limited time to spend
+				developing the site. Time permitting, I will add a clickable U.S. map and add more countries. For now, I think these are the
+				most relevant to most people I know. Stay tuned, non-Arizonians...</p>
+				</div>
+				</td>
+				<td class="col-md-2"><div id="chartContainer22" style="height: 100px; width: 100%">
+				<h3 style="color:#522398;">What are all these charts?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">Click on the Chart Info button when viewing a
+				dashboard page for an explanation of each chart. If it seems too technical, well, consider that I am a mechanical engineer by training,
+				who taught mathematics, and who works as a software engineer......get over it.  :-)</p>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer31" style="height: 200px; width: 100%">
+				<h3 style="color:#522398;">Who is the site creator?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">Roy Chancellor is a guy who likes math and likes
+				to program. I recently began a career as a software engineer after working as a math teacher and mechanical engineer. Like all of you,
+				I am currently homebound for work and want to let the data inform me when I *should* be able to return to normal. Very grateful for my job,
+				having said job means I work on the site part-time in the evenings.</p>
+				</div>
+				</td>
+				<td class="col-md-2"><div id="chartContainer32" style="height: 200px; width: 100%">
+				<h3 style="color:#522398;">Your site isn't completely terrible, how did you build it?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">The site is a 
+				<a href="https://www.java.com/en/">Java</a> application that uses <a href="https://en.wikipedia.org/wiki/JavaServer_Pages">JSP</a>
+				and <a href="https://getbootstrap.com">Bootstrap</a> to
+				render the front-end pages that you see. Sorry, no React, Angular, etc. Underneath, it uses Java with
+				<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.htmlSpring">Spring MVC</a> for all
+				external API calls, internal logic, and data manipulation/analysis. This is a stateless application, in that it stores
+				no persistent data (e.g. in a database), rather it uses <a href="https://spring.io">Spring</a> caching to make the site a bit snappier.
+				The charts are from <a href="https://www.chartjs.org">Chart.js</a> which uses
+				<a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a> to configure and render. The site resides on
+				<a href="https://aws.amazon.com">AWS</a> in an <a href="https://aws.amazon.com/elasticbeanstalk/">Elastic Beanstalk</a> instance
+				running a <a href="https://en.wikipedia.org/wiki/Linux">Linux</a> virtual machine with a <a href="http://tomcat.apache.org">Tomcat</a> server.</p>
+				</div>
+				</td>
+			</tr>
+		</table>
+		</div>
 	</div>
 	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

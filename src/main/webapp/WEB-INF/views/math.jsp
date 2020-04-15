@@ -14,14 +14,23 @@
 
 <body>
 	<div class="container">
-		<%@ include file="common/header-common.jspf" %>
-		<section>
-			<h1>The Math Behind the Charts</h1>
-			<h3>More than you probably wanted to know...</h3>
-			<p>
-			<p><a class="btn btn-success" href="${pageContext.request.contextPath}/corona">Return to Home</a></p>
-		</section>
-		<%@ include file="common/footer-common.jspf" %>
+		<div>
+			<h2 style="display:inline-block"><strong style="color:#522398">The math behind the charts</strong></h2>
+			<a class="btn btn-success" onClick="history.back()">MATH!!! GET ME OUTTA HERE!!!</a>
+		</div>
+		<div class="dashboard">
+		<table class="table table-dark">
+			<tr>
+				<td class="col-md-2">
+				<div id="chartContainer11" style="height: 200px; width: 100%">
+				<h3 style="color:#522398;">Coming soon...</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">I'll get you the math you so eagerly desire.
+				Just gotta get the site deployed first!</p>
+				</div>
+				</td>
+			</tr>
+		</table>
+		</div>
 	</div>
 	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
