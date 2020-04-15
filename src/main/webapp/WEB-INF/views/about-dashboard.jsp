@@ -82,6 +82,24 @@
 				</div>
 				</td>
 			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer22" style="height: 200px; width: 100%">
+				<h3 style="color:#522398;">How can I write to law makers?</h3>
+				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">I'm not about to tell you <strong><u>what</u></strong>
+				to write to your elected officials, but I <strong><u>will</u></strong> tell you <strong><u>to</u></strong> write to them. Here are some links:</p>
+				<ul style="font-size:0.75em;">
+					<li><a href="https://www.whitehouse.gov/contact/" target="_blank">President Trump</a></li>
+					<li><a href="https://www.mcsally.senate.gov/contact_martha" target="_blank">Senator McSally (Arizona)</a></li>
+					<li><a href="https://www.sinema.senate.gov/contact-kyrsten" target="_blank">Senator Sinema (Arizona)</a></li>
+					<li><a href="https://www.senate.gov/general/contact_information/senators_cfm.cfm" target="_blank">Contact your U.S. Senator</a></li>
+					<li><a href="https://www.house.gov/representatives/find-your-representative" target="_blank">Contact your U.S. Representative</a></li>
+					<li><a href="https://azgovernor.gov/engage/form/contact-governor-ducey" target="_blank">Governor Ducey (Arizona)</a></li>
+					<li><a href="https://www.azleg.gov/findmylegislator/" target="_blank">Contact your Arizona Senator</a></li>
+					<li><a href="https://www.azleg.gov/findmylegislator/" target="_blank">Contact your Arizona Representatives</a></li>
+					<li><a href="https://www.phoenix.gov/mayor/contact-mayor-gallego" target="_blank">Mayor Gallego (Phoenix)</a></li>
+				</ul>
+				</div>
+			</tr>
 		</table>
 		</div>
 	</div>

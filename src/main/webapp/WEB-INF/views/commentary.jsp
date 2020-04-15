@@ -60,7 +60,7 @@
 				<h3 style="color:#522398;">Where to write your elected officials?</h3>
 				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">I'm not about to tell you <strong><u>what</u></strong>
 				to write to your elected officials, but I <strong><u>will</u></strong> tell you <strong><u>to</u></strong> write to them. Here are some links:</p>
-				<ul style="font-size:0.5em;">
+				<ul style="font-size:0.75em;">
 					<li><a href="https://www.whitehouse.gov/contact/" target="_blank">President Trump</a></li>
 					<li><a href="https://www.mcsally.senate.gov/contact_martha" target="_blank">Senator McSally (Arizona)</a></li>
 					<li><a href="https://www.sinema.senate.gov/contact-kyrsten" target="_blank">Senator Sinema (Arizona)</a></li>

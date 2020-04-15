@@ -1,8 +1,10 @@
+com/royware/corona/dashboard/model/ChartConfig.class
 com/royware/corona/dashboard/services/ChartServiceImpl.class
 com/royware/corona/dashboard/model/WorldRecords.class
 com/royware/corona/dashboard/interfaces/CanonicalCases.class
 com/royware/corona/dashboard/services/ChartServiceDaoImpl.class
 com/royware/corona/dashboard/interfaces/ChartListService.class
+com/royware/corona/dashboard/model/DashboardChart.class
 com/royware/corona/dashboard/model/UnitedStatesCases.class
 com/royware/corona/dashboard/model/WorldCases.class
 com/royware/corona/dashboard/interfaces/ChartListDataService.class
