@@ -18,7 +18,7 @@
 	<div class="container">
 		<%@ include file="common/header-common.jspf" %>
 		<section>
-			<h1>Coronavirus Dashboard Creator</h1>
+			<h2>Coronavirus Dashboard Creator</h2>
 			<region:form modelAttribute="region" action="${pageContext.request.contextPath}/dashboard" method="POST">
 				<table class="table table-hover">
 				  <thead>
@@ -29,24 +29,28 @@
 				  </thead>
 				  <tbody>
 				    <tr class="info">
-				      <td><button class="btn btn-info btn-lg" name="region" value=${us} type="submit">United States</button></td>
+				      <td><button class="btn btn-info btn-sm" name="region" value=${USA} type="submit">United States</button></td>
 				      <td>Dashboard for the entire United States</td>
 				    </tr>
 				    <tr class="danger">
-				      <td><button class="btn btn-info btn-lg" name="region" value=${us_no_ny} type="submit">US no NY</button></td>
+				      <td><button class="btn btn-info btn-sm" name="region" value=${USA_NO_NY} type="submit">US no NY</button></td>
 				      <td>Dashboard for the United States, excluding New York state</td>
 				    </tr>
 				    <tr class="danger">
-				      <td><button class="btn btn-danger btn-lg" name="region" value=${ny} type="submit">New York</button></td>
+				      <td><button class="btn btn-danger btn-sm" name="region" value=${NY} type="submit">New York</button></td>
 				      <td>Dashboard for the state of New York</td>
 				    </tr>
 				    <tr class="danger">
-				      <td><button class="btn btn-danger btn-lg" name="region" value=${az} type="submit">Arizona</button></td>
+				      <td><button class="btn btn-danger btn-sm" name="region" value=${AZ} type="submit">Arizona</button></td>
 				      <td>Dashboard for the state of Arizona</td>
 				    </tr>
 				    <tr class="warning">
-				      <td><button class="btn btn-warning btn-lg" name="region" value=${ita} type="submit">Italy</button></td>
+				      <td><button class="btn btn-warning btn-sm" name="region" value=${ITA} type="submit">Italy</button></td>
 				      <td>Dashboard for the country of Italy</td>
+				    </tr>
+				    <tr class="warning">
+				      <td><button class="btn btn-warning btn-sm" name="region" value=${DEU} type="submit">Germany</button></td>
+				      <td>Dashboard for the country of Germany</td>
 				    </tr>
 				  </tbody>
 				</table>

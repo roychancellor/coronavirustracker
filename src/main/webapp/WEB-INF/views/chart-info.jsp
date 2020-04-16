@@ -22,15 +22,15 @@
 		<table class="table table-dark">
 			<tr>
 				<td class="col-md-2">
-				<div id="chartContainer11" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-11.png">
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">This chart shows the total (cumulative) number of cases as reported by the data source versus the
+				<div id="chartContainer11" style="height: 380px; width: 100%"><img src="resources/images/chartinfo/Chart-11.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the total (cumulative) number of cases as reported by the data source versus the
 				number of days since cases became greater than zero. This chart has, perhaps, the least amount of valuable information, as it does not
 				reference the size of the population; nevertheless, its shape is able to give an overall picture of the rate of change of cases over time.</p>
 				</div>
 				</td>
 				<td class="col-md-2">
-				<div id="chartContainer12" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-12.png">
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">This chart shows the rate of change of cases in
+				<div id="chartContainer12" style="height: 380px; width: 100%"><img src="resources/images/chartinfo/Chart-12.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the rate of change of cases in
 				units of % per day. For example, if the current number of cases is 100 today and 4 new cases are added, the rate of change is 4% per day.
 				This is similar to a car's speed-o-meter: How fast the car is moving in miles per hour. The lower the rate of change,
 				the fewer number of new cases are being added each day. Note that as long as the rate is positive, the number of cases is still increasing,
@@ -39,15 +39,15 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer21" style="height: 400px; width: 100%"><img src="resources/images/chartinfo/Chart-21.png">
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">This chart shows the acceleration of cases, or the 
+				<td class="col-md-2"><div id="chartContainer21" style="height: 430px; width: 100%"><img src="resources/images/chartinfo/Chart-21.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the acceleration of cases, or the 
 				rate of change of the rate of change of cases in units of % per day. Keeping with the car analogy, this is a measure of how hard you
 				are pressing the gas pedal (positive acceleration) or pressing the brake (negative acceleration). For coronavirus, we want negative
 				acceleration, implying that while cases are still increasing, the rate of change is decreasing (braking --> slowing down).</p>
 				</div>
 				</td>
-				<td class="col-md-2"><div id="chartContainer22" style="height: 400px; width: 100%"><img src="resources/images/chartinfo/Chart-22.png">
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">This chart shows the daily change in cases versus
+				<td class="col-md-2"><div id="chartContainer22" style="height: 430px; width: 100%"><img src="resources/images/chartinfo/Chart-22.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the daily change in cases versus
 				the total cases and is important for detecting the change from "increasing at an increasing rate" to "increasing at a decreasing rate",
 				mathematically called the inflection point. Keeping with the car analogy, this is the point at which you hit the brakes after pressing the 
 				gas pedal to accelerate to a constant speed. The straight line is a reference line that shows how change in cases
@@ -58,12 +58,12 @@
 			</tr>
 			<tr>
 				<td class="col-md-2"><div id="chartContainer31" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-31.png">
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">This chart is exactly the same as the previous
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the previous
 				chart, except for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
 				</div>
 				</td>
 				<td class="col-md-2"><div id="chartContainer32" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-32.png">
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">This chart is exactly the same as
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
 				the rate of change of cases (speed-o-meter), except for deaths.  Note that deaths lags cases by a few days,
 				but the time scale here is the same as cases.</p>
 				</div>

@@ -1,6 +1,6 @@
 package com.royware.corona.dashboard.model;
 
-public class ChartConfig {
+public class DashboardChartConfig {
 	private String chartTitle;
 	private String xAxisTitle;
 	private String yAxisTitle;
@@ -29,11 +29,11 @@ public class ChartConfig {
 	private String yGridDashType;
 	private String yAxisNumberSuffix;
 	
-	public ChartConfig() {
+	public DashboardChartConfig() {
 		
 	}
 	
-	public ChartConfig(String chartTitle, String xAxisTitle, String yAxisTitle, String chartType) {
+	public DashboardChartConfig(String chartTitle, String xAxisTitle, String yAxisTitle, String chartType) {
 		this.chartTitle = chartTitle;
 		this.xAxisTitle = xAxisTitle;
 		this.yAxisTitle = yAxisTitle;

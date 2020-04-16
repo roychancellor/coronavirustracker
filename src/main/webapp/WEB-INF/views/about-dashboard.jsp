@@ -22,18 +22,18 @@
 		<table class="table table-dark">
 			<tr>
 				<td class="col-md-2">
-				<div id="chartContainer11" style="height: 120px; width: 100%">
+				<div id="chartContainer11" style="height: 140px; width: 100%">
 				<h3 style="color:#522398;">Why another Coronavirus site?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">There are certainly far more flashy sites
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">There are certainly far more flashy sites
 				out there that are more visually appealing and dynamic. This site has a different purpose. Here, I am attempting to look at the data
 				a little differently than the other sites to help satisfy my curiosity and inform my own
 				opinions about when it is safe to "go back into the water", as it were.</p>
 				</div>
 				</td>
 				<td class="col-md-2">
-				<div id="chartContainer12" style="height: 120px; width: 100%">
+				<div id="chartContainer12" style="height: 140px; width: 100%">
 				<h3 style="color:#522398;">What are the data sources?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">All United States data comes from
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">All United States data comes from
 				<a href="https://covidtracking.com">The COVID Tracking Project</a> which offers some really sweet APIs for easy access of the data by a computer. This site
 				seems to be gathering data in a serious way, attempting to be as accurate as possible. Data for any other countries comes from
 				<a href="https://opendata.ecdc.europa.eu/covid19/casedistribution/json/">European Center for Disease Control</a> which offers
@@ -42,16 +42,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer21" style="height: 100px; width: 100%">
+				<td class="col-md-2"><div id="chartContainer21" style="height: 120px; width: 100%">
 				<h3 style="color:#522398;">Why such a limited selection of regions?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">Mainly due to my limited time to spend
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">Mainly due to my limited time to spend
 				developing the site. Time permitting, I will add a clickable U.S. map and add more countries. For now, I think these are the
 				most relevant to most people I know. Stay tuned, non-Arizonians...</p>
 				</div>
 				</td>
-				<td class="col-md-2"><div id="chartContainer22" style="height: 100px; width: 100%">
+				<td class="col-md-2"><div id="chartContainer22" style="height: 120px; width: 100%">
 				<h3 style="color:#522398;">What are all these charts?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">Click on the Chart Info button when viewing a
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">Click on the Chart Info button when viewing a
 				dashboard page for an explanation of each chart. If it seems too technical, well, consider that I am a mechanical engineer by training,
 				who taught mathematics, and who works as a software engineer......get over it.  :-)</p>
 				</div>
@@ -60,7 +60,7 @@
 			<tr>
 				<td class="col-md-2"><div id="chartContainer31" style="height: 200px; width: 100%">
 				<h3 style="color:#522398;">Who is the site creator?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">Roy Chancellor is a guy who likes math and likes
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">Roy Chancellor is a guy who likes math and likes
 				to program. I recently began a career as a software engineer after working as a math teacher and mechanical engineer. Like all of you,
 				I am currently homebound for work and want to let the data inform me when I *should* be able to return to normal. Very grateful for my job,
 				having said job means I work on the site part-time in the evenings.</p>
@@ -68,7 +68,7 @@
 				</td>
 				<td class="col-md-2"><div id="chartContainer32" style="height: 200px; width: 100%">
 				<h3 style="color:#522398;">Your site isn't completely terrible, how did you build it?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">The site is a 
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">The site is a 
 				<a href="https://www.java.com/en/">Java</a> application that uses <a href="https://en.wikipedia.org/wiki/JavaServer_Pages">JSP</a>
 				and <a href="https://getbootstrap.com">Bootstrap</a> to
 				render the front-end pages that you see. Sorry, no React, Angular, etc. Underneath, it uses Java with
@@ -85,7 +85,7 @@
 			<tr>
 				<td class="col-md-2"><div id="chartContainer22" style="height: 200px; width: 100%">
 				<h3 style="color:#522398;">How can I write to law makers?</h3>
-				<p style="font-size:0.5em; color:white; padding:2px; margin:2px; line-height:1.0em;">I'm not about to tell you <strong><u>what</u></strong>
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">I'm not about to tell you <strong><u>what</u></strong>
 				to write to your elected officials, but I <strong><u>will</u></strong> tell you <strong><u>to</u></strong> write to them. Here are some links:</p>
 				<ul style="font-size:0.75em;">
 					<li><a href="https://www.whitehouse.gov/contact/" target="_blank">President Trump</a></li>

@@ -3,7 +3,6 @@ package com.royware.corona.dashboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +27,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.interfaces.ChartService;
-import com.royware.corona.dashboard.model.ChartConfig;
-import com.royware.corona.dashboard.model.DashboardChart;
+import com.royware.corona.dashboard.model.DashboardChartConfig;
+import com.royware.corona.dashboard.model.DashboardChartData;
+import com.royware.corona.dashboard.model.DashboardStatistics;
+import com.royware.corona.dashboard.model.Regions;
+import com.royware.corona.dashboard.model.Dashboard;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
 import com.royware.corona.dashboard.model.WorldCases;
 import com.royware.corona.dashboard.services.ChartListDataServiceImpl;
@@ -53,6 +55,9 @@ public class DashboardController {
 	
 	@Autowired
 	ChartListDataService dataService;
+	
+	@Autowired
+	DashboardStatistics dashStats;
 	
 	@Bean
 	public ChartListDataService dataService() {
@@ -78,22 +83,8 @@ public class DashboardController {
 	private static final String COMMENTARY_PAGE = "commentary";
 	private static final String DASHBOARD_PAGE = "dashboard";
 	private static final String CHART_INFO_PAGE = "chart-info";
-	private static final String REGION_US = "us";
-	private static final String REGION_US_NO_NY = "us_no_ny";
-	private static final String REGION_NY = "ny";
-	private static final String REGION_AZ = "az";
-	private static final String REGION_ITA = "ita";
+	private static final String CACHE_KEY = "COVID_TRACKING";
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	
-	private static Map<String, String> abbrevToFull = new HashMap<>();
-	static {
-		abbrevToFull.put(REGION_US, "United States");
-		abbrevToFull.put(REGION_US_NO_NY, "U.S. w/o New York");
-		abbrevToFull.put(REGION_NY, "New York State");
-		abbrevToFull.put(REGION_AZ, "Arizona");
-		abbrevToFull.put(REGION_ITA, "Italy");
-	}
-
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -103,11 +94,13 @@ public class DashboardController {
 	@GetMapping(value = "/corona")
 	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
 		map.addAttribute("region", region);
-		map.addAttribute("us", REGION_US);
-		map.addAttribute("us_no_ny", REGION_US_NO_NY);
-		map.addAttribute("ny", REGION_NY);
-		map.addAttribute("az", REGION_AZ);
-		map.addAttribute("ita", REGION_ITA);
+		map.addAttribute(Regions.USA.name(), Regions.USA.name());
+		map.addAttribute(Regions.USA_NO_NY.name(), Regions.USA_NO_NY.name());
+		map.addAttribute(Regions.NY.name(), Regions.NY.name());
+		map.addAttribute(Regions.AZ.name(), Regions.AZ.name());
+		map.addAttribute(Regions.ITA.name(), Regions.ITA.name());
+		map.addAttribute(Regions.DEU.name(), Regions.DEU.name());
+
 		return HOME_PAGE;
 	}
 	
@@ -119,54 +112,54 @@ public class DashboardController {
 	 */
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
-		log.info("STUB-OUT: Making dashboard for region: " + region);	
+		log.info("Making dashboard for region: " + region);	
 		
 		List<UnitedStatesCases> usList = new ArrayList<>();
 		List<WorldCases> worldList = new ArrayList<>();
 		
-		switch(region) {
-		case REGION_US:
-			usList = dataService.getAllUsData("COVID_TRACKING");
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, getRegionFullName(region)));
-			break;
-		case REGION_US_NO_NY:
-			usList = dataService.getAllUsDataExcludingState(REGION_NY);
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, getRegionFullName(region)));
-			break;
-		case REGION_NY:
-			usList = dataService.getSingleUsStateData(REGION_NY);
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, getRegionFullName(region)));
-			break;
-		case REGION_AZ:
-			usList = dataService.getSingleUsStateData(REGION_AZ);
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, getRegionFullName(region)));
-			break;
-		case REGION_ITA:
-			worldList = dataService.getSingleNonUsCountryData(REGION_ITA);
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(worldList, getRegionFullName(region)));
-			break;
+		if(Regions.valueOf(region.toUpperCase()) == Regions.USA) {
+			usList = Regions.USA.getRegionDataList(dataService, CACHE_KEY);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, Regions.USA.getRegionData().getFullName(), dashStats));
+		} else if(Regions.valueOf(region.toUpperCase()) == Regions.USA_NO_NY) {
+			usList = Regions.USA_NO_NY.getRegionDataList(dataService, region);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, Regions.USA_NO_NY.getRegionData().getFullName(), dashStats));
+		} else if(region.length() == 2) {
+			usList = Regions.valueOf(region).getRegionDataList(dataService, region);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(usList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
+		} else {
+			worldList = Regions.valueOf(region).getRegionDataList(dataService, region);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(worldList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
 		}
 		
-		map.addAttribute("fullregion", getRegionFullName(region));
-//		configureDashboardCharts(map, getRegionFullName(region));
-		
+		map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
+		map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
+		map.addAttribute("dashstats", dashStats);
+
 		return DASHBOARD_PAGE;
 	}
 	
-	private String getRegionFullName(String regionAbbreviation) {
-		return abbrevToFull.get(regionAbbreviation);
-	}
-	
-	private <T extends CanonicalCases> List<DashboardChart> makeAllDashboardCharts(List<T> caseList, String region) {
-		List<DashboardChart> dashboardChartList = new ArrayList<>();
+	private <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> caseList, String region, DashboardStatistics dashStats) {
+		List<Dashboard> dashboardList = new ArrayList<>();
 		List<List<Map<Object, Object>>> dataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(caseList);
 		List<List<Map<Object, Object>>> dataRateOfCasesByTime = chartService.getDailyRateOfChangeOfCasesWithMovingAverage(caseList);
 		List<List<Map<Object, Object>>> dataAccelOfCasesByTime = chartService.getDailyAccelerationOfCasesWithMovingAverage(caseList);
-		List<List<Map<Object, Object>>> dataRateOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(caseList);
-		List<List<Map<Object, Object>>> dataDeathsByTime = chartService.getChangeInTotalDeathsVersusDeathsswithExponentialLine(caseList);
+		List<List<Map<Object, Object>>> dataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(caseList);
+		List<List<Map<Object, Object>>> dataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsswithExponentialLine(caseList);
 		List<List<Map<Object, Object>>> dataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(caseList);
 		
-		ChartConfig configCasesByTime = new ChartConfig("Total Cases in " + region,
+		//Set all the individual dashboard statistics
+		dashStats.setCasesTotal((int)dataCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y"));
+		dashStats.setCasesToday((int)dataCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y")
+				- (int)dataCasesByTime.get(0).get(dataCasesByTime.size() - 2).get("y"));
+		dashStats.setRateOfCasesToday((double)dataRateOfCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y"));
+		dashStats.setAccelOfCasesToday((double)dataAccelOfCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y"));
+		dashStats.setDeathsTotal((int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.size() - 1).get("x"));
+		dashStats.setDeathsToday((int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.size() - 1).get("x")
+				- (int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.size() - 2).get("x"));
+		dashStats.setRateOfDeathsToday((double)dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.size() - 1).get("y"));
+
+		/////Configure all the dashboards individually
+		DashboardChartConfig configCasesByTime = new DashboardChartConfig("Total Cases in " + region,
 				"Days Since Cases > 0", "Total Cases", "scatter");
 		configCasesByTime.setyAxisNumberSuffix("");
 		configCasesByTime.setxAxisPosition("bottom");
@@ -184,11 +177,11 @@ public class DashboardController {
 		int factor = (int)Math.pow(10, (int)Math.log10(maxY));
 		configCasesByTime.setyAxisMax(maxY / factor * factor + factor);
 		configCasesByTime.setyAxisInterval(factor);
-		log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configCasesByTime.getyAxisMax());
+//		log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configCasesByTime.getyAxisMax());
 
-		dashboardChartList.add(new DashboardChart(dataCasesByTime, configCasesByTime));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataCasesByTime), configCasesByTime));
 		
-		ChartConfig rateOfChangeOfCasesChartConfig = new ChartConfig("Rate of Change of Cases in " + region,
+		DashboardChartConfig rateOfChangeOfCasesChartConfig = new DashboardChartConfig("Rate of Change of Cases in " + region,
 				"Days Since Cases > 0", "Percent Change in New Cases", "scatter");
 		rateOfChangeOfCasesChartConfig.setyAxisNumberSuffix("%");
 		rateOfChangeOfCasesChartConfig.setxAxisPosition("bottom");
@@ -208,9 +201,9 @@ public class DashboardController {
 		rateOfChangeOfCasesChartConfig.setyAxisMax(maxY / factor * factor + factor);
 		rateOfChangeOfCasesChartConfig.setyAxisInterval(factor);
 
-		dashboardChartList.add(new DashboardChart(dataRateOfCasesByTime, rateOfChangeOfCasesChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfCasesByTime), rateOfChangeOfCasesChartConfig));
 		
-		ChartConfig accelerationOfCasesChartConfig = new ChartConfig("Acceleration of Cases in " + region,
+		DashboardChartConfig accelerationOfCasesChartConfig = new DashboardChartConfig("Acceleration of Cases in " + region,
 				"Days Since Cases > 0", "Percent Change in the Rate of New Cases", "scatter");
 		accelerationOfCasesChartConfig.setyAxisNumberSuffix("%");
 		accelerationOfCasesChartConfig.setxAxisPosition("bottom");
@@ -233,9 +226,9 @@ public class DashboardController {
 		accelerationOfCasesChartConfig.setyAxisInterval(factor);
 		accelerationOfCasesChartConfig.setyAxisMax(maxY / factor * factor + factor);
 		
-		dashboardChartList.add(new DashboardChart(dataAccelOfCasesByTime, accelerationOfCasesChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataAccelOfCasesByTime), accelerationOfCasesChartConfig));
 		
-		ChartConfig rateOfCasesVersusCasesChartConfig = new ChartConfig("Detecting Inflection of Cases in " + region,
+		DashboardChartConfig rateOfCasesVersusCasesChartConfig = new DashboardChartConfig("Detecting Inflection of Cases in " + region,
 				"Total Cases", "Daily Change in Total Cases", "scatter");
 		rateOfCasesVersusCasesChartConfig.setyAxisNumberSuffix("");
 		rateOfCasesVersusCasesChartConfig.setxAxisPosition("bottom");
@@ -245,18 +238,18 @@ public class DashboardController {
 		rateOfCasesVersusCasesChartConfig.setShowLegend("true");
 		rateOfCasesVersusCasesChartConfig.setDataPointSize(1);
 		rateOfCasesVersusCasesChartConfig.setxGridDashType("dot");
-		rateOfCasesVersusCasesChartConfig.setxAxisMin((int)Math.pow(10, (int)Math.log10((Integer)dataRateOfCasesByCases.get(0).get(0).get("x"))));
+		rateOfCasesVersusCasesChartConfig.setxAxisMin((int)Math.pow(10, (int)Math.log10((Integer)dataChangeOfCasesByCases.get(0).get(0).get("x"))));
 		rateOfCasesVersusCasesChartConfig.setxAxisMax((int)Math.pow(10,
-					1 + (int)Math.log10((Integer)dataRateOfCasesByCases.get(0).get(dataRateOfCasesByCases.get(0).size() - 1).get("x"))));
-		Double minValue = (Double)dataRateOfCasesByCases.get(0).get(0).get("y");
-		int digits = minValue > 0 ? (int)Math.log10((Double)dataRateOfCasesByCases.get(0).get(0).get("y")) : 1;
+					1 + (int)Math.log10((Integer)dataChangeOfCasesByCases.get(0).get(dataChangeOfCasesByCases.get(0).size() - 1).get("x"))));
+		Double minValue = (Double)dataChangeOfCasesByCases.get(0).get(0).get("y");
+		int digits = minValue > 0 ? (int)Math.log10((Double)dataChangeOfCasesByCases.get(0).get(0).get("y")) : 1;
 		rateOfCasesVersusCasesChartConfig.setyAxisMin((int)Math.pow(10, digits));
 		rateOfCasesVersusCasesChartConfig.setyAxisMax((int)Math.pow(10,
-					1 + (int)Math.log10((double)getMaxValueFromListOfXYMaps(dataRateOfCasesByCases.get(1)))));
+					1 + (int)Math.log10((double)getMaxValueFromListOfXYMaps(dataChangeOfCasesByCases.get(1)))));
 		
-		dashboardChartList.add(new DashboardChart(dataRateOfCasesByCases, rateOfCasesVersusCasesChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataChangeOfCasesByCases), rateOfCasesVersusCasesChartConfig));
 		
-		ChartConfig rateOfDeathsVersusDeathsChartConfig = new ChartConfig("Detecting Inflection of Deaths in " + region,
+		DashboardChartConfig rateOfDeathsVersusDeathsChartConfig = new DashboardChartConfig("Detecting Inflection of Deaths in " + region,
 				"Total Deaths", "Daily Change in Total Deaths", "scatter");
 		rateOfDeathsVersusDeathsChartConfig.setyAxisNumberSuffix("");
 		rateOfDeathsVersusDeathsChartConfig.setxAxisPosition("bottom");
@@ -266,18 +259,18 @@ public class DashboardController {
 		rateOfDeathsVersusDeathsChartConfig.setShowLegend("true");
 		rateOfDeathsVersusDeathsChartConfig.setDataPointSize(1);
 		rateOfDeathsVersusDeathsChartConfig.setxGridDashType("dot");
-		rateOfDeathsVersusDeathsChartConfig.setxAxisMin((int)Math.pow(10, (int)Math.log10((Integer)dataDeathsByTime.get(0).get(0).get("x"))));
+		rateOfDeathsVersusDeathsChartConfig.setxAxisMin((int)Math.pow(10, (int)Math.log10((Integer)dataChangeOfDeathsByDeaths.get(0).get(0).get("x"))));
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMax((int)Math.pow(10,
-					1 + (int)Math.log10((Integer)dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("x"))));
-		minValue = (Double)dataDeathsByTime.get(0).get(0).get("y");
-		digits = minValue > 0 ? (int)Math.log10((Double)dataDeathsByTime.get(0).get(0).get("y")) : 1;
+					1 + (int)Math.log10((Integer)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x"))));
+		minValue = (Double)dataChangeOfDeathsByDeaths.get(0).get(0).get("y");
+		digits = minValue > 0 ? (int)Math.log10((Double)dataChangeOfDeathsByDeaths.get(0).get(0).get("y")) : 1;
 		rateOfDeathsVersusDeathsChartConfig.setyAxisMin((int)Math.pow(10, digits));
 		rateOfDeathsVersusDeathsChartConfig.setyAxisMax((int)Math.pow(10,
-					1 + (int)Math.log10((double)getMaxValueFromListOfXYMaps(dataDeathsByTime.get(1)))));
+					1 + (int)Math.log10((double)getMaxValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(1)))));
 		
-		dashboardChartList.add(new DashboardChart(dataDeathsByTime, rateOfDeathsVersusDeathsChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataChangeOfDeathsByDeaths), rateOfDeathsVersusDeathsChartConfig));
 		
-		ChartConfig rateOfChangeOfDeathsChartConfig = new ChartConfig("Rate of Change of Deaths in " + region,
+		DashboardChartConfig rateOfChangeOfDeathsChartConfig = new DashboardChartConfig("Rate of Change of Deaths in " + region,
 				"Days Since Cases > 0", "Percent Change in New Deaths", "scatter");
 		rateOfChangeOfDeathsChartConfig.setyAxisNumberSuffix("%");
 		rateOfChangeOfDeathsChartConfig.setxAxisPosition("bottom");
@@ -297,9 +290,9 @@ public class DashboardController {
 		rateOfChangeOfDeathsChartConfig.setyAxisInterval(factor);
 		rateOfChangeOfDeathsChartConfig.setyAxisMax(maxY / factor * factor + factor);
 		
-		dashboardChartList.add(new DashboardChart(dataRateOfDeathsByTime, rateOfChangeOfDeathsChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfDeathsByTime), rateOfChangeOfDeathsChartConfig));
 		
-		return dashboardChartList;
+		return dashboardList;
 	}
 	
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {

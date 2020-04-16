@@ -151,7 +151,7 @@
 			var yValue;
 			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
 				var dataPointsArr = [[], []];
-				<chart:forEach items="${dataset.chartLists}" var="dataPoints" varStatus="loop">	
+				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");

@@ -1,6 +1,6 @@
 <footer>
 	<p>
-		<a href="${pageContext.request.contextPath}/about-dashboard">About</a> | 
+		<a href="${pageContext.request.contextPath}/about">About</a> | 
 		<a href="${pageContext.request.contextPath}/commentary">Commentary</a> | 
 		<a href="${pageContext.request.contextPath}/home-page">Home</a>
 	</p>

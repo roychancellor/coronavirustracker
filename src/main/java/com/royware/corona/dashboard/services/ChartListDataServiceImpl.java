@@ -47,6 +47,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 20;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final long CACHE_EVICT_PERIOD_MILLISECONDS = 3 * 60 * 60 * 1000;  //every 3 hours
+	private static final long CACHE_REPOPULATE_PERIOD_MILLISECONDS = CACHE_EVICT_PERIOD_MILLISECONDS + 2000;
 	private static final String CACHE_NAME = "dataCache";
 	private static final int US_CUTOFF_DATE = 20200304;
 
@@ -129,7 +130,6 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 
 	@Override
-//	@Cacheable(key = "#stateToExclude", value = CACHE_NAME)
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		log.info("***** ABOUT TO FILTER *OUT* STATE: " + stateToExclude + " ****");
@@ -167,7 +167,6 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		
 		Collections.reverse(casesInOneCountry);
 		
-//		log.info("COUNTRY DATA:");
 		WorldCases wc;
 		int positiveCases = 0;
 		int negativeCases = 0;
@@ -175,9 +174,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		for(int i = 0; i < casesInOneCountry.size(); i++) {
 			wc = casesInOneCountry.get(i);
 			positiveCases += wc.getDailyNewCases();
-			negativeCases += wc.getDailyNewCases();  //DELETE THIS LATER...DON'T USE NEGATIVES FOR ANYTHING
 			totalDeaths += wc.getDailyNewDeaths();
-//			log.info("date: " + wc.getDate() + ", cases: " + wc.getDailyNewCases() + ", totalCases: " + positiveCases);
 			if(positiveCases >= MINIMUM_TOTAL_CASES_FOR_INCLUSION) {
 				wc.setTotalPositiveCases(positiveCases);
 				wc.setTotalNegativeCases(negativeCases);
@@ -200,6 +197,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		repopulateCaches();
 	}
 	
+	@Scheduled(fixedDelay = CACHE_REPOPULATE_PERIOD_MILLISECONDS)
 	private void repopulateCaches() {
 		getAllUsData("COVID_TRACKING");
 		getAllWorldData("EURO_CDC");

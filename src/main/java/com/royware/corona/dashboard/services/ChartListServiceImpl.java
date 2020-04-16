@@ -288,11 +288,9 @@ public class ChartListServiceImpl implements ChartListService {
 			movingAverage = 0;
 			for(int d = dayIndex; d > dayIndex - MOVING_AVERAGE_SIZE; d--) {
 				amountToAdd = caseMap.get(d);
-//				log.info("dayIndex: " + dayIndex + ", amountToAdd: " + amountToAdd);
 				if(!(Double.isNaN(amountToAdd) || Double.isInfinite(amountToAdd))) {
 					movingAverage += amountToAdd;
 					divisor++;
-					//log.info("Success...movingAverage = " + movingAverage);
 				} else {
 					log.info("Oops...amountToAdd is not a real number, it is " + amountToAdd + ", so it will NOT be in the moving average.");
 				}
