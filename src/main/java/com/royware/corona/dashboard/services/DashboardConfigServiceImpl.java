@@ -75,7 +75,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		configCasesByTime.setLegendHorizonalAlign("left");
 		configCasesByTime.setLegendVerticalAlign("top");
 		configCasesByTime.setDataSeries1Name("Total cases");
-		configCasesByTime.setDataSeries2Name("Daily new cases");
+		configCasesByTime.setDataSeries2Name("4-day Moving Average of New Cases");
 		
 		dashboardList.add(new Dashboard(new DashboardChartData(dataCasesByTime), configCasesByTime));
 

@@ -19,6 +19,7 @@ public class ChartListServiceImpl implements ChartListService {
 	private static final int MOVING_AVERAGE_SIZE = 4;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
+	private Map<Integer, Double> dailyCases = new HashMap<>();
 	private Map<Integer, Double> dailyPctChgDeaths = new LinkedHashMap<>();
 	private Map<Integer, Double> dailyChgDeaths = new LinkedHashMap<>();
 	
@@ -52,13 +53,16 @@ public class ChartListServiceImpl implements ChartListService {
 			totalToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
-			xyPair = new HashMap<>();
-			xyPair.put("x", dayIndex);
-			xyPair.put("y", dailyChange);
-			dailyCaseList.add(xyPair);
+			dailyCases.put(dayIndex, dailyChange * 1.0);
+//			xyPair = new HashMap<>();
+//			xyPair.put("x", dayIndex);
+//			xyPair.put("y", dailyChange);
+//			dailyCaseList.add(xyPair);
 			dayIndex++;
 		}
-		scatterChartDataLists.add(dailyCaseList);
+		//make the MOVING AVERAGE
+//		scatterChartDataLists.add(dailyCaseList);
+		scatterChartDataLists.add(makeMovingAverageList(dailyCases, MOVING_AVERAGE_SIZE, regionCaseList.size()));
 		
 		log.info("***** DONE MAKING TOTAL CASES VERSUS TIME *****");
 

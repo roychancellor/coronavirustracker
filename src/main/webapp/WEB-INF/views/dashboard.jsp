@@ -228,29 +228,31 @@
 					maximum: config.xMaximum,
 					gridDashType: config.xGridDashType
 				},
-				data: [{
-					type: "scatter",
-					name: config.data1Name,
-					pointRadius: 1,
-					pointHoverRadius: 5,
-					fill: true,
-					tension: 0,
-					showLine: false,
-					dataPoints: dataPointsArr[0],
-					showInLegend: true
-				},
-				{
-					axisYType: "secondary",
-					name: config.data2Name,
-					type: "line",
-					markerSize: 0,
-					pointHoverRadius: 5,
-					fill: false,
-					tension: 0.4,
-					showLine: true,
-					dataPoints: dataPointsArr[1],
-					showInLegend: true
-				}]
+				data: [
+					{
+						type: "scatter",
+						name: config.data1Name,
+						pointRadius: 1,
+						pointHoverRadius: 5,
+						fill: true,
+						tension: 0,
+						showLine: false,
+						dataPoints: dataPointsArr[0],
+						showInLegend: true
+					},
+					{
+						axisYType: "secondary",
+						name: config.data2Name,
+						type: "line",
+						markerSize: 0,
+						pointHoverRadius: 5,
+						fill: false,
+						tension: 0.4,
+						showLine: true,
+						dataPoints: dataPointsArr[1],
+						showInLegend: true
+					}
+				]
 			});
 			chart.render();
 		}
