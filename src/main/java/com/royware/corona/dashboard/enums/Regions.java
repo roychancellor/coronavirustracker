@@ -20,26 +20,6 @@ public enum Regions {
 			return dataService.getAllUsData("COVID_TRACKING");
 		}
 	},
-	ITA {
-		public RegionData getRegionData() {
-			return new RegionData(this, 60360000, RegionLevels.COUNTRY, "Italy");
-		}
-		@SuppressWarnings("unchecked")
-		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
-		}
-	},
-	DEU {
-		public RegionData getRegionData() {
-			return new RegionData(this, 83020000, RegionLevels.COUNTRY, "Germany");
-		}
-		@SuppressWarnings("unchecked")
-		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
-		}
-	},
 	AUS {
 		public RegionData getRegionData() {
 			return new RegionData(this, 24990000, RegionLevels.COUNTRY, "Australia");
@@ -70,9 +50,9 @@ public enum Regions {
 			return dataService.getSingleNonUsCountryData(this.name());
 		}
 	},
-	JPN {
+	DEU {
 		public RegionData getRegionData() {
-			return new RegionData(this, 126500000, RegionLevels.COUNTRY, "Japan");
+			return new RegionData(this, 83020000, RegionLevels.COUNTRY, "Germany");
 		}
 		@SuppressWarnings("unchecked")
 		@Override
@@ -80,9 +60,49 @@ public enum Regions {
 			return dataService.getSingleNonUsCountryData(this.name());
 		}
 	},
-	MEX {
+	ESP {
 		public RegionData getRegionData() {
-			return new RegionData(this, 126200000, RegionLevels.COUNTRY, "Mexico");
+			return new RegionData(this, 46940000, RegionLevels.COUNTRY, "Spain");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
+			return dataService.getSingleNonUsCountryData(this.name());
+		}
+	},
+	FRA {
+		public RegionData getRegionData() {
+			return new RegionData(this, 66990000, RegionLevels.COUNTRY, "France");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
+			return dataService.getSingleNonUsCountryData(this.name());
+		}
+	},
+	GBR {
+		public RegionData getRegionData() {
+			return new RegionData(this, 66650000, RegionLevels.COUNTRY, "Great Britain");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
+			return dataService.getSingleNonUsCountryData(this.name());
+		}
+	},
+	ITA {
+		public RegionData getRegionData() {
+			return new RegionData(this, 60360000, RegionLevels.COUNTRY, "Italy");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
+			return dataService.getSingleNonUsCountryData(this.name());
+		}
+	},
+	JPN {
+		public RegionData getRegionData() {
+			return new RegionData(this, 126500000, RegionLevels.COUNTRY, "Japan");
 		}
 		@SuppressWarnings("unchecked")
 		@Override
@@ -100,9 +120,19 @@ public enum Regions {
 			return dataService.getSingleNonUsCountryData(this.name());
 		}
 	},
-	GBR {
+	MEX {
 		public RegionData getRegionData() {
-			return new RegionData(this, 66650000, RegionLevels.COUNTRY, "Great Britain");
+			return new RegionData(this, 126200000, RegionLevels.COUNTRY, "Mexico");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
+			return dataService.getSingleNonUsCountryData(this.name());
+		}
+	},
+	SGP {
+		public RegionData getRegionData() {
+			return new RegionData(this, 5639000, RegionLevels.COUNTRY, "Singapore");
 		}
 		@SuppressWarnings("unchecked")
 		@Override
