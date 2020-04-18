@@ -30,7 +30,7 @@ public class ChartListServiceImpl implements ChartListService {
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
-		List<Map<Object, Object>> expFitList = new ArrayList<>();
+		List<Map<Object, Object>> dailyCaseList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		int dayIndex = 0;
 		for(CanonicalCases cc : regionCaseList) {
@@ -42,18 +42,23 @@ public class ChartListServiceImpl implements ChartListService {
 		}
 		scatterChartDataLists.add(dataList);
 
-		//TODO: Figure out how to make the exponential regression fit data and populate it here
-		//For now, just make a generic exponential model: 100*exp(0.15*t)
-		dayIndex = 0;
+		//Makes a list of daily new cases for plotting on the secondary axis of the time chart
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
+		dayIndex = 1;
 		while(dayIndex < regionCaseList.size()) {
+			totalYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases();
+			totalToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
+			dailyChange = totalToday - totalYesterday;
+			dailyChange = dailyChange > 0 ? dailyChange : 0;
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-//			xyPair.put("y", 100 * Math.exp(0.15 * dayIndex));
-			xyPair.put("y", regionCaseList.get(dayIndex).getTotalPositiveCases());
-			expFitList.add(xyPair);
+			xyPair.put("y", dailyChange);
+			dailyCaseList.add(xyPair);
 			dayIndex++;
 		}
-		scatterChartDataLists.add(expFitList);
+		scatterChartDataLists.add(dailyCaseList);
 		
 		log.info("***** DONE MAKING TOTAL CASES VERSUS TIME *****");
 
@@ -163,7 +168,7 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataLists.add(dataList);
 
 		//make the EXPONENTIAL (will show as straight line on log-log graph)
-		double k = 0.30482; //need to compute this for each dataset using regression on a subset of the data (early days)
+		double k = 0.30998; //need to compute this for each dataset using regression on a subset of the data (early days)
 		scatterChartDataLists.add(makeExponentialLineList(regionCaseList.get(0).getTotalPositiveCases(),
 				regionCaseList.get(regionCaseList.size() - 1).getTotalPositiveCases(), k));
 
@@ -207,7 +212,7 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataLists.add(dataList);
 
 		//make the EXPONENTIAL (will show as straight line on log-log graph)
-		double k = 0.30482;  //need to compute this for region using regression on early data
+		double k = 0.29966;  //need to compute this for region using regression on early data
 		scatterChartDataLists.add(makeExponentialLineList(regionDataList.get(startDayIndex).getTotalDeaths(),
 				regionDataList.get(regionDataList.size() - 1).getTotalDeaths(), k));
 
