@@ -28,6 +28,10 @@ public class DashboardChartConfig {
 	private String xGridDashType;
 	private String yGridDashType;
 	private String yAxisNumberSuffix;
+	private String legendVerticalAlign;
+	private String legendHorizonalAlign;
+	private String dataSeries1Name;
+	private String dataSeries2Name;
 	
 	public DashboardChartConfig() {
 		
@@ -254,6 +258,38 @@ public class DashboardChartConfig {
 
 	public void setyAxisNumberSuffix(String yAxisNumberSuffix) {
 		this.yAxisNumberSuffix = yAxisNumberSuffix;
+	}
+
+	public String getLegendVerticalAlign() {
+		return legendVerticalAlign;
+	}
+
+	public void setLegendVerticalAlign(String legendVerticalAlign) {
+		this.legendVerticalAlign = legendVerticalAlign;
+	}
+
+	public String getLegendHorizonalAlign() {
+		return legendHorizonalAlign;
+	}
+
+	public void setLegendHorizonalAlign(String legendHorizonalAlign) {
+		this.legendHorizonalAlign = legendHorizonalAlign;
+	}
+
+	public String getDataSeries1Name() {
+		return dataSeries1Name;
+	}
+
+	public void setDataSeries1Name(String dataSeries1Name) {
+		this.dataSeries1Name = dataSeries1Name;
+	}
+
+	public String getDataSeries2Name() {
+		return dataSeries2Name;
+	}
+
+	public void setDataSeries2Name(String dataSeries2Name) {
+		this.dataSeries2Name = dataSeries2Name;
 	}
 	
 	

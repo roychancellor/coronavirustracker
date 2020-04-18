@@ -113,7 +113,8 @@
 		//ACTIONS
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
- 		for(var i = 0; i < 6; i++) {
+		addLoadEvent(makeChartCasesByTime(containers[0], configObjects[0], chartArray[0]));
+ 		for(var i = 1; i < 6; i++) {
  			addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
  		}
  		//END ACTIONS
@@ -134,7 +135,10 @@
 					yMinimum: parseInt("${config.chartConfig.yAxisMin}"),
 					yMaximum: parseInt("${config.chartConfig.yAxisMax}"),
 					yInterval: parseInt("${config.chartConfig.yAxisInterval}"),
-					yNumberSuffix: "${config.chartConfig.yAxisNumberSuffix}"
+					legendVAlign: "${config.chartConfig.legendVerticalAlign}",
+					legendHAlign: "${config.chartConfig.legendHorizonalAlign}",
+					data1Name: "${config.chartConfig.dataSeries1Name}",
+					data2Name: "${config.chartConfig.dataSeries2Name}"
 	 			};
 	 		</chart:forEach>
 		}
@@ -144,6 +148,11 @@
 				animationEnabled: true,
 				exportEnabled: true,
 				theme: 'light2', //light1, dark1, dark2
+				legend: {
+					verticalAlign: config.legendVAlign, //top, bottom
+					horizontalAlign: config.legendHAlign, //left, right
+					dockInsidePlotArea: true
+				},
 				title: {
 					text: config.chartTitle,
 					fontSize: 14
@@ -153,8 +162,7 @@
 					logarithmic: config.yAxisLogarithmic,
 					minimum: config.yMinimum,
 					maximum: config.yMaximum,
-					interval: config.yInterval,
-					suffix: config.yNumberSuffix
+					interval: config.yInterval
 				},
 				axisX: {
 					title: config.xAxisTitle,
@@ -165,21 +173,83 @@
 				},
 				data: [{
 					type: "scatter",
+					name: config.data1Name,
 					pointRadius: 1,
 					pointHoverRadius: 5,
 					fill: true,
 					tension: 0,
 					showLine: false,
-					dataPoints: dataPointsArr[0]
+					dataPoints: dataPointsArr[0],
+					showInLegend: true
 				},
 				{
+					type: "line",
+					name: config.data2Name,
+					markerSize: 0,
+					pointHoverRadius: 5,
+					fill: false,
+					tension: 0.4,
+					showLine: true,
+					dataPoints: dataPointsArr[1],
+					showInLegend: true
+				}]
+			});
+			chart.render();
+		}
+		
+		function makeChartCasesByTime(chartContainerString, config, dataPointsArr) {
+ 			var chart = new CanvasJS.Chart(chartContainerString, {
+				animationEnabled: true,
+				exportEnabled: true,
+				theme: 'light2', //light1, dark1, dark2
+				legend: {
+					verticalAlign: config.legendVAlign, //top, bottom
+					horizontalAlign: config.legendHAlign, //left, right
+					dockInsidePlotArea: true
+				},
+				title: {
+					text: config.chartTitle,
+					fontSize: 14
+				},
+				axisY: {
+					title: config.yAxisTitle,
+					logarithmic: config.yAxisLogarithmic,
+					minimum: config.yMinimum,
+					maximum: config.yMaximum,
+					interval: config.yInterval
+				},
+				axisY2: {
+					title: "Daily Cases"
+				},
+				axisX: {
+					title: config.xAxisTitle,
+					logarithmic: config.xAxisLogarithmic,
+					minimum: config.xMinimum,
+					maximum: config.xMaximum,
+					gridDashType: config.xGridDashType
+				},
+				data: [{
+					type: "scatter",
+					name: config.data1Name,
+					pointRadius: 1,
+					pointHoverRadius: 5,
+					fill: true,
+					tension: 0,
+					showLine: false,
+					dataPoints: dataPointsArr[0],
+					showInLegend: true
+				},
+				{
+					axisYType: "secondary",
+					name: config.data2Name,
 					type: "line",
 					markerSize: 0,
 					pointHoverRadius: 5,
 					fill: false,
 					tension: 0.4,
 					showLine: true,
-					dataPoints: dataPointsArr[1]
+					dataPoints: dataPointsArr[1],
+					showInLegend: true
 				}]
 			});
 			chart.render();

@@ -72,6 +72,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		configCasesByTime.setyAxisInterval(factor);
 //			log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configCasesByTime.getyAxisMax());
 
+		configCasesByTime.setLegendHorizonalAlign("left");
+		configCasesByTime.setLegendVerticalAlign("top");
+		configCasesByTime.setDataSeries1Name("Total cases");
+		configCasesByTime.setDataSeries2Name("Daily new cases");
+		
 		dashboardList.add(new Dashboard(new DashboardChartData(dataCasesByTime), configCasesByTime));
 
 		DashboardChartConfig rateOfChangeOfCasesChartConfig = new DashboardChartConfig(
@@ -99,6 +104,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfChangeOfCasesChartConfig.setyAxisMax(maxY / factor * factor + factor);
 		rateOfChangeOfCasesChartConfig.setyAxisInterval(factor);
 
+		rateOfChangeOfCasesChartConfig.setLegendHorizonalAlign("right");
+		rateOfChangeOfCasesChartConfig.setLegendVerticalAlign("top");
+		rateOfChangeOfCasesChartConfig.setDataSeries1Name("% Change in Cases");
+		rateOfChangeOfCasesChartConfig.setDataSeries2Name("4-day Moving Average");
+		
 		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfCasesByTime), rateOfChangeOfCasesChartConfig));
 
 		DashboardChartConfig accelerationOfCasesChartConfig = new DashboardChartConfig(
@@ -131,6 +141,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		accelerationOfCasesChartConfig.setyAxisInterval(factor);
 		accelerationOfCasesChartConfig.setyAxisMax(maxY / factor * factor + factor);
 
+		accelerationOfCasesChartConfig.setLegendHorizonalAlign("right");
+		accelerationOfCasesChartConfig.setLegendVerticalAlign("top");
+		accelerationOfCasesChartConfig.setDataSeries1Name("Acceleration of Cases");
+		accelerationOfCasesChartConfig.setDataSeries2Name("4-day Moving Average");
+		
 		dashboardList
 				.add(new Dashboard(new DashboardChartData(dataAccelOfCasesByTime), accelerationOfCasesChartConfig));
 
@@ -155,6 +170,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfCasesVersusCasesChartConfig.setyAxisMax((int) Math.pow(10,
 				1 + (int) Math.log10((double) getMaxValueFromListOfXYMaps(dataChangeOfCasesByCases.get(1)))));
 
+		rateOfCasesVersusCasesChartConfig.setLegendHorizonalAlign("left");
+		rateOfCasesVersusCasesChartConfig.setLegendVerticalAlign("top");
+		rateOfCasesVersusCasesChartConfig.setDataSeries1Name("Daily change in cases");
+		rateOfCasesVersusCasesChartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
+		
 		dashboardList.add(
 				new Dashboard(new DashboardChartData(dataChangeOfCasesByCases), rateOfCasesVersusCasesChartConfig));
 
@@ -184,6 +204,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		maxValue = maxValue > 0 ? maxValue : 1;
 		rateOfDeathsVersusDeathsChartConfig.setyAxisMax((int) Math.pow(10, 1 + (int) Math.log10(maxValue)));
 
+		rateOfDeathsVersusDeathsChartConfig.setLegendHorizonalAlign("left");
+		rateOfDeathsVersusDeathsChartConfig.setLegendVerticalAlign("top");
+		rateOfDeathsVersusDeathsChartConfig.setDataSeries1Name("Daily change in deaths");
+		rateOfDeathsVersusDeathsChartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
+		
 		dashboardList.add(
 				new Dashboard(new DashboardChartData(dataChangeOfDeathsByDeaths), rateOfDeathsVersusDeathsChartConfig));
 
@@ -211,6 +236,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfChangeOfDeathsChartConfig.setyAxisInterval(factor);
 		rateOfChangeOfDeathsChartConfig.setyAxisMax(maxY / factor * factor + factor);
 
+		rateOfChangeOfDeathsChartConfig.setLegendHorizonalAlign("right");
+		rateOfChangeOfDeathsChartConfig.setLegendVerticalAlign("top");
+		rateOfChangeOfDeathsChartConfig.setDataSeries1Name("% change in deaths");
+		rateOfChangeOfDeathsChartConfig.setDataSeries2Name("4-day Moving Average");
+		
 		dashboardList
 				.add(new Dashboard(new DashboardChartData(dataRateOfDeathsByTime), rateOfChangeOfDeathsChartConfig));
 
