@@ -1,9 +1,11 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 package com.royware.corona.dashboard;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -77,11 +79,11 @@ public class DashboardController {
 		return new RestTemplate();
 	}
 	
-	private static final String HOME_PAGE = "home-page";
+	private static final String HOME_PAGE = "home-page2";
 	private static final String ABOUT_PAGE = "about-dashboard";
 	private static final String MATH_PAGE = "math";
 	private static final String COMMENTARY_PAGE = "commentary";
-	private static final String DASHBOARD_PAGE = "dashboard";
+	private static final String DASHBOARD_PAGE = "dashboard2";
 	private static final String CHART_INFO_PAGE = "chart-info";
 	private static final String CACHE_KEY = "COVID_TRACKING";
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
@@ -133,6 +135,10 @@ public class DashboardController {
 		
 		map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
 		map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
+		map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
+		map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
+		map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
+		map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
 		map.addAttribute("dashstats", dashStats);
 
 		return DASHBOARD_PAGE;
@@ -148,15 +154,15 @@ public class DashboardController {
 		List<List<Map<Object, Object>>> dataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(caseList);
 		
 		//Set all the individual dashboard statistics
-		dashStats.setCasesTotal((int)dataCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y"));
-		dashStats.setCasesToday((int)dataCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y")
-				- (int)dataCasesByTime.get(0).get(dataCasesByTime.size() - 2).get("y"));
-		dashStats.setRateOfCasesToday((double)dataRateOfCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y"));
-		dashStats.setAccelOfCasesToday((double)dataAccelOfCasesByTime.get(0).get(dataCasesByTime.size() - 1).get("y"));
-		dashStats.setDeathsTotal((int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.size() - 1).get("x"));
-		dashStats.setDeathsToday((int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.size() - 1).get("x")
-				- (int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.size() - 2).get("x"));
-		dashStats.setRateOfDeathsToday((double)dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.size() - 1).get("y"));
+		dashStats.setCasesTotal((int)dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 1).get("y"));
+		dashStats.setCasesToday((int)dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 1).get("y")
+				- (int)dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 2).get("y"));
+		dashStats.setRateOfCasesToday((double)dataRateOfCasesByTime.get(0).get(dataRateOfCasesByTime.get(0).size() - 1).get("y"));
+		dashStats.setAccelOfCasesToday((double)dataAccelOfCasesByTime.get(0).get(dataAccelOfCasesByTime.get(0).size() - 1).get("y"));
+		dashStats.setDeathsTotal((int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x"));
+		dashStats.setDeathsToday((int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x")
+				- (int)dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 2).get("x"));
+		dashStats.setRateOfDeathsToday((double)dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 
 		/////Configure all the dashboards individually
 		DashboardChartConfig configCasesByTime = new DashboardChartConfig("Total Cases in " + region,

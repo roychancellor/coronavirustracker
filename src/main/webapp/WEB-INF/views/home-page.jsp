@@ -18,7 +18,6 @@
 	<div class="container">
 		<%@ include file="common/header-common.jspf" %>
 		<section>
-			<h2>Coronavirus Dashboard Creator</h2>
 			<region:form modelAttribute="region" action="${pageContext.request.contextPath}/dashboard" method="POST">
 				<table class="table table-hover">
 				  <thead>
