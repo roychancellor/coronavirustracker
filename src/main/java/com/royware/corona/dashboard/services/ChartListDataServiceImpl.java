@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -27,6 +28,7 @@ import com.royware.corona.dashboard.model.UnitedStatesCases;
  * Provides service methods for getting dashboard data from external sources
  */
 @Service
+@EnableScheduling
 public class ChartListDataServiceImpl implements ChartListDataService {
 //Leave these commented out for troubleshooting later. Just use normal object creation by constructor for now.
 //	@Autowired
@@ -47,7 +49,6 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final long CACHE_EVICT_PERIOD_MILLISECONDS = 3 * 60 * 60 * 1000;  //every 3 hours
-	private static final long CACHE_REPOPULATE_PERIOD_MILLISECONDS = CACHE_EVICT_PERIOD_MILLISECONDS + 2000;
 	private static final String CACHE_NAME = "dataCache";
 	private static final int US_CUTOFF_DATE = 20200304;
 
@@ -192,13 +193,13 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	
 	@CacheEvict(allEntries = true, cacheNames = {CACHE_NAME})
 	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
+	@Override
 	public void cacheEvict() {
 		log.info("CACHES EVICTED AT: " + LocalDateTime.now());
 		log.info("Repopulating caches...");
 		repopulateCaches();
 	}
 	
-	@Scheduled(fixedDelay = CACHE_REPOPULATE_PERIOD_MILLISECONDS)
 	private void repopulateCaches() {
 		getAllUsData("COVID_TRACKING");
 		getAllWorldData("EURO_CDC");

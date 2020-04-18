@@ -14,4 +14,5 @@ public interface ChartListDataService {
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateAbbreviation);
 	public List<WorldCases> getAllWorldData(String cacheKey);
 	public List<WorldCases> getSingleNonUsCountryData(String countryName);
+	public void cacheEvict();
 }
