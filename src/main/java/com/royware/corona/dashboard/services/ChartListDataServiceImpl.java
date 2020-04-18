@@ -154,8 +154,9 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
+		List<WorldCases> worldCases = getAllWorldData(CacheKeys.CACHE_KEY_WORLD.toString());
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
-		casesInOneCountry = getAllWorldData(CacheKeys.CACHE_KEY_WORLD.toString())
+		casesInOneCountry = worldCases
 				.stream()
 				.filter(wc -> {
 					return wc.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode)
