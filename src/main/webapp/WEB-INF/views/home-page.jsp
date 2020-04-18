@@ -105,19 +105,19 @@
 		    </div>
 		    <h4 style="color:#232f98;">Reference Countries</h4>
 		    <div class="row">
-		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${ITA} type="submit">Australia</button></div>
+		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${AUS} type="submit">Australia</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${CAN} type="submit">Canada</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${CHN} type="submit">China</button></div>
-		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${GBR} type="submit">France</button></div>
+		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${FRA} type="submit">France</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${DEU} type="submit">Germany</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${GBR} type="submit">Great Britain</button></div>
 		    </div>
 		    <div class="row">
-		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${JPN} type="submit">Hong Kong</button></div>
+		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${HKG} type="submit">Hong Kong</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${ITA} type="submit">Italy</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${JPN} type="submit">Japan</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${MEX} type="submit">Mexico</button></div>
-		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${KOR} type="submit">Singapore</button></div>
+		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${SGP} type="submit">Singapore</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${KOR} type="submit">South Korea</button></div>
 		    </div>
 			</region:form>
