@@ -44,7 +44,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 20;
+	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final long CACHE_EVICT_PERIOD_MILLISECONDS = 3 * 60 * 60 * 1000;  //every 3 hours
 	private static final long CACHE_REPOPULATE_PERIOD_MILLISECONDS = CACHE_EVICT_PERIOD_MILLISECONDS + 2000;
@@ -119,6 +119,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		List<UnitedStatesCases> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
 		Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
+//		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getTotalPositiveCases() < MINIMUM_TOTAL_CASES_FOR_INCLUSION));
 		
 		for(UnitedStatesCases usc:stateDataList) {
 			log.info(usc.toString());

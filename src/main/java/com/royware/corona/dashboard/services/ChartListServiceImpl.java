@@ -149,6 +149,7 @@ public class ChartListServiceImpl implements ChartListService {
 			changeInCases = valueToday - valueYesterday;
 			
 			dailyChgCases.put(dayIndex, changeInCases);
+//			log.info("dayIndex: " + dayIndex + ", chg in cases: " + changeInCases);
 			
 			if(changeInCases > maxChangeInCases) {
 				maxChangeInCases = changeInCases;
@@ -191,6 +192,7 @@ public class ChartListServiceImpl implements ChartListService {
 			valueToday = regionDataList.get(dayIndex).getTotalDeaths();
 			changeInDeaths = valueToday - valueYesterday;
 			
+			log.info("deaths: " + ((valueToday + valueYesterday) / 2) + ", chg in deaths: " + changeInDeaths);
 			dailyChgDeaths.put(dayIndex, changeInDeaths);
 			
 			if(changeInDeaths > maxChangeInDeaths) {
