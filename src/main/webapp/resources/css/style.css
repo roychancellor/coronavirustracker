@@ -18,16 +18,16 @@ header {
 	/*the images are in /resources/images/..., therefore need to go up one level using .. to get back to */
 	/*/resources/, then go down into /images/ in order to work as a relative reference */
 	background-image:url(../images/header.jpg);
-	padding-top:20px;
-	padding-bottom:20px;
+	padding-top:10px;
+	padding-bottom:10px;
 }
 header h2 {
 	color:#232f98;
-	font-size:3.0em;
-	padding:6px;
+	font-size:2.5em;
+	padding:0px;
 	background:#ffffff;
-	border:6px solid #232f98;
-	width:95%;
+	border:3px solid #232f98;
+	width:65%;
 	margin:auto;
 	text-align:center;
 }

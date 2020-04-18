@@ -1,5 +1,5 @@
 <header>
-	<h2>Coronavirus Dashboard Generator<img src="${pageContext.request.contextPath}/resources/images/world-icon.png"/></h2>
+	<h2>Coronavirus Dashboards<img src="${pageContext.request.contextPath}/resources/images/world-icon.png"/></h2>
 </header>
 <nav>
 	<div><a href="${pageContext.request.contextPath}/corona">Home</a></div>

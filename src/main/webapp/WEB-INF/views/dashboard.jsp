@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="chart" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="money" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,11 +16,65 @@
 <body>
 	<div class="container">
 		<div>
-			<h2 style="display:inline-block">Dashboard for <strong style="color:#522398">${fullregion}</strong></h2>
-			<a style="font-size:1em" class="btn btn-success" href="${pageContext.request.contextPath}/chart-info">Chart Info</a>
-			<a style="font-size:1em" class="btn btn-warning" href="${pageContext.request.contextPath}/corona">Return Home</a>
+		<table class="table">
+			<tr>
+				<td valign="middle" style="color:#522398; font-size:2em;">Dashboard Region</td>
+				<td valign="middle" style="color:#522398; font-size:2em;">Population</td>
+				<td valign="middle" style="color:#FFFFFF; font-size:1.5em;">
+					<a class="btn btn-success" href="${pageContext.request.contextPath}/chart-info">Chart Info</a>
+				</td>
+			</tr>
+			<tr>
+				<td valign="middle" style="font-size:2em;"><strong style="color:#FFFFFF">${fullregion}</strong></td>
+				<td valign="middle" style="font-size:2em;">
+					<strong style="color:#FFFFFF"><fmt:formatNumber type = "number" pattern = "#,###" value = "${population}" /></strong>
+				</td>
+				<td valign="middle" style="color:#FFFFFF; font-size:1.5em;">
+					<a class="btn btn-warning" href="${pageContext.request.contextPath}/corona">Return Home</a>
+				</td>
+			</tr>
+		</table>
 		</div>
-		<div class="dashboard">
+		<div>
+		<table class="table table-bordered">
+			<tr style="line-height:12px;">
+				<td style="color:#522398;">
+					Cases:
+				</td>
+				<td style="color:#FFFFFF;">
+					Total: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesTotal}" />
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" />)
+				</td>
+				<td style="color:#FFFFFF;">
+					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfCasesToday}" /> %/day
+				</td>
+			</tr>
+			<tr style="line-height:12px;">
+				<td style="color:#522398;">
+					Deaths:
+				</td>
+				<td style="color:#FFFFFF;">
+					Total: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsTotal}" />
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" />)
+				</td>
+				<td style="color:#FFFFFF;">
+					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfDeathsToday}" /> %/day
+				</td>
+			</tr>
+			<tr style="line-height:12px;">
+				<td style="color:#522398;">
+					Per Capita:
+				</td>
+				<td style="color:#FFFFFF;">
+					Cases: <fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" /> %
+				</td>
+				<td style="color:#FFFFFF;">
+					Deaths: <fmt:formatNumber type = "number" pattern = "#.#####" value = "${deathspercent}" /> %
+				</td>
+			</tr>
+		</table>
+		</div>
+		<div class="dashboardCharts">
 		<table class="table table-dark">
 			<tr>
 				<td><div id="chartContainer11" style="height: 250px; width: 100%"></div></td>
