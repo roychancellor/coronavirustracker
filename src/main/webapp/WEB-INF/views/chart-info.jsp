@@ -23,9 +23,10 @@
 			<tr>
 				<td class="col-md-2">
 				<div id="chartContainer11" style="height: 380px; width: 100%"><img src="resources/images/chartinfo/Chart-11.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the total (cumulative) number of cases as reported by the data source versus the
-				number of days since cases became greater than zero. This chart has, perhaps, the least amount of valuable information, as it does not
-				reference the size of the population; nevertheless, its shape is able to give an overall picture of the rate of change of cases over time.</p>
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows a 4-day moving average of the daily
+				new cases as well as the total cases to date. The moving average smoothes out some of the daily noise and allows seeing the trend more cleanly.
+				Remember that total cases tells only part of the story - the size of the population matters also. The dashboard table gives per-capita
+				statistics for reference. Note that we are looking for daily new cases to drop which will make total cases flatten out.</p>
 				</div>
 				</td>
 				<td class="col-md-2">
