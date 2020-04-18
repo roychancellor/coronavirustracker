@@ -1,9 +1,12 @@
-package com.royware.corona.dashboard.model;
+package com.royware.corona.dashboard.enums;
 
 import java.util.List;
 
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
+import com.royware.corona.dashboard.model.RegionData;
+import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.WorldCases;
 
 public enum Regions {
 	USA {

@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model;
+package com.royware.corona.dashboard.enums;
 
 public enum Pages {
 	HOME_PAGE("home-page"),

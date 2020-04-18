@@ -19,6 +19,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.DashboardController;
+import com.royware.corona.dashboard.enums.CacheKeys;
+import com.royware.corona.dashboard.enums.DataUrls;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.model.WorldCases;
 import com.royware.corona.dashboard.model.WorldRecords;
@@ -40,18 +42,19 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 //	}
 
 	private RestTemplate restTemplate;
-	
-	public ChartListDataServiceImpl(RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
-	
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final long CACHE_EVICT_PERIOD_MILLISECONDS = 3 * 60 * 60 * 1000;  //every 3 hours
 	private static final String CACHE_NAME = "dataCache";
 	private static final int US_CUTOFF_DATE = 20200304;
 
+	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+
+	
+	public ChartListDataServiceImpl(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
+	
 	/**
 	 * Gets all US data and returns it as an array of objects
 	 * @return JSON array of UnitedStatesData objects
@@ -64,10 +67,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		do {
 			try {
 				log.info("***** ABOUT TO HIT ENDPOINT FOR UNITED STATES DATA *****");
-				usDataArray = restTemplate.getForObject(
-						"https://covidtracking.com/api/us/daily",
-						UnitedStatesCases[].class
-				);
+				usDataArray = restTemplate.getForObject(DataUrls.US_DATA_URL.toString(), UnitedStatesCases[].class);
 				log.info("***** GOT THROUGH PARSING UNITED STATES DATA *****");
 			} catch(RestClientException e) {
 				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -93,10 +93,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		do {	
 			try {
 				log.info("***** ABOUT TO HIT ENDPOINT FOR ALL WORLD DATA *****");
-				worldData = restTemplate.getForObject(
-						"https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
-						WorldRecords.class
-				);				
+				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL.toString(), WorldRecords.class);				
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
 			} catch (RestClientException e) {
 				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -114,13 +111,12 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	public List<UnitedStatesCases> getSingleUsStateData(String stateAbbreviation) {
 		log.info("***** ABOUT TO GET STATE: " + stateAbbreviation + " ****");
 		UnitedStatesCases[] stateDataArray = restTemplate.getForObject(
-				"https://covidtracking.com/api/states/daily?state=" + stateAbbreviation.toUpperCase(),
+				DataUrls.STATE_DATA_URL.toString() + stateAbbreviation.toUpperCase(),
 				UnitedStatesCases[].class
 		);
 		List<UnitedStatesCases> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
 		Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
-//		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getTotalPositiveCases() < MINIMUM_TOTAL_CASES_FOR_INCLUSION));
 		
 		for(UnitedStatesCases usc:stateDataList) {
 			log.info(usc.toString());
@@ -135,7 +131,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	public List<UnitedStatesCases> getAllUsDataExcludingState(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		log.info("***** ABOUT TO FILTER *OUT* STATE: " + stateToExclude + " ****");
-		List<UnitedStatesCases> usDataExcludingState = getAllUsData("COVID_TRACKING");
+		List<UnitedStatesCases> usDataExcludingState = getAllUsData(CacheKeys.CACHE_KEY_US.toString());
 		List<UnitedStatesCases> stateDataToExclude = getSingleUsStateData(stateToExclude);
 		
 		for(int i = 0; i < usDataExcludingState.size(); i++) {
@@ -159,7 +155,7 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
-		casesInOneCountry = getAllWorldData("EURO_CDC")
+		casesInOneCountry = getAllWorldData(CacheKeys.CACHE_KEY_WORLD.toString())
 				.stream()
 				.filter(wc -> {
 					return wc.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode)
@@ -201,8 +197,8 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	}
 	
 	private void repopulateCaches() {
-		getAllUsData("COVID_TRACKING");
-		getAllWorldData("EURO_CDC");
+		getAllUsData(CacheKeys.CACHE_KEY_US.toString());
+		getAllWorldData(CacheKeys.CACHE_KEY_WORLD.toString());
 		log.info("DONE REPOPULATING CACHES");
 	}
 }

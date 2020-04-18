@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.royware.corona.dashboard.enums.Pages;
+import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartListDataService;
 import com.royware.corona.dashboard.interfaces.ChartService;
 import com.royware.corona.dashboard.model.DashboardChartConfig;
 import com.royware.corona.dashboard.model.DashboardChartData;
 import com.royware.corona.dashboard.model.DashboardStatistics;
-import com.royware.corona.dashboard.model.Pages;
-import com.royware.corona.dashboard.model.Regions;
 import com.royware.corona.dashboard.model.Dashboard;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
 import com.royware.corona.dashboard.model.WorldCases;
