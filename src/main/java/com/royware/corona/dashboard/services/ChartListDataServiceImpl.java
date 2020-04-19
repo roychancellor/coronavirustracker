@@ -152,10 +152,11 @@ public class ChartListDataServiceImpl implements ChartListDataService {
 	@Override
 	@Cacheable(key = "#countryThreeLetterCode", value = CACHE_NAME)
 	public List<WorldCases> getSingleNonUsCountryData(String countryThreeLetterCode) {
-		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
+		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
 		List<WorldCases> worldCases = getAllWorldData(CacheKeys.CACHE_KEY_WORLD.toString());
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
+		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		casesInOneCountry = worldCases
 				.stream()
 				.filter(wc -> {
