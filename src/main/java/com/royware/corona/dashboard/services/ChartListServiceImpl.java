@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.ChartListService;
@@ -158,7 +159,7 @@ public class ChartListServiceImpl implements ChartListService {
 			changeInCases = valueToday - valueYesterday;
 			
 			dailyChgCases.put(dayIndex, changeInCases);
-//			log.info("dayIndex: " + dayIndex + ", chg in cases: " + changeInCases);
+			log.info("dayIndex: " + dayIndex + ", chg in cases: " + changeInCases + ", totalCases average: " + (valueToday + valueYesterday) / 2);
 			
 			if(changeInCases > maxChangeInCases) {
 				maxChangeInCases = changeInCases;
@@ -173,8 +174,15 @@ public class ChartListServiceImpl implements ChartListService {
 
 		//make the EXPONENTIAL (will show as straight line on log-log graph)
 		double k = 0.30998; //need to compute this for each dataset using regression on a subset of the data (early days)
-		scatterChartDataLists.add(makeExponentialLineList(regionCaseList.get(0).getTotalPositiveCases(),
-				regionCaseList.get(regionCaseList.size() - 1).getTotalPositiveCases(), k));
+		int minCases = regionCaseList.get(0).getTotalPositiveCases();
+		if(minCases <= 0) {
+			minCases = 1;
+		}
+		int maxCases = regionCaseList.get(regionCaseList.size() - 1).getTotalPositiveCases();
+		if(maxCases <= 0) {
+			maxCases = 10;
+		}
+		scatterChartDataLists.add(makeExponentialLineList(minCases, maxCases, k));
 
 		log.info("***** DONE MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
 
@@ -217,8 +225,15 @@ public class ChartListServiceImpl implements ChartListService {
 
 		//make the EXPONENTIAL (will show as straight line on log-log graph)
 		double k = 0.29966;  //need to compute this for region using regression on early data
-		scatterChartDataLists.add(makeExponentialLineList(regionDataList.get(startDayIndex).getTotalDeaths(),
-				regionDataList.get(regionDataList.size() - 1).getTotalDeaths(), k));
+		int minCases = regionDataList.get(0).getTotalDeaths();
+		if(minCases <= 0) {
+			minCases = 1;
+		}
+		int maxCases = regionDataList.get(regionDataList.size() - 1).getTotalDeaths();
+		if(maxCases <= 0) {
+			maxCases = 10;
+		}
+		scatterChartDataLists.add(makeExponentialLineList(minCases, maxCases, k));
 
 		log.info("***** DONE MAKING CHANGE IN DAILY DEATHS VERSUS TOTAL DEATHS *****");
 

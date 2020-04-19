@@ -165,11 +165,14 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfCasesVersusCasesChartConfig.setShowLegend("true");
 		rateOfCasesVersusCasesChartConfig.setDataPointSize(1);
 		rateOfCasesVersusCasesChartConfig.setxGridDashType("dot");
-		int exp = (int) Math.log10((Integer) dataChangeOfCasesByCases.get(0).get(0).get("x"));
-		exp = (exp == 0) ? 1 : exp;
+		int cases = (Integer) dataChangeOfCasesByCases.get(0).get(0).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		int exp = (int) Math.log10(cases);
 		rateOfCasesVersusCasesChartConfig.setxAxisMin((int) Math.pow(10, exp));
-		rateOfCasesVersusCasesChartConfig.setxAxisMax((int) Math.pow(10, 1 + (int) Math.log10(
-				(Integer) dataChangeOfCasesByCases.get(0).get(dataChangeOfCasesByCases.get(0).size() - 1).get("x"))));
+		cases = (Integer) dataChangeOfCasesByCases.get(0).get(dataChangeOfCasesByCases.get(0).size() - 1).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		exp = (int) Math.log10(cases);
+		rateOfCasesVersusCasesChartConfig.setxAxisMax((int) Math.pow(10, 1 + (int) Math.log10(cases)));
 		Double minValue = (Double) dataChangeOfCasesByCases.get(0).get(0).get("y");
 		int digits = minValue > 0 ? (int) Math.log10((Double) dataChangeOfCasesByCases.get(0).get(0).get("y")) : 1;
 		rateOfCasesVersusCasesChartConfig.setyAxisMin((int) Math.pow(10, digits));
@@ -195,13 +198,13 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfDeathsVersusDeathsChartConfig.setShowLegend("true");
 		rateOfDeathsVersusDeathsChartConfig.setDataPointSize(1);
 		rateOfDeathsVersusDeathsChartConfig.setxGridDashType("dot");
-		exp = (int) Math.log10((Integer) dataChangeOfDeathsByDeaths.get(0).get(0).get("x"));
-//			exp = (exp == 0) ? 1 : exp;
+		cases = (Integer) dataChangeOfDeathsByDeaths.get(0).get(0).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		exp = (int) Math.log10(cases);
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMin((int) Math.pow(10, exp));
-		exp = (int) Math.log10(
-				(Integer) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x"));
-//			log.info("setting x max for deaths by deaths, exp = " + exp);
-//			exp = (exp == 0) ? 1 : exp;
+		cases = (Integer) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		exp = (int) Math.log10(cases);
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMax((int) Math.pow(10, 1 + exp));
 		minValue = Double.valueOf(getMinValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(0))); // (Double)dataChangeOfDeathsByDeaths.get(0).get(0).get("y");
 		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
