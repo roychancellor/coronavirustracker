@@ -130,6 +130,16 @@ public enum Regions {
 			return dataService.getSingleNonUsCountryData(this.name());
 		}
 	},
+	PRI {
+		public RegionData getRegionData() {
+			return new RegionData(this, 3194000, RegionLevels.COUNTRY, "Puerto Rico");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
+			return dataService.getSingleNonUsCountryData(this.name());
+		}
+	},
 	SGP {
 		public RegionData getRegionData() {
 			return new RegionData(this, 5639000, RegionLevels.COUNTRY, "Singapore");
