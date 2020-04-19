@@ -2,12 +2,15 @@ package com.royware.corona.dashboard.enums;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
-import com.royware.corona.dashboard.interfaces.ChartListDataService;
+import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.RegionData;
 import com.royware.corona.dashboard.model.UnitedStatesCases;
 import com.royware.corona.dashboard.model.WorldCases;
 
+@Service
 public enum Regions {
 	USA {
 		@Override
@@ -16,8 +19,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String cacheKey) {
-			return dataService.getAllUsData("COVID_TRACKING");
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
 		}
 	},
 	AUS {
@@ -26,8 +29,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	CAN {
@@ -36,8 +39,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	CHN {
@@ -46,8 +49,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	DEU {
@@ -56,8 +59,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	ESP {
@@ -66,8 +69,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	FRA {
@@ -76,8 +79,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	GBR {
@@ -86,8 +89,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	ITA {
@@ -96,8 +99,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	JPN {
@@ -106,8 +109,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	KOR {
@@ -116,8 +119,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MEX {
@@ -126,8 +129,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	PRI {
@@ -136,8 +139,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	SGP {
@@ -146,8 +149,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleNonUsCountryData(this.name());
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	USA_NO_NY {
@@ -158,8 +161,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getAllUsDataExcludingState(NY.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource("NY");
 		}
 	},
 	AL {
@@ -168,8 +171,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	AK {
@@ -178,8 +181,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	AZ {
@@ -188,8 +191,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	AR {
@@ -198,8 +201,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	CA {
@@ -208,8 +211,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	CO {
@@ -218,8 +221,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	CT {
@@ -228,8 +231,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	DE {
@@ -238,8 +241,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	FL {
@@ -248,8 +251,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	GA {
@@ -258,8 +261,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	HI {
@@ -268,8 +271,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	ID {
@@ -278,8 +281,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	IL {
@@ -288,8 +291,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	IN {
@@ -298,8 +301,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	IA {
@@ -308,8 +311,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	KS {
@@ -318,8 +321,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	KY {
@@ -328,8 +331,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	LA {
@@ -338,8 +341,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	ME {
@@ -348,8 +351,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MD {
@@ -358,8 +361,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MA {
@@ -368,8 +371,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MI {
@@ -378,8 +381,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MN {
@@ -388,8 +391,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MS {
@@ -398,8 +401,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MO {
@@ -408,8 +411,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	MT {
@@ -418,8 +421,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NE {
@@ -428,8 +431,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NV {
@@ -438,8 +441,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NH {
@@ -448,8 +451,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NJ {
@@ -458,8 +461,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NM {
@@ -468,8 +471,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NY {
@@ -478,8 +481,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	NC {
@@ -488,8 +491,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	ND {
@@ -498,8 +501,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	OH {
@@ -508,8 +511,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	OK {
@@ -518,8 +521,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	OR {
@@ -528,8 +531,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	PA {
@@ -538,8 +541,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	RI {
@@ -548,8 +551,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	SC {
@@ -558,8 +561,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	SD {
@@ -568,8 +571,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	TN {
@@ -578,8 +581,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	TX {
@@ -588,8 +591,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	UT {
@@ -598,8 +601,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	VT {
@@ -608,8 +611,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	VA {
@@ -618,8 +621,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	WA {
@@ -628,8 +631,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	WV {
@@ -638,8 +641,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	WI {
@@ -648,8 +651,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	WY {
@@ -658,8 +661,8 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
 	DC {
@@ -668,11 +671,11 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getRegionDataList(ChartListDataService dataService, String region) {
-			return dataService.getSingleUsStateData(this.name());
+		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
 		}
 	};
 	
 	public abstract RegionData getRegionData();
-	public abstract <T extends CanonicalCases> List<T> getRegionDataList(ChartListDataService dataService, String region);
+	public abstract <T extends CanonicalCases> List<T> getCoronaVirusDataFromExternalSource(ExternalDataService dataService);
 }

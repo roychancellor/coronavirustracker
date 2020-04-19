@@ -2,18 +2,13 @@
 package com.royware.corona.dashboard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
@@ -21,21 +16,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.Pages;
 import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
-import com.royware.corona.dashboard.interfaces.ChartListDataService;
-import com.royware.corona.dashboard.interfaces.ChartService;
-import com.royware.corona.dashboard.model.DashboardChartConfig;
-import com.royware.corona.dashboard.model.DashboardChartData;
+import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.DashboardStatistics;
-import com.royware.corona.dashboard.model.Dashboard;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
-import com.royware.corona.dashboard.model.WorldCases;
-import com.royware.corona.dashboard.services.ChartListDataServiceImpl;
 import com.royware.corona.dashboard.services.DashboardConfigService;
 
 /**
@@ -50,18 +37,31 @@ import com.royware.corona.dashboard.services.DashboardConfigService;
 @ComponentScan("com.royware.corona")
 public class DashboardController {
 	@Autowired
-	ChartService chartService;
+	private DashboardStatistics dashStats;
 	
 	@Autowired
-	ChartListDataService dataService;
+	private DashboardConfigService dashConfigSvc;
 	
 	@Autowired
-	DashboardStatistics dashStats;
+	@Qualifier(value = "us")
+	private ExternalDataService usDataService;
 	
 	@Autowired
-	DashboardConfigService dashConfigSvc;
+	@Qualifier(value = "world")
+	private ExternalDataService worldDataService;
 	
-	private static final String CACHE_KEY = "COVID_TRACKING";
+	@Autowired
+	@Qualifier(value = "singleState")
+	private ExternalDataService singleStateDataService;
+	
+	@Autowired
+	@Qualifier(value = "usExcludingState")
+	private ExternalDataService usExcludingStateDataService;
+	
+	@Autowired
+	@Qualifier(value = "singleCountry")
+	private ExternalDataService singleCountryDataService;
+	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
 	/**
@@ -90,22 +90,21 @@ public class DashboardController {
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		log.info("Making dashboard for region: " + region);	
 		
-		List<UnitedStatesCases> usList = new ArrayList<>();
-		List<WorldCases> worldList = new ArrayList<>();
+		List<? extends CanonicalCases> dataList = new ArrayList<>();
+		ExternalDataService dataService;
 		
-		if(Regions.valueOf(region.toUpperCase()) == Regions.USA) {
-			usList = Regions.USA.getRegionDataList(dataService, CACHE_KEY);
-			map.addAttribute("allDashboardCharts", dashConfigSvc.makeAllDashboardCharts(usList, Regions.USA.getRegionData().getFullName(), dashStats));
-		} else if(Regions.valueOf(region.toUpperCase()) == Regions.USA_NO_NY) {
-			usList = Regions.USA_NO_NY.getRegionDataList(dataService, region);
-			map.addAttribute("allDashboardCharts", dashConfigSvc.makeAllDashboardCharts(usList, Regions.USA_NO_NY.getRegionData().getFullName(), dashStats));
+		if(region.equalsIgnoreCase(Regions.USA.name())) {
+			dataService = usDataService;
+		} else if(region.equalsIgnoreCase(Regions.USA_NO_NY.name())) {
+			dataService = usExcludingStateDataService;
 		} else if(region.length() == 2) {
-			usList = Regions.valueOf(region).getRegionDataList(dataService, region);
-			map.addAttribute("allDashboardCharts", dashConfigSvc.makeAllDashboardCharts(usList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
+			dataService = singleStateDataService;
 		} else {
-			worldList = Regions.valueOf(region).getRegionDataList(dataService, region);
-			map.addAttribute("allDashboardCharts", dashConfigSvc.makeAllDashboardCharts(worldList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
+			dataService = singleCountryDataService;
 		}
+		
+		dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
+		map.addAttribute("allDashboardCharts", dashConfigSvc.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
 		
 		map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
 		map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
