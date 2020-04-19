@@ -31,7 +31,7 @@ public class ChartListServiceImpl implements ChartListService {
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
-		List<Map<Object, Object>> dailyCaseList = new ArrayList<>();
+//		List<Map<Object, Object>> dailyCaseList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		int dayIndex = 0;
 		for(CanonicalCases cc : regionCaseList) {
@@ -201,7 +201,7 @@ public class ChartListServiceImpl implements ChartListService {
 			valueToday = regionDataList.get(dayIndex).getTotalDeaths();
 			changeInDeaths = valueToday - valueYesterday;
 			
-			log.info("deaths: " + ((valueToday + valueYesterday) / 2) + ", chg in deaths: " + changeInDeaths);
+//			log.info("deaths: " + ((valueToday + valueYesterday) / 2) + ", chg in deaths: " + changeInDeaths);
 			dailyChgDeaths.put(dayIndex, changeInDeaths);
 			
 			if(changeInDeaths > maxChangeInDeaths) {
