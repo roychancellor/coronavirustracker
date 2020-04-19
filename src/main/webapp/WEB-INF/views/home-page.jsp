@@ -26,7 +26,7 @@
 			<!-- </div> -->
 		    <div class="row">
 		      <div class="col-md-3"></div>
-		      <div class="col-md-6"><button class="btn btn-success btn-lg btn-block" name="region" value=${USA} type="submit">United States as a Whole Country</button></div>
+		      <div class="col-md-6"><button class="btn btn-primary btn-lg btn-block" name="region" value=${USA} type="submit">United States as a Whole Country</button></div>
 		      <div class="col-md-3"></div>
 		      <div class="col-md-4"></div>
 		      <div class="col-md-4"><button class="btn btn-secondary btn-md btn-block" name="region" value=${USA_NO_NY} type="submit">United States without New York State</button></div>
