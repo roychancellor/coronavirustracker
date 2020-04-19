@@ -1,12 +1,9 @@
 <header>
-	<h2>World Online Bank<img src="${pageContext.request.contextPath}/resources/images/world-icon.png"/></h2>
+	<h2>Coronavirus Dashboards<img src="${pageContext.request.contextPath}/resources/images/world-icon.png"/></h2>
 </header>
 <nav>
-	<div><a href="${pageContext.request.contextPath}/deposit-bank">Deposit</a></div>
-	<div><a href="${pageContext.request.contextPath}/withdraw-bank">Withdraw</a></div>
-	<div><a href="${pageContext.request.contextPath}/transfer-bank">Transfer</a></div>
-	<div><a href="${pageContext.request.contextPath}/statements-bank">Transactions</a></div>
-	<div><a href="${pageContext.request.contextPath}/dashboard">Dashboard</a></div>
-	<div><a href="${pageContext.request.contextPath}/customer-settings">Settings</a></div>
-	<div><a href="${pageContext.request.contextPath}/logout">Logout</a></div>
+	<div><a href="${pageContext.request.contextPath}/corona">Home</a></div>
+	<div><a href="${pageContext.request.contextPath}/about">About</a></div>
+	<div><a href="${pageContext.request.contextPath}/commentary">Commentary</a></div>
+	<div><a href="${pageContext.request.contextPath}/math">The Math</a></div>
 </nav>

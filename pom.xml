@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>edu.gcu.cst341</groupId>
-  <artifactId>BankingAppLinuxTomcat</artifactId>
+  <groupId>com.royware.corona</groupId>
+  <artifactId>coronavirustracker</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>BakingAppLinuxTomcat</name>
+  <name>coronavirustracker</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -22,19 +22,16 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!-- Get the JDBC driver for MySQL -->
-    <dependency>
-   		<groupId>mysql</groupId>
-   		<artifactId>mysql-connector-java</artifactId>
-   		<version>8.0.15</version>
-   		<!-- put a copy in /usr/share/tomcat7/lib -->
-  		<!-- <scope>provided</scope> -->
-	</dependency>
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
         <version>5.2.0.RELEASE</version>
     </dependency>
+    <dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	    <version>5.1.8.RELEASE</version>
+	</dependency>
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
@@ -102,9 +99,20 @@
     	<artifactId>commons-math3</artifactId>
     	<version>3.5</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-api</artifactId>
+	    <version>1.7.30</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-simple</artifactId>
+	  <version>1.7.21</version>
+	</dependency>	
 </dependencies>
 <build>
-   <finalName>bank</finalName>
+   <finalName>coronatracker</finalName>
    <pluginManagement>
        <plugins>
            <plugin>
@@ -124,7 +132,7 @@
                <version>2.2</version>
                <configuration>
                    <path>/</path>
-                   <port>5000</port>
+                   <port>8080</port>
                    <contextReloadable>true</contextReloadable>
                </configuration>
            </plugin>

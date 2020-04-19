@@ -1,0 +1,93 @@
+package com.royware.corona.dashboard.services;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import com.royware.corona.dashboard.DashboardController;
+import com.royware.corona.dashboard.enums.CacheKeys;
+import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.model.WorldCases;
+
+/**
+ * Provides service methods for getting dashboard data from external sources
+ */
+@EnableScheduling
+public class SingleCountryDataServiceImpl implements ExternalDataService {
+	@Autowired
+	@Qualifier(value = "world")
+	private ExternalDataService worldDataService;
+	
+	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
+	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
+	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private String cacheKeyToEvict;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Cacheable(key = "#countryThreeLetterCode", value = CACHE_NAME)
+	public List<WorldCases> makeDataListFromExternalSource(String countryThreeLetterCode) {
+		cacheKeyToEvict = countryThreeLetterCode;
+		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
+		List<WorldCases> casesInOneCountry = new ArrayList<>();
+		List<WorldCases> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.toString());
+		//Because the country data returns daily new cases and deaths, need to compute the totals by day
+		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
+		casesInOneCountry = worldCases
+				.stream()
+				.filter(wc -> {
+					return wc.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode)
+							&& wc.getDailyNewCases() >= MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION;
+				})
+				.collect(Collectors.toList());
+		
+		Collections.reverse(casesInOneCountry);
+		
+		WorldCases wc;
+		int positiveCases = 0;
+		int negativeCases = 0;
+		int totalDeaths = 0;
+		for(int i = 0; i < casesInOneCountry.size(); i++) {
+			wc = casesInOneCountry.get(i);
+			positiveCases += wc.getDailyNewCases();
+			totalDeaths += wc.getDailyNewDeaths();
+			if(positiveCases >= MINIMUM_TOTAL_CASES_FOR_INCLUSION) {
+				wc.setTotalPositiveCases(positiveCases);
+				wc.setTotalNegativeCases(negativeCases);
+				wc.setTotalDeaths(totalDeaths);
+			} else {
+				wc.setTotalPositiveCases(wc.getDailyNewCases());
+				wc.setTotalDeaths(wc.getDailyNewDeaths());
+			}
+		}
+		log.info("***** FINISHED FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
+	
+		return casesInOneCountry;
+	}
+	
+	@CacheEvict(key = "#cacheKeyToEvict", cacheNames = {CACHE_NAME})
+	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
+	@Override
+	public void cacheEvict() {
+		log.info("CACHE FOR COUNTRY " + cacheKeyToEvict + " EVICTED AT: " + LocalDateTime.now());
+		log.info("Repopulating cache...");
+		repopulateCache();
+		log.info("DONE REPOPULATING CACHE FOR COUNTRY " + cacheKeyToEvict + " AT: " + LocalDateTime.now());
+	}
+	
+	private void repopulateCache() {
+		makeDataListFromExternalSource(cacheKeyToEvict);
+	}
+}

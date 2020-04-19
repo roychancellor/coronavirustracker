@@ -14,20 +14,20 @@ section {
 }
 
 header {
-	/* the url reference is relative to the stylesheet location, which is /resources/css/style.css
-	the images are in /resources/images/..., therefore need to go up one level using .. to get back to
-	/resources/, then go down into /images/ in order to work as a relative reference */
+	/* the url reference is relative to the stylesheet location, which is /resources/css/style.css */
+	/*the images are in /resources/images/..., therefore need to go up one level using .. to get back to */
+	/*/resources/, then go down into /images/ in order to work as a relative reference */
 	background-image:url(../images/header.jpg);
-	padding-top:20px;
-	padding-bottom:20px;
+	padding-top:10px;
+	padding-bottom:10px;
 }
 header h2 {
 	color:#232f98;
-	font-size:3.0em;
-	padding:6px;
+	font-size:2.5em;
+	padding:0px;
 	background:#ffffff;
-	border:6px solid #232f98;
-	width:47%;
+	border:3px solid #232f98;
+	width:65%;
 	margin:auto;
 	text-align:center;
 }
@@ -54,8 +54,9 @@ table {
 
 td {
 	border-bottom:1px solid black;
-	font-size:1.15em;
+	font-size:1.25em;
 	text-align:left;
+	margin:1px;
 }
 
 th {
