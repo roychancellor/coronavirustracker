@@ -50,6 +50,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				- (int) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 2).get("x"));
 		dashStats.setRateOfDeathsToday(
 				(double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y"));
+		dashStats.setAccelOfDeathsToday(
+				((double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y")
+				/ (double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 2).get("y") - 1)
+				* 100.0
+		);
 
 		///// Configure all the dashboards individually
 		DashboardChartConfig configCasesByTime = new DashboardChartConfig("Total Cases in " + region,

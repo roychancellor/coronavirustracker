@@ -15,26 +15,16 @@
 
 <body>
 	<div class="container">
-		<div>
-		<table class="table">
-			<tr>
-				<td valign="middle" style="color:#522398; font-size:2em;">Dashboard Region</td>
-				<td valign="middle" style="color:#522398; font-size:2em;">Population</td>
-				<td valign="middle" style="color:#FFFFFF; font-size:1.5em;">
-					<a class="btn btn-success" href="${pageContext.request.contextPath}/chart-info">Chart Info</a>
-				</td>
-			</tr>
-			<tr>
-				<td valign="middle" style="font-size:2em;"><strong style="color:#FFFFFF">${fullregion}</strong></td>
-				<td valign="middle" style="font-size:2em;">
-					<strong style="color:#FFFFFF"><fmt:formatNumber type = "number" pattern = "#,###" value = "${population}" /></strong>
-				</td>
-				<td valign="middle" style="color:#FFFFFF; font-size:1.5em;">
-					<a class="btn btn-warning" href="${pageContext.request.contextPath}/corona">Return Home</a>
-				</td>
-			</tr>
-		</table>
-		</div>
+	    <div class="row row-no-gutters">
+	      <div class="col-md-7"><p style="color:#522398;font-size:2em;">Dashboard Region</p></div>
+	      <div class="col-md-3"><p style="color:#522398;font-size:2em;">Population</p></div>
+	      <div class="col-md-2"><a class="btn btn-md btn-success" href="${pageContext.request.contextPath}/chart-info">Chart Info</a></div>
+	    </div>
+	    <div class="row row-no-gutters">
+	      <div class="col-md-7"><p><strong style="color:#FFFFFF;font-size:2em;">${fullregion}</strong></p></div>
+	      <div class="col-md-3"><p><strong style="color:#FFFFFF;font-size:2em;"><fmt:formatNumber type = "number" pattern = "#,###" value = "${population}" /></strong></p></div>
+	      <div class="col-md-2"><a class="btn btn-md btn-warning" href="${pageContext.request.contextPath}/corona">Return Home</a></div>
+	    </div>
 		<div>
 		<table class="table table-bordered">
 			<tr style="line-height:12px;">
@@ -43,10 +33,11 @@
 				</td>
 				<td style="color:#FFFFFF;">
 					Total: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesTotal}" />
-					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" />)
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" /> today)
 				</td>
 				<td style="color:#FFFFFF;">
-					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfCasesToday}" /> %/day
+					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfCasesToday}" />% per day
+					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfCasesToday}" />%)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
@@ -55,10 +46,11 @@
 				</td>
 				<td style="color:#FFFFFF;">
 					Total: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsTotal}" />
-					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" />)
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" /> today)
 				</td>
 				<td style="color:#FFFFFF;">
-					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfDeathsToday}" /> %/day
+					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfDeathsToday}" />% per day
+					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfDeathsToday}" />%)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
@@ -66,10 +58,12 @@
 					Per Capita:
 				</td>
 				<td style="color:#FFFFFF;">
-					Cases: <fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" /> %
+					Cases: <fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" />%
+					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${casespermillion}" /> per million)
 				</td>
 				<td style="color:#FFFFFF;">
-					Deaths: <fmt:formatNumber type = "number" pattern = "#.#####" value = "${deathspercent}" /> %
+					Deaths: <fmt:formatNumber type = "number" pattern = "#.#####" value = "${deathspercent}" />%
+					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${deathspermillion}" /> per million)
 				</td>
 			</tr>
 		</table>

@@ -13,6 +13,7 @@ public class DashboardStatistics {
 	private double rateOfDeathsToday;
 	private double rateOfCasesPerCasesToday;
 	private double rateOfDeathsPerDeathsToday;
+	private double accelOfDeathsToday;
 	
 	public DashboardStatistics() {
 	}
@@ -87,5 +88,13 @@ public class DashboardStatistics {
 
 	public void setRateOfDeathsPerDeathsToday(double rateOfDeathsPerDeathsToday) {
 		this.rateOfDeathsPerDeathsToday = rateOfDeathsPerDeathsToday;
+	}
+
+	public double getAccelOfDeathsToday() {
+		return accelOfDeathsToday;
+	}
+
+	public void setAccelOfDeathsToday(double accelOFDeathsToday) {
+		this.accelOfDeathsToday = accelOFDeathsToday;
 	}
 }
