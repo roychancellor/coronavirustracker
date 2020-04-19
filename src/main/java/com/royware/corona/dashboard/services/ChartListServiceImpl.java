@@ -159,7 +159,7 @@ public class ChartListServiceImpl implements ChartListService {
 			changeInCases = valueToday - valueYesterday;
 			
 			dailyChgCases.put(dayIndex, changeInCases);
-			log.info("dayIndex: " + dayIndex + ", chg in cases: " + changeInCases + ", totalCases average: " + (valueToday + valueYesterday) / 2);
+//			log.info("dayIndex: " + dayIndex + ", chg in cases: " + changeInCases + ", totalCases average: " + (valueToday + valueYesterday) / 2);
 			
 			if(changeInCases > maxChangeInCases) {
 				maxChangeInCases = changeInCases;
