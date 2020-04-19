@@ -21,9 +21,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.royware.corona.dashboard.enums.Pages;
 import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.DashboardStatistics;
-import com.royware.corona.dashboard.services.DashboardConfigService;
 
 /**
  * The MAIN CONTROLLER for the dashboard application

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartService;
+import com.royware.corona.dashboard.interfaces.DashboardConfigService;
 import com.royware.corona.dashboard.model.Dashboard;
 import com.royware.corona.dashboard.model.DashboardChartConfig;
 import com.royware.corona.dashboard.model.DashboardChartData;
