@@ -53,7 +53,6 @@ public class WorldDataServiceImpl implements ExternalDataService {
 
 	@CacheEvict(key = "#cacheKeyToEvict", cacheNames = {CACHE_NAME})
 	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
-	@Override
 	public void cacheEvict() {
 		log.info("WORLD DATA CACHE WITH KEY " + cacheKeyToEvict + " EVICTED AT: " + LocalDateTime.now());
 		log.info("Repopulating cache...");
