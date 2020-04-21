@@ -1,6 +1,5 @@
 package com.royware.corona.dashboard.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.CacheKeys;
@@ -24,7 +19,7 @@ import com.royware.corona.dashboard.model.WorldCases;
 /**
  * Provides service methods for getting dashboard data from external sources
  */
-@EnableScheduling
+
 public class SingleCountryDataServiceImpl implements ExternalDataService {
 	@Autowired
 	@Qualifier(value = "world")
@@ -33,13 +28,10 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	private String cacheKeyToEvict;
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable(key = "#countryThreeLetterCode", value = CACHE_NAME)
 	public List<WorldCases> makeDataListFromExternalSource(String countryThreeLetterCode) {
-		cacheKeyToEvict = countryThreeLetterCode;
 		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldCases> casesInOneCountry = new ArrayList<>();
 		List<WorldCases> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.toString());
@@ -75,19 +67,5 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 		log.info("***** FINISHED FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 	
 		return casesInOneCountry;
-	}
-	
-	@CacheEvict(key = "#cacheKeyToEvict", cacheNames = {CACHE_NAME})
-	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
-	@Override
-	public void cacheEvict() {
-		log.info("CACHE FOR COUNTRY " + cacheKeyToEvict + " EVICTED AT: " + LocalDateTime.now());
-		log.info("Repopulating cache...");
-		repopulateCache();
-		log.info("DONE REPOPULATING CACHE FOR COUNTRY " + cacheKeyToEvict + " AT: " + LocalDateTime.now());
-	}
-	
-	private void repopulateCache() {
-		makeDataListFromExternalSource(cacheKeyToEvict);
 	}
 }
