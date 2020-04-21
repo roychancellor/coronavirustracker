@@ -7,7 +7,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +22,7 @@ import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.model.DashboardStatistics;
 
 /**
@@ -43,24 +43,7 @@ public class DashboardController {
 	private DashboardConfigService dashConfigSvc;
 	
 	@Autowired
-	@Qualifier(value = "us")
-	private ExternalDataService usDataService;
-	
-	@Autowired
-	@Qualifier(value = "world")
-	private ExternalDataService worldDataService;
-	
-	@Autowired
-	@Qualifier(value = "singleState")
-	private ExternalDataService singleStateDataService;
-	
-	@Autowired
-	@Qualifier(value = "usExcludingState")
-	private ExternalDataService usExcludingStateDataService;
-	
-	@Autowired
-	@Qualifier(value = "singleCountry")
-	private ExternalDataService singleCountryDataService;
+	private ExternalDataServiceFactory dataFactory;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
@@ -88,33 +71,40 @@ public class DashboardController {
 	 */
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
-		log.info("Making dashboard for region: " + region);	
+		log.info("Making dashboard for region: " + region);
 		
-		List<? extends CanonicalCases> dataList = new ArrayList<>();
-		ExternalDataService dataService;
-		
-		if(region.equalsIgnoreCase(Regions.USA.name())) {
-			dataService = usDataService;
-		} else if(region.equalsIgnoreCase(Regions.USA_NO_NY.name())) {
-			dataService = usExcludingStateDataService;
-		} else if(region.length() == 2) {
-			dataService = singleStateDataService;
-		} else {
-			dataService = singleCountryDataService;
+		if(!populateDashboardModelMap(region, map)) {
+			return Pages.HOME_PAGE.toString();
 		}
-		
-		dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
-		map.addAttribute("allDashboardCharts", dashConfigSvc.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
-		
-		map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
-		map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
-		map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
-		map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
-		map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
-		map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
-		map.addAttribute("dashstats", dashStats);
-
 		return Pages.DASHBOARD_PAGE.toString();
+	}
+
+	private boolean populateDashboardModelMap(String region, ModelMap map) {
+		try {
+			ExternalDataService dataService = dataFactory.getExternalDataService(region);
+		
+			List<? extends CanonicalCases> dataList = new ArrayList<>();
+			dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
+			
+			map.addAttribute("allDashboardCharts", dashConfigSvc
+					.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
+		
+			map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
+			map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
+			map.addAttribute("casespermillion", dashStats
+					.getCasesTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
+			map.addAttribute("casespercent", dashStats
+					.getCasesTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
+			map.addAttribute("deathspermillion", dashStats
+					.getDeathsTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
+			map.addAttribute("deathspercent", dashStats
+					.getDeathsTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
+			map.addAttribute("dashstats", dashStats);
+			return true;
+		} catch(IllegalArgumentException e) {
+			log.error("Unable to find data source for region " + region + ", no dashboard to build");
+			return false;
+		}
 	}
 	
 	/**
