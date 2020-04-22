@@ -153,6 +153,16 @@ public enum Regions {
 			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
+	SWE {
+		public RegionData getRegionData() {
+			return new RegionData(this, 10230000, RegionLevels.COUNTRY, "Sweden");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			return eds.makeDataListFromExternalSource(this.name());
+		}
+	},
 	USA_NO_NY {
 		public RegionData getRegionData() {
 			return new RegionData(this,
