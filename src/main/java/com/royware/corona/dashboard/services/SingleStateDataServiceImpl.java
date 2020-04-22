@@ -37,9 +37,9 @@ public class SingleStateDataServiceImpl implements ExternalDataService {
 		Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
 		
-		for(UnitedStatesCases usc:stateDataList) {
-			log.info(usc.toString());
-		}
+//		for(UnitedStatesCases usc:stateDataList) {
+//			log.info(usc.toString());
+//		}
 		
 		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		
