@@ -22,7 +22,7 @@
 		<table class="table table-dark">
 			<tr>
 				<td class="col-md-2">
-				<div id="chartContainer11" style="height: 140px; width: 100%">
+				<div id="chartContainer11" style="height: 150px; width: 100%">
 				<h3 style="color:#522398;">Why another Coronavirus site?</h3>
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">There are certainly far more flashy sites
 				out there that are more visually appealing and dynamic.
@@ -33,7 +33,7 @@
 				</div>
 				</td>
 				<td class="col-md-2">
-				<div id="chartContainer12" style="height: 140px; width: 100%">
+				<div id="chartContainer12" style="height: 150px; width: 100%">
 				<h3 style="color:#522398;">What are the data sources?</h3>
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">All United States data comes from
 				<a href="https://covidtracking.com">The COVID Tracking Project</a> which offers some really sweet APIs for easy access of the data by a computer. 
@@ -59,7 +59,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer31" style="height: 200px; width: 100%">
+				<td class="col-md-2"><div id="chartContainer31" style="height: 120px; width: 100%">
 				<h3 style="color:#522398;">Who is the site creator?</h3>
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">Roy Chancellor is a guy who likes math and likes
 				to program. I recently began a career as a software engineer after working as a mechanical engineer and math teacher. Like all of you,
@@ -67,7 +67,7 @@
 				having said job means I work on the site part-time in the evenings.</p>
 				</div>
 				</td>
-				<td class="col-md-2"><div id="chartContainer32" style="height: 200px; width: 100%">
+				<td class="col-md-2"><div id="chartContainer32" style="height: 120px; width: 100%">
 				<h3 style="color:#522398;">Your site isn't completely terrible, how did you build it?</h3>
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.1em;">The site is a 
 				<a href="https://www.java.com/en/">Java</a> application that uses <a href="https://en.wikipedia.org/wiki/JavaServer_Pages">JSP</a>

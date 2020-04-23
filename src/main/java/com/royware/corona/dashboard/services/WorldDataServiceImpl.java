@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -17,21 +16,20 @@ import org.springframework.web.client.RestTemplate;
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.CacheKeys;
 import com.royware.corona.dashboard.enums.DataUrls;
+import com.royware.corona.dashboard.interfaces.CacheActions;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.WorldCases;
 import com.royware.corona.dashboard.model.WorldRecords;
 
-@EnableScheduling
-public class WorldDataServiceImpl implements ExternalDataService {
+public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Autowired
 	private RestTemplate restTemplate;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-	private String cacheKeyToEvict = CacheKeys.CACHE_KEY_WORLD.toString();
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable(key = "#cacheKey", value = CACHE_NAME)
+	@Cacheable(value = CACHE_NAME)
 	public List<WorldCases> makeDataListFromExternalSource(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
@@ -50,11 +48,12 @@ public class WorldDataServiceImpl implements ExternalDataService {
 		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA *****");
 		return Arrays.asList(worldData.getRecords());
 	}
-
-	@CacheEvict(key = "#cacheKeyToEvict", cacheNames = {CACHE_NAME})
+	
+	@CacheEvict(value = CACHE_NAME, allEntries = true)
 	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
+	@Override
 	public void cacheEvict() {
-		log.info("WORLD DATA CACHE WITH KEY " + cacheKeyToEvict + " EVICTED AT: " + LocalDateTime.now());
+		log.info("WORLD DATA CACHE EVICTED AT: " + LocalDateTime.now());
 		log.info("Repopulating cache...");
 		repopulateCache();
 		log.info("DONE REPOPULATING WORLD CACHE");
