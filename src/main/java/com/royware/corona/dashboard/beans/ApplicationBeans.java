@@ -7,6 +7,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +21,7 @@ import com.royware.corona.dashboard.services.WorldDataServiceImpl;
 
 @Configuration
 @EnableScheduling
+@ComponentScan("com.royware.corona")
 public class ApplicationBeans {
 	@Bean
 	public RestTemplate makeRestTemplate() {

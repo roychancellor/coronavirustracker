@@ -37,14 +37,24 @@ public class ChartServiceDaoImpl implements ChartServiceDao {
 	}
 
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getChangeInTotalDeathsVersusDeathsswithExponentialLineList(
-			List<T> regionCaseList) {
-		return chartListService.makeChangeInTotalDeathsVersusDeathsWithExponentialLineList(regionCaseList);
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getTotalDeathsVersusTimeWithExponentialFitList(List<T> regionCaseList) {
+		return chartListService.makeTotalDeathsVersusTimeWithExponentialFitList(regionCaseList);
 	}
 
 	@Override
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getDailyRateOfChangeOfDeathsWithMovingAverageList(
 			List<T> regionCaseList) {
 		return chartListService.makeDailyRateOfChangeOfDeathsWithMovingAverageList(regionCaseList);
+	}
+ 
+	@Override
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getDailyAccelerationOfDeathsWithMovingAverageList(List<T> regionCaseList) {
+		return chartListService.makeDailyAccelerationOfDeathsWithMovingAverageList(regionCaseList);
+	}
+
+	@Override
+	public <T extends CanonicalCases> List<List<Map<Object, Object>>> getChangeInTotalDeathsVersusDeathsWithExponentialLineList(
+			List<T> regionCaseList) {
+		return chartListService.makeChangeInTotalDeathsVersusDeathsWithExponentialLineList(regionCaseList);
 	}
 }

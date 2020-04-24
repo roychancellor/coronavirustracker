@@ -31,10 +31,14 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				.getDailyAccelerationOfCasesWithMovingAverage(caseList);
 		List<List<Map<Object, Object>>> dataChangeOfCasesByCases = chartService
 				.getChangeInTotalCasesVersusCaseswithExponentialLine(caseList);
-		List<List<Map<Object, Object>>> dataChangeOfDeathsByDeaths = chartService
-				.getChangeInTotalDeathsVersusDeathsswithExponentialLine(caseList);
+		List<List<Map<Object, Object>>> dataDeathsByTime = chartService
+				.getTotalDeathsVersusTimeWithExponentialFit(caseList);
 		List<List<Map<Object, Object>>> dataRateOfDeathsByTime = chartService
 				.getDailyRateOfChangeOfDeathsWithMovingAverage(caseList);
+		List<List<Map<Object, Object>>> dataAccelOfDeathsByTime = chartService
+				.getDailyAccelerationOfDeathsWithMovingAverage(caseList);
+		List<List<Map<Object, Object>>> dataChangeOfDeathsByDeaths = chartService
+				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(caseList);
 
 		// Set all the individual dashboard statistics
 		dashStats.setCasesTotal((int) dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 1).get("y"));
@@ -83,8 +87,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		configCasesByTime.setDataSeries1Name("Total cases");
 		configCasesByTime.setDataSeries2Name("4-day Moving Average of New Cases");
 		
-		dashboardList.add(new Dashboard(new DashboardChartData(dataCasesByTime), configCasesByTime));
-
 		DashboardChartConfig rateOfChangeOfCasesChartConfig = new DashboardChartConfig(
 				"Rate of Change of Cases in " + region, "Days Since Cases > 0", "Percent Change in New Cases",
 				"scatter");
@@ -115,8 +117,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfChangeOfCasesChartConfig.setDataSeries1Name("% Change in Cases");
 		rateOfChangeOfCasesChartConfig.setDataSeries2Name("4-day Moving Average");
 		
-		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfCasesByTime), rateOfChangeOfCasesChartConfig));
-
 		DashboardChartConfig accelerationOfCasesChartConfig = new DashboardChartConfig(
 				"Acceleration of Cases in " + region, "Days Since Cases > 0", "Percent Change in the Rate of New Cases",
 				"scatter");
@@ -152,9 +152,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		accelerationOfCasesChartConfig.setDataSeries1Name("Acceleration of Cases");
 		accelerationOfCasesChartConfig.setDataSeries2Name("4-day Moving Average");
 		
-		dashboardList
-				.add(new Dashboard(new DashboardChartData(dataAccelOfCasesByTime), accelerationOfCasesChartConfig));
-
 		DashboardChartConfig rateOfCasesVersusCasesChartConfig = new DashboardChartConfig(
 				"Detecting Inflection of Cases in " + region, "Total Cases", "Daily Change in Total Cases", "scatter");
 		rateOfCasesVersusCasesChartConfig.setyAxisNumberSuffix("");
@@ -184,9 +181,95 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfCasesVersusCasesChartConfig.setDataSeries1Name("Daily change in cases");
 		rateOfCasesVersusCasesChartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
 		
-		dashboardList.add(
-				new Dashboard(new DashboardChartData(dataChangeOfCasesByCases), rateOfCasesVersusCasesChartConfig));
+		DashboardChartConfig configDeathsByTime = new DashboardChartConfig("Total Deaths in " + region,
+				"Days Since Deaths > 0", "Total Deaths", "scatter");
+		configDeathsByTime.setyAxisNumberSuffix("");
+		configDeathsByTime.setxAxisPosition("bottom");
+		configDeathsByTime.setxAxisLogarithmic("false");
+		configDeathsByTime.setyAxisPosition("left");
+		configDeathsByTime.setyAxisLogarithmic("false");
+		configDeathsByTime.setShowLegend("true");
+		configDeathsByTime.setDataPointSize(1);
+		configDeathsByTime.setxGridDashType("dot");
+		configDeathsByTime.setxAxisMin(0);
+		maxX = (int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("x");
+		configDeathsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		configDeathsByTime.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(dataDeathsByTime.get(0));
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		configDeathsByTime.setyAxisMax(maxY / factor * factor + factor);
+		configDeathsByTime.setyAxisInterval(factor);
+//			log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configDeathsByTime.getyAxisMax());
 
+		configDeathsByTime.setLegendHorizonalAlign("left");
+		configDeathsByTime.setLegendVerticalAlign("top");
+		configDeathsByTime.setDataSeries1Name("Total Deaths");
+		configDeathsByTime.setDataSeries2Name("4-day Moving Average of New Deaths");
+		
+		DashboardChartConfig rateOfChangeOfDeathsChartConfig = new DashboardChartConfig(
+				"Rate of Change of Deaths in " + region, "Days Since Deaths > 0", "Percent Change in New Deaths",
+				"scatter");
+		rateOfChangeOfDeathsChartConfig.setyAxisNumberSuffix("%");
+		rateOfChangeOfDeathsChartConfig.setxAxisPosition("bottom");
+		rateOfChangeOfDeathsChartConfig.setxAxisLogarithmic("false");
+		rateOfChangeOfDeathsChartConfig.setyAxisPosition("left");
+		rateOfChangeOfDeathsChartConfig.setyAxisLogarithmic("false");
+		rateOfChangeOfDeathsChartConfig.setShowLegend("true");
+		rateOfChangeOfDeathsChartConfig.setDataPointSize(1);
+		rateOfChangeOfDeathsChartConfig.setxAxisGridlinesDisplay("dot");
+		rateOfChangeOfDeathsChartConfig.setxAxisMin(0);
+		maxX = (int) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("x");
+		rateOfChangeOfDeathsChartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		rateOfChangeOfDeathsChartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(dataRateOfDeathsByTime.get(0));
+		maxY = maxY > 100 ? 99 : maxY;
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		rateOfChangeOfDeathsChartConfig.setyAxisInterval(factor);
+		rateOfChangeOfDeathsChartConfig.setyAxisMax(maxY / factor * factor + factor);
+
+		rateOfChangeOfDeathsChartConfig.setLegendHorizonalAlign("right");
+		rateOfChangeOfDeathsChartConfig.setLegendVerticalAlign("top");
+		rateOfChangeOfDeathsChartConfig.setDataSeries1Name("% change in deaths");
+		rateOfChangeOfDeathsChartConfig.setDataSeries2Name("4-day Moving Average");
+		
+		DashboardChartConfig accelerationOfDeathsChartConfig = new DashboardChartConfig(
+				"Acceleration of Deaths in " + region, "Days Since Deaths > 0", "Percent Change in the Rate of New Deaths",
+				"scatter");
+		accelerationOfDeathsChartConfig.setyAxisNumberSuffix("%");
+		accelerationOfDeathsChartConfig.setxAxisPosition("bottom");
+		accelerationOfDeathsChartConfig.setxAxisLogarithmic("false");
+		accelerationOfDeathsChartConfig.setyAxisPosition("left");
+		accelerationOfDeathsChartConfig.setyAxisLogarithmic("false");
+		accelerationOfDeathsChartConfig.setShowLegend("true");
+		accelerationOfDeathsChartConfig.setDataPointSize(1);
+		accelerationOfDeathsChartConfig.setxGridDashType("dot");
+		accelerationOfDeathsChartConfig.setxAxisMin(0);
+		maxX = (int) dataAccelOfDeathsByTime.get(0).get(dataAccelOfDeathsByTime.get(0).size() - 1).get("x");
+		accelerationOfDeathsChartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		minY = getMinValueFromListOfXYMaps(dataAccelOfDeathsByTime.get(0));
+		maxY = getMaxValueFromListOfXYMaps(dataAccelOfDeathsByTime.get(0));
+		maxY = maxY > 100 ? 99 : maxY;
+		minY = minY < -100 ? -99 : minY;
+		factor = (int) Math.pow(10, (int) Math.log10(minY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		accelerationOfDeathsChartConfig.setyAxisMin(minY / factor * factor - factor);
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		accelerationOfDeathsChartConfig.setyAxisInterval(factor);
+		accelerationOfDeathsChartConfig.setyAxisMax(maxY / factor * factor + factor);
+
+		accelerationOfDeathsChartConfig.setLegendHorizonalAlign("right");
+		accelerationOfDeathsChartConfig.setLegendVerticalAlign("top");
+		accelerationOfDeathsChartConfig.setDataSeries1Name("Acceleration of Deaths");
+		accelerationOfDeathsChartConfig.setDataSeries2Name("4-day Moving Average");
+		
 		DashboardChartConfig rateOfDeathsVersusDeathsChartConfig = new DashboardChartConfig(
 				"Detecting Inflection of Deaths in " + region, "Total Deaths", "Daily Change in Total Deaths",
 				"scatter");
@@ -218,40 +301,14 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfDeathsVersusDeathsChartConfig.setDataSeries1Name("Daily change in deaths");
 		rateOfDeathsVersusDeathsChartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
 		
-		dashboardList.add(
-				new Dashboard(new DashboardChartData(dataChangeOfDeathsByDeaths), rateOfDeathsVersusDeathsChartConfig));
-
-		DashboardChartConfig rateOfChangeOfDeathsChartConfig = new DashboardChartConfig(
-				"Rate of Change of Deaths in " + region, "Days Since Cases > 0", "Percent Change in New Deaths",
-				"scatter");
-		rateOfChangeOfDeathsChartConfig.setyAxisNumberSuffix("%");
-		rateOfChangeOfDeathsChartConfig.setxAxisPosition("bottom");
-		rateOfChangeOfDeathsChartConfig.setxAxisLogarithmic("false");
-		rateOfChangeOfDeathsChartConfig.setyAxisPosition("left");
-		rateOfChangeOfDeathsChartConfig.setyAxisLogarithmic("false");
-		rateOfChangeOfDeathsChartConfig.setShowLegend("true");
-		rateOfChangeOfDeathsChartConfig.setDataPointSize(1);
-		rateOfChangeOfDeathsChartConfig.setxAxisGridlinesDisplay("dot");
-		rateOfChangeOfDeathsChartConfig.setxAxisMin(0);
-		maxX = (int) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("x");
-		rateOfChangeOfDeathsChartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
-		rateOfChangeOfDeathsChartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(dataRateOfDeathsByTime.get(0));
-		maxY = maxY > 100 ? 99 : maxY;
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		rateOfChangeOfDeathsChartConfig.setyAxisInterval(factor);
-		rateOfChangeOfDeathsChartConfig.setyAxisMax(maxY / factor * factor + factor);
-
-		rateOfChangeOfDeathsChartConfig.setLegendHorizonalAlign("right");
-		rateOfChangeOfDeathsChartConfig.setLegendVerticalAlign("top");
-		rateOfChangeOfDeathsChartConfig.setDataSeries1Name("% change in deaths");
-		rateOfChangeOfDeathsChartConfig.setDataSeries2Name("4-day Moving Average");
-		
-		dashboardList
-				.add(new Dashboard(new DashboardChartData(dataRateOfDeathsByTime), rateOfChangeOfDeathsChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataCasesByTime), configCasesByTime));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfCasesByTime), rateOfChangeOfCasesChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataAccelOfCasesByTime), accelerationOfCasesChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataChangeOfCasesByCases), rateOfCasesVersusCasesChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataDeathsByTime), configDeathsByTime));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfDeathsByTime), rateOfChangeOfDeathsChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataAccelOfDeathsByTime), accelerationOfDeathsChartConfig));
+		dashboardList.add(new Dashboard(new DashboardChartData(dataChangeOfDeathsByDeaths), rateOfDeathsVersusDeathsChartConfig));
 
 		return dashboardList;
 	}
