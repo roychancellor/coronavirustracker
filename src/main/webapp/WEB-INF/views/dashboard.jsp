@@ -101,14 +101,14 @@
 		var chartArray = [];
 		
 		var mapIndexToContainerRowCol = new Map();
-		mapIndexToContainerRowCol.set("0", "11");
-		mapIndexToContainerRowCol.set("1", "12");
-		mapIndexToContainerRowCol.set("2", "21");
-		mapIndexToContainerRowCol.set("3", "22");
-		mapIndexToContainerRowCol.set("4", "31");
-		mapIndexToContainerRowCol.set("5", "32");
-		mapIndexToContainerRowCol.set("6", "41");
-		mapIndexToContainerRowCol.set("7", "42");
+		mapIndexToContainerRowCol.set(0, "11");
+		mapIndexToContainerRowCol.set(1, "12");
+		mapIndexToContainerRowCol.set(2, "21");
+		mapIndexToContainerRowCol.set(3, "22");
+		mapIndexToContainerRowCol.set(4, "31");
+		mapIndexToContainerRowCol.set(5, "32");
+		mapIndexToContainerRowCol.set(6, "41");
+		mapIndexToContainerRowCol.set(7, "42");
 		
 		const numCharts = 8;
 		const CASES_TIME_HISTORY = 0;
@@ -124,10 +124,6 @@
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
  			}
  		}
-		addLoadEvent(makeChartCasesOrDeathsByTime(containers[4], configObjects[4], chartArray[4]));
- 		for(var i = numCharts / 2 + 1; i < numCharts; i++) {
- 			addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
- 		}
  		//END ACTIONS
  		
 		function makeChartConfigs() {
@@ -135,11 +131,18 @@
  				var c = parseInt("${loop.index}");
 	 			containers[c] = "chartContainer" + mapIndexToContainerRowCol.get(c);
 	 			
-	 			var axis2Title = "";
+	 			var axis2TitleValue = "";
+	 			var pointColorStr = "blue";
+	 			var lineColorStr = "red";
 	 			if(c == CASES_TIME_HISTORY) {
-	 				axis2Title = "Total and Daily Cases in " + "${fullRegion}";
+	 				axis2TitleValue = "Daily Cases";
 	 			} else if(c == DEATHS_TIME_HISTORY) {
-	 				axis2Title = "Total and Daily Deaths in " + "${fullRegion}";
+	 				axis2TitleValue = "Daily Deaths";
+	 			}
+	 			
+	 			if(c >= 4) {
+	 				pointColorStr = "purple";
+	 				lineColorStr = "green";
 	 			}
 	 			
  				configObjects[c] = {
@@ -158,7 +161,9 @@
 					legendHAlign: "${config.chartConfig.legendHorizonalAlign}",
 					data1Name: "${config.chartConfig.dataSeries1Name}",
 					data2Name: "${config.chartConfig.dataSeries2Name}",
-					axis2Title: axis2Title
+					axis2Title: axis2TitleValue,
+					colorPoints: pointColorStr,
+					colorLine: lineColorStr
 	 			};
 	 		</chart:forEach>
 		}
@@ -200,7 +205,8 @@
 					tension: 0,
 					showLine: false,
 					dataPoints: dataPointsArr[0],
-					showInLegend: true
+					showInLegend: true,
+					color: config.colorPoints
 				},
 				{
 					type: "line",
@@ -211,7 +217,8 @@
 					tension: 0.4,
 					showLine: true,
 					dataPoints: dataPointsArr[1],
-					showInLegend: true
+					showInLegend: true,
+					lineColor: config.colorLine
 				}]
 			});
 			chart.render();
@@ -258,7 +265,8 @@
 						tension: 0,
 						showLine: false,
 						dataPoints: dataPointsArr[0],
-						showInLegend: true
+						showInLegend: true,
+						color: config.colorPoints
 					},
 					{
 						axisYType: "secondary",
@@ -270,7 +278,8 @@
 						tension: 0.4,
 						showLine: true,
 						dataPoints: dataPointsArr[1],
-						showInLegend: true
+						showInLegend: true,
+						lineColor: config.colorLine
 					}
 				]
 			});
