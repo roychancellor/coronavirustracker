@@ -82,6 +82,10 @@
 				<td><div id="chartContainer31" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer32" style="height: 250px; width: 100%"></div></td>
 			</tr>
+			<tr>
+				<td><div id="chartContainer41" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer42" style="height: 250px; width: 100%"></div></td>
+			</tr>
 		</table>
 		</div>
 	</div>
@@ -96,28 +100,52 @@
  		var configObjects = [];
 		var chartArray = [];
 		
-		var mapArr = new Map();
-		mapArr.set("0", "11");
-		mapArr.set("1", "12");
-		mapArr.set("2", "21");
-		mapArr.set("3", "22");
-		mapArr.set("4", "31");
-		mapArr.set("5", "32");
+		var mapIndexToContainerRowCol = new Map();
+		mapIndexToContainerRowCol.set(0, "11");
+		mapIndexToContainerRowCol.set(1, "12");
+		mapIndexToContainerRowCol.set(2, "21");
+		mapIndexToContainerRowCol.set(3, "22");
+		mapIndexToContainerRowCol.set(4, "31");
+		mapIndexToContainerRowCol.set(5, "32");
+		mapIndexToContainerRowCol.set(6, "41");
+		mapIndexToContainerRowCol.set(7, "42");
+		
+		const numCharts = 8;
+		const CASES_TIME_HISTORY = 0;
+		const DEATHS_TIME_HISTORY = 4;
  		
 		//ACTIONS
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
-		addLoadEvent(makeChartCasesByTime(containers[0], configObjects[0], chartArray[0]));
- 		for(var i = 1; i < 6; i++) {
- 			addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
+ 		for(var i = 0; i < numCharts; i++) {
+ 			if(i == CASES_TIME_HISTORY || i == DEATHS_TIME_HISTORY) {
+ 				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i]));
+ 			} else {
+ 				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
+ 			}
  		}
  		//END ACTIONS
  		
 		function makeChartConfigs() {
 	 		<chart:forEach items = "${allDashboardCharts}" var = "config" varStatus = "loop">
- 				containers[parseInt("${loop.index}")] = "chartContainer" + mapArr.get("${loop.index}");
+ 				var c = parseInt("${loop.index}");
+	 			containers[c] = "chartContainer" + mapIndexToContainerRowCol.get(c);
 	 			
- 				configObjects[parseInt("${loop.index}")] = {
+	 			var axis2TitleValue = "";
+	 			var pointColorStr = "blue";
+	 			var lineColorStr = "red";
+	 			if(c == CASES_TIME_HISTORY) {
+	 				axis2TitleValue = "Daily Cases";
+	 			} else if(c == DEATHS_TIME_HISTORY) {
+	 				axis2TitleValue = "Daily Deaths";
+	 			}
+	 			
+	 			if(c >= 4) {
+	 				pointColorStr = "purple";
+	 				lineColorStr = "green";
+	 			}
+	 			
+ 				configObjects[c] = {
 	 				chartTitle: "${config.chartConfig.chartTitle}",
 	 				xAxisTitle: "${config.chartConfig.xAxisTitle}",
 	 				yAxisTitle: "${config.chartConfig.yAxisTitle}",
@@ -132,7 +160,10 @@
 					legendVAlign: "${config.chartConfig.legendVerticalAlign}",
 					legendHAlign: "${config.chartConfig.legendHorizonalAlign}",
 					data1Name: "${config.chartConfig.dataSeries1Name}",
-					data2Name: "${config.chartConfig.dataSeries2Name}"
+					data2Name: "${config.chartConfig.dataSeries2Name}",
+					axis2Title: axis2TitleValue,
+					colorPoints: pointColorStr,
+					colorLine: lineColorStr
 	 			};
 	 		</chart:forEach>
 		}
@@ -174,7 +205,8 @@
 					tension: 0,
 					showLine: false,
 					dataPoints: dataPointsArr[0],
-					showInLegend: true
+					showInLegend: true,
+					color: config.colorPoints
 				},
 				{
 					type: "line",
@@ -185,13 +217,14 @@
 					tension: 0.4,
 					showLine: true,
 					dataPoints: dataPointsArr[1],
-					showInLegend: true
+					showInLegend: true,
+					lineColor: config.colorLine
 				}]
 			});
 			chart.render();
 		}
 		
-		function makeChartCasesByTime(chartContainerString, config, dataPointsArr) {
+		function makeChartCasesOrDeathsByTime(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
 				exportEnabled: true,
@@ -213,7 +246,7 @@
 					interval: config.yInterval
 				},
 				axisY2: {
-					title: "Daily Cases"
+					title: config.axis2Title
 				},
 				axisX: {
 					title: config.xAxisTitle,
@@ -232,7 +265,8 @@
 						tension: 0,
 						showLine: false,
 						dataPoints: dataPointsArr[0],
-						showInLegend: true
+						showInLegend: true,
+						color: config.colorPoints
 					},
 					{
 						axisYType: "secondary",
@@ -244,7 +278,8 @@
 						tension: 0.4,
 						showLine: true,
 						dataPoints: dataPointsArr[1],
-						showInLegend: true
+						showInLegend: true,
+						lineColor: config.colorLine
 					}
 				]
 			});
