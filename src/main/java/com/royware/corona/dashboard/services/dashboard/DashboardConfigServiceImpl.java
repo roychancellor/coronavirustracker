@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.DashboardController;
+import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartService;
 import com.royware.corona.dashboard.interfaces.DashboardConfigService;
@@ -26,28 +27,28 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 
 	@Override
-	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> caseList, String region, DashboardStatistics dashStats) {
+	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> dataList, String region, DashboardStatistics dashStats) {
 		List<Dashboard> dashboardList = new ArrayList<>();
 		
 		////////// CASES //////////
 		List<List<Map<Object, Object>>> dataCasesByTime = chartService
-				.getTotalCasesVersusTimeWithExponentialFit(caseList);
+				.getTotalCasesVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> dataRateOfCasesByTime = chartService
-				.getDailyRateOfChangeOfCasesWithMovingAverage(caseList);
+				.getDailyRateOfChangeOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataAccelOfCasesByTime = chartService
-				.getDailyAccelerationOfCasesWithMovingAverage(caseList);
+				.getDailyAccelerationOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataChangeOfCasesByCases = chartService
-				.getChangeInTotalCasesVersusCaseswithExponentialLine(caseList);
+				.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
 		
 		////////// DEATHS /////////
 		List<List<Map<Object, Object>>> dataDeathsByTime = chartService
-				.getTotalDeathsVersusTimeWithExponentialFit(caseList);
+				.getTotalDeathsVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> dataRateOfDeathsByTime = chartService
-				.getDailyRateOfChangeOfDeathsWithMovingAverage(caseList);
+				.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataAccelOfDeathsByTime = chartService
-				.getDailyAccelerationOfDeathsWithMovingAverage(caseList);
+				.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataChangeOfDeathsByDeaths = chartService
-				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(caseList);
+				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
 		dashStats.setCasesTotal((int) dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 1).get("y"));
@@ -63,10 +64,22 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		dashStats.setRateOfDeathsToday(
 				(double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
-				((double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y")
-				/ (double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 2).get("y") - 1)
+				(double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y")
 				* 100.0
-		);
+				/ (double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 2).get("y") - 1);
+		
+		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
+				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
+		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
+				* 1.0 / dashStats.getTotalTestsConducted());
+		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
+				* 1.0 / Regions.valueOf(region).getRegionData().getPopulation());
+		dashStats.setProportionOfDeathsFromPositives(dataList.get(dataList.size() - 1).getTotalDeaths()
+				* 1.0 / dataList.get(dataList.size() - 1).getTotalPositiveCases());
+		dashStats.setProportionOfDeathsFromTested(dataList.get(dataList.size() - 1).getTotalDeaths()
+				* 1.0 / dashStats.getTotalTestsConducted());
+		dashStats.setProportionOfDeathsOfExtrapolatedCases(dataList.get(dataList.size() - 1).getTotalDeaths()
+				* 1.0 / (dashStats.getProportionOfPositiveTests() * Regions.valueOf(region).getRegionData().getPopulation()));
 
 		////////// CASES CHARTS ///////////
 		DashboardChartConfig configCasesByTime = new DashboardChartConfig("Time History of Cases " + region,
