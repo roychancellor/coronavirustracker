@@ -14,6 +14,12 @@ public class DashboardStatistics {
 	private double rateOfCasesPerCasesToday;
 	private double rateOfDeathsPerDeathsToday;
 	private double accelOfDeathsToday;
+	private int totalTestsConducted;
+	private double proportionOfPopulationTested;
+	private double proportionOfPositiveTests;
+	private double proportionOfDeathsFromPositives;
+	private double proportionOfDeathsFromTested;
+	private double proportionOfDeathsOfExtrapolatedCases;
 	
 	public DashboardStatistics() {
 	}
@@ -96,5 +102,53 @@ public class DashboardStatistics {
 
 	public void setAccelOfDeathsToday(double accelOFDeathsToday) {
 		this.accelOfDeathsToday = accelOFDeathsToday;
+	}
+
+	public int getTotalTestsConducted() {
+		return totalTestsConducted;
+	}
+
+	public void setTotalTestsConducted(int totalTestsConducted) {
+		this.totalTestsConducted = totalTestsConducted;
+	}
+
+	public double getProportionOfPopulationTested() {
+		return proportionOfPopulationTested;
+	}
+
+	public void setProportionOfPopulationTested(double proportionOfPopulationTested) {
+		this.proportionOfPopulationTested = proportionOfPopulationTested;
+	}
+
+	public double getProportionOfPositiveTests() {
+		return proportionOfPositiveTests;
+	}
+
+	public void setProportionOfPositiveTests(double proportionOfPositiveTests) {
+		this.proportionOfPositiveTests = proportionOfPositiveTests;
+	}
+
+	public double getProportionOfDeathsFromPositives() {
+		return proportionOfDeathsFromPositives;
+	}
+
+	public void setProportionOfDeathsFromPositives(double proportionOfDeathsFromPositives) {
+		this.proportionOfDeathsFromPositives = proportionOfDeathsFromPositives;
+	}
+
+	public double getProportionOfDeathsFromTested() {
+		return proportionOfDeathsFromTested;
+	}
+
+	public void setProportionOfDeathsFromTested(double proportionOfDeathsFromTested) {
+		this.proportionOfDeathsFromTested = proportionOfDeathsFromTested;
+	}
+
+	public double getProportionOfDeathsOfExtrapolatedCases() {
+		return proportionOfDeathsOfExtrapolatedCases;
+	}
+
+	public void setProportionOfDeathsOfExtrapolatedCases(double proportionOfDeathsOfExtrapolatedCases) {
+		this.proportionOfDeathsOfExtrapolatedCases = proportionOfDeathsOfExtrapolatedCases;
 	}
 }
