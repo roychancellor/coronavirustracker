@@ -57,11 +57,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				(double) dataRateOfCasesByTime.get(0).get(dataRateOfCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfCasesToday(
 				(double) dataAccelOfCasesByTime.get(0).get(dataAccelOfCasesByTime.get(0).size() - 1).get("y"));
-//		dashStats.setDeathsTotal(
-//				(int) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x"));
-//		dashStats.setDeathsToday((int) dataChangeOfDeathsByDeaths.get(0)
-//				.get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x")
-//				- (int) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 2).get("x"));
 		dashStats.setDeathsTotal((int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setDeathsToday((int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 2).get("y"));
@@ -92,7 +87,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		configCasesByTime.setyAxisMax(maxY / factor * factor + factor);
 		configCasesByTime.setyAxisInterval(factor);
-//			log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configCasesByTime.getyAxisMax());
 
 		configCasesByTime.setLegendHorizonalAlign("left");
 		configCasesByTime.setLegendVerticalAlign("top");
@@ -115,7 +109,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfChangeOfCasesChartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
 		rateOfChangeOfCasesChartConfig.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(dataRateOfCasesByTime.get(0));
-//			log.info("rate of cases, maxY = " + maxY);
 		maxY = maxY >= 100 ? 99 : maxY;
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
@@ -215,7 +208,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		configDeathsByTime.setyAxisMax(maxY / factor * factor + factor);
 		configDeathsByTime.setyAxisInterval(factor);
-//			log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configDeathsByTime.getyAxisMax());
 
 		configDeathsByTime.setLegendHorizonalAlign("left");
 		configDeathsByTime.setLegendVerticalAlign("top");
@@ -305,7 +297,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		cases = (cases <= 0) ? 1 : cases;
 		exp = (int) Math.log10(cases);
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMax((int) Math.pow(10, 1 + exp));
-		minValue = Double.valueOf(getMinValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(0))); // (Double)dataChangeOfDeathsByDeaths.get(0).get(0).get("y");
+		minValue = Double.valueOf(getMinValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(0)));
 		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
 		rateOfDeathsVersusDeathsChartConfig.setyAxisMin((int) Math.pow(10, exp));
 		double maxValue = (double) getMaxValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(1));
@@ -352,7 +344,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				max = Double.valueOf(xy.get("y").toString());
 			}
 		}
-//			log.info("getMaxValueFromListOfXYMaps, max = " + max);
 		if (max.isNaN() || max.isInfinite()) {
 			max = 99.0;
 		}
