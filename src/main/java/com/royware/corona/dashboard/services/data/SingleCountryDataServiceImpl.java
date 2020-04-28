@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services;
+package com.royware.corona.dashboard.services.data;
 
 import java.util.ArrayList;
 import java.util.Collections;

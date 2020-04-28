@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services;
+package com.royware.corona.dashboard.services.data;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
