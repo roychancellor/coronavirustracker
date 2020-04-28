@@ -71,15 +71,15 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
 		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
-				* 1.0 / dashStats.getTotalTestsConducted());
+				* 100.0 / dashStats.getTotalTestsConducted());
 		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
-				* 1.0 / Regions.valueOf(region).getRegionData().getPopulation());
+				* 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
 		dashStats.setProportionOfDeathsFromPositives(dataList.get(dataList.size() - 1).getTotalDeaths()
-				* 1.0 / dataList.get(dataList.size() - 1).getTotalPositiveCases());
+				* 100.0 / dataList.get(dataList.size() - 1).getTotalPositiveCases());
 		dashStats.setProportionOfDeathsFromTested(dataList.get(dataList.size() - 1).getTotalDeaths()
-				* 1.0 / dashStats.getTotalTestsConducted());
+				* 100.0 / dashStats.getTotalTestsConducted());
 		dashStats.setProportionOfDeathsOfExtrapolatedCases(dataList.get(dataList.size() - 1).getTotalDeaths()
-				* 1.0 / (dashStats.getProportionOfPositiveTests() * Regions.valueOf(region).getRegionData().getPopulation()));
+				* 100.0 / (dashStats.getProportionOfPositiveTests() * Regions.valueOf(region).getRegionData().getPopulation()));
 
 		////////// CASES CHARTS ///////////
 		DashboardChartConfig configCasesByTime = new DashboardChartConfig("Time History of Cases " + region,
