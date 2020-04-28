@@ -11,5 +11,5 @@ public interface CanonicalCases {
 	public void setTotalNegativeCases(int negative);
 	public int getTotalDeaths();
 	public void setTotalDeaths(int death);
-	public String getRegionAbbrev();
+	public String getRegionString();
 }

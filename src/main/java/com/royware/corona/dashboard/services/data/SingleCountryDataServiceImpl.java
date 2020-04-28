@@ -40,7 +40,7 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 		casesInOneCountry = worldCases
 				.stream()
 				.filter(wc -> {
-					return wc.getRegionAbbrev().equalsIgnoreCase(countryThreeLetterCode)
+					return wc.getRegionString().equalsIgnoreCase(countryThreeLetterCode)
 							&& wc.getDailyNewCases() >= MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION;
 				})
 				.collect(Collectors.toList());
