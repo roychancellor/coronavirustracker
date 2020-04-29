@@ -67,13 +67,10 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		dashStats.setRateOfDeathsToday(
 				(double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
-				(double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y")
-				* 100.0
-				/ (double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 2).get("y") - 1);
+				(double) dataAccelOfDeathsByTime.get(0).get(dataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
 		
 		log.info("Making all the DASHBOARD STATISTICS - NEW ONES");
 		log.info("Getting the region population from the Regions enum");
-//		int pop = Regions.valueOf(region).getRegionData().getPopulation();
 		int pop = Regions.USA.getRegionData().getPopulation();
 		log.info("Making total tests conducted");
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()

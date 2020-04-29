@@ -27,6 +27,7 @@ public class ChartListServiceImpl implements ChartListService {
 	//CASES WILL ALWAYS START WITH INDEX = 0 --> DAY = 0
 	//DEATHS WILL HAVE A VARIABLE-INDEX --> DAY = 0 (DEATHS LAG CASES AND VARIES AMONG REGIONS)
 	
+	////////// CASES ///////////
 	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
 		log.info("***** MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
@@ -194,10 +195,10 @@ public class ChartListServiceImpl implements ChartListService {
 		//Find the first object having a totalDeaths > 0 for two consecutive days
 		int startDayIndex = findFirstDayIndexWithPositiveDeaths(regionDataList);
 		int dayIndex = startDayIndex;
-		for(CanonicalCases cc : regionDataList) {
+		while(dayIndex < regionDataList.size()) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", cc.getTotalDeaths());
+			xyPair.put("y", regionDataList.get(dayIndex).getTotalDeaths());
 			dataList.add(xyPair);
 			dayIndex++;
 		}
@@ -353,8 +354,9 @@ public class ChartListServiceImpl implements ChartListService {
 		int startDayIndex = 0;
 		for(int dayIndex = startDayIndex + 1; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getTotalDeaths() > 0 && regionDataList.get(dayIndex - 1).getTotalDeaths() > 0) {
-				startDayIndex = dayIndex;
-				break;
+				log.info("first day index with positive deaths: " + (dayIndex - 1)
+						+ " with " + regionDataList.get(dayIndex - 1).getTotalDeaths() + " deaths");
+				return dayIndex - 1;
 			}
 		}
 		return startDayIndex;
