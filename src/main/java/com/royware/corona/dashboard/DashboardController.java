@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
-//import org.springframework.context.annotation.ComponentScan;
-//import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +28,9 @@ import com.royware.corona.dashboard.model.DashboardStatistics;
  * Controls all HTTP GET and POST requests
  * All return statements are the names of Java Server Page (jsp) files
  */
-//@Configuration
 @EnableCaching
 @EnableWebMvc
 @Controller
-//@ComponentScan("com.royware.corona")
 public class DashboardController {
 	@Autowired
 	private DashboardStatistics dashStats;
@@ -74,7 +70,7 @@ public class DashboardController {
 		log.info("Making dashboard for region: " + region);
 		
 		if(!populateDashboardModelMap(region, map)) {
-			return Pages.HOME_PAGE.toString();
+			return "redirect:corona";
 		}
 		return Pages.DASHBOARD_PAGE.toString();
 	}
@@ -85,9 +81,15 @@ public class DashboardController {
 		
 			List<? extends CanonicalCases> dataList = new ArrayList<>();
 			dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
-			
+			log.info("About to call makeAllDashboardCharts with region = " + Regions.valueOf(region).getRegionData().getFullName());
 			map.addAttribute("allDashboardCharts", dashConfigSvc
 					.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
+			log.info("Done calling makeAllDashboardCharts");
+			
+			map.addAttribute("regionType", "us");
+			if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
+				map.put("regionType", "world");
+			}
 		
 			map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
 			map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
