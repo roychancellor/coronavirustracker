@@ -1,10 +1,13 @@
 package com.royware.corona.dashboard.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class UnitedStatesCases implements CanonicalCases {
 	@JsonProperty("date") private int date;
 	@JsonProperty("positive") private int totalPositiveCases;
