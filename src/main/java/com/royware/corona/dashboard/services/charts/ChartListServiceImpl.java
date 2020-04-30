@@ -193,6 +193,7 @@ public class ChartListServiceImpl implements ChartListService {
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		//Find the first object having a totalDeaths > 0 for two consecutive days
+		log.info("Making time history of TOTAL deaths");
 		int startDayIndex = findFirstDayIndexWithPositiveDeaths(regionDataList);
 		int dayIndex = startDayIndex;
 		while(dayIndex < regionDataList.size()) {
@@ -205,6 +206,7 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataLists.add(dataList);
 
 		//Makes a list of daily new deaths for plotting on the secondary axis of the time chart
+		log.info("Making time history of DAILY deaths");
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
@@ -218,6 +220,7 @@ public class ChartListServiceImpl implements ChartListService {
 			dayIndex++;
 		}
 		//make the MOVING AVERAGE of daily deaths to smooth out some of the noise
+		log.info("Making moving average of DAILY deaths");
 		scatterChartDataLists.add(makeMovingAverageList(dailyDeaths, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY DEATHS VERSUS TIME *****");
@@ -238,12 +241,12 @@ public class ChartListServiceImpl implements ChartListService {
 		dailyPctChgDeaths.clear();
 		
 		//Find the first object having a totalDeaths > 0 for two consecutive days
-		int startDayIndex = findFirstDayIndexWithPositiveDeaths(regionDataList);
+		int startDayIndex = findFirstDayIndexWithPositiveDeaths(regionDataList) + 1;
+		log.info("startDayIndex: " + startDayIndex);
 		for(int dayIndex = startDayIndex; dayIndex < regionDataList.size(); dayIndex++) {
 			valueYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
 			valueToday = regionDataList.get(dayIndex).getTotalDeaths();
 			percentChange = (valueToday - valueYesterday) * 100.0 / valueYesterday;
-			
 			dailyPctChgDeaths.put(dayIndex, percentChange);
 			
 			xyPair = new HashMap<>();
@@ -313,7 +316,7 @@ public class ChartListServiceImpl implements ChartListService {
 		double changeInDeaths = 0;
 		double maxChangeInDeaths = regionDataList.get(0).getTotalDeaths();
 		dailyChgDeaths.clear();
-		for(int dayIndex = startDayIndex; dayIndex < regionDataList.size(); dayIndex++) {
+		for(int dayIndex = startDayIndex + 1; dayIndex < regionDataList.size(); dayIndex++) {
 			valueYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
 			valueToday = regionDataList.get(dayIndex).getTotalDeaths();
 			changeInDeaths = valueToday - valueYesterday;
@@ -351,15 +354,14 @@ public class ChartListServiceImpl implements ChartListService {
 
 	//////////// HELPER METHODS /////////////
 	private <T extends CanonicalCases> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
-		int startDayIndex = 0;
-		for(int dayIndex = startDayIndex + 1; dayIndex < regionDataList.size(); dayIndex++) {
-			if(regionDataList.get(dayIndex).getTotalDeaths() > 0 && regionDataList.get(dayIndex - 1).getTotalDeaths() > 0) {
-				log.info("first day index with positive deaths: " + (dayIndex - 1)
-						+ " with " + regionDataList.get(dayIndex - 1).getTotalDeaths() + " deaths");
-				return dayIndex - 1;
+		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
+			if(regionDataList.get(dayIndex).getTotalDeaths() > 0 /*&& regionDataList.get(dayIndex - 1).getTotalDeaths() >= 0*/) {
+				log.info("first day index with positive deaths: " + dayIndex
+						+ " with " + regionDataList.get(dayIndex).getTotalDeaths() + " deaths");
+				return dayIndex;
 			}
 		}
-		return startDayIndex;
+		return 0;
 	}
 	
 	List<Map<Object, Object>> makeExponentialLineList(int minCases, int maxCases, double k) {
