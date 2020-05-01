@@ -33,7 +33,7 @@ public class SingleStateDataServiceImpl implements ExternalDataService {
 		UnitedStatesCases[] stateDataArray = restTemplate.getForObject(url, UnitedStatesCases[].class);
 		List<UnitedStatesCases> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
 		Collections.reverse(stateDataList);
-		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
+		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		
 		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		

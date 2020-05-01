@@ -44,7 +44,7 @@ public class WorldCases implements CanonicalCases {
 
 	@Override
 	@JsonIgnore
-	public int getDate() {
+	public int getDateInteger() {
 		return Integer.parseInt(stringDate.replace("/", ""));
 	}
 

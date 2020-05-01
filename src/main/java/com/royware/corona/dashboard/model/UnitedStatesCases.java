@@ -1,5 +1,8 @@
 package com.royware.corona.dashboard.model;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -9,7 +12,8 @@ import com.royware.corona.dashboard.interfaces.CanonicalCases;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 public class UnitedStatesCases implements CanonicalCases {
-	@JsonProperty("date") private int date;
+	@JsonProperty("date") private int dateInteger;
+	@JsonProperty("dateChecked") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-mm-ddThh:mm:ssZ") private Date dateChecked;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
 	@JsonProperty("posNeg") private int totalPositivePlusNegative;
@@ -21,8 +25,8 @@ public class UnitedStatesCases implements CanonicalCases {
 		super();
 	}
 
-	public int getDate() {
-		return date;
+	public int getDateInteger() {
+		return dateInteger;
 	}
 
 	public int getTotalPositiveCases() {
@@ -73,9 +77,17 @@ public class UnitedStatesCases implements CanonicalCases {
 		this.pendingTests = pendingTests;
 	}
 
+	public Date getDateChecked() {
+		return dateChecked;
+	}
+
+	public void setDateChecked(Date dateChecked) {
+		this.dateChecked = dateChecked;
+	}
+
 	@Override
 	public String toString() {
-		return "UnitedStatesCases [date=" + date + ", totalPositiveCases=" + totalPositiveCases
+		return "UnitedStatesCases [date=" + dateInteger + ", totalPositiveCases=" + totalPositiveCases
 				+ ", totalNegativeCases=" + totalNegativeCases + ", totalDeaths=" + totalDeaths + ", regionString="
 				+ regionString + "]";
 	}
@@ -84,7 +96,7 @@ public class UnitedStatesCases implements CanonicalCases {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + date;
+		result = prime * result + dateInteger;
 		result = prime * result + ((regionString == null) ? 0 : regionString.hashCode());
 		result = prime * result + totalDeaths;
 		result = prime * result + totalNegativeCases;
@@ -101,7 +113,7 @@ public class UnitedStatesCases implements CanonicalCases {
 		if (getClass() != obj.getClass())
 			return false;
 		UnitedStatesCases other = (UnitedStatesCases) obj;
-		if (date != other.date)
+		if (dateInteger != other.dateInteger)
 			return false;
 		if (regionString == null) {
 			if (other.regionString != null)
