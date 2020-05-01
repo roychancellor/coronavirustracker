@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.DashboardController;
+import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.ChartService;
 import com.royware.corona.dashboard.interfaces.DashboardConfigService;
@@ -26,30 +27,33 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 
 	@Override
-	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> caseList, String region, DashboardStatistics dashStats) {
+	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> dataList, String region, DashboardStatistics dashStats) {
 		List<Dashboard> dashboardList = new ArrayList<>();
 		
 		////////// CASES //////////
+		log.info("Making all the chart data lists for CASES");
 		List<List<Map<Object, Object>>> dataCasesByTime = chartService
-				.getTotalCasesVersusTimeWithExponentialFit(caseList);
+				.getTotalCasesVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> dataRateOfCasesByTime = chartService
-				.getDailyRateOfChangeOfCasesWithMovingAverage(caseList);
+				.getDailyRateOfChangeOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataAccelOfCasesByTime = chartService
-				.getDailyAccelerationOfCasesWithMovingAverage(caseList);
+				.getDailyAccelerationOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataChangeOfCasesByCases = chartService
-				.getChangeInTotalCasesVersusCaseswithExponentialLine(caseList);
+				.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
 		
 		////////// DEATHS /////////
+		log.info("Making all the chart data lists for DEATHS");
 		List<List<Map<Object, Object>>> dataDeathsByTime = chartService
-				.getTotalDeathsVersusTimeWithExponentialFit(caseList);
+				.getTotalDeathsVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> dataRateOfDeathsByTime = chartService
-				.getDailyRateOfChangeOfDeathsWithMovingAverage(caseList);
+				.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataAccelOfDeathsByTime = chartService
-				.getDailyAccelerationOfDeathsWithMovingAverage(caseList);
+				.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> dataChangeOfDeathsByDeaths = chartService
-				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(caseList);
+				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
+		log.info("Making all the DASHBOARD STATISTICS - ORIGINAL");
 		dashStats.setCasesTotal((int) dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setCasesToday((int) dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 1).get("y")
 				- (int) dataCasesByTime.get(0).get(dataCasesByTime.get(0).size() - 2).get("y"));
@@ -57,23 +61,38 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				(double) dataRateOfCasesByTime.get(0).get(dataRateOfCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfCasesToday(
 				(double) dataAccelOfCasesByTime.get(0).get(dataAccelOfCasesByTime.get(0).size() - 1).get("y"));
-//		dashStats.setDeathsTotal(
-//				(int) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x"));
-//		dashStats.setDeathsToday((int) dataChangeOfDeathsByDeaths.get(0)
-//				.get(dataChangeOfDeathsByDeaths.get(0).size() - 1).get("x")
-//				- (int) dataChangeOfDeathsByDeaths.get(0).get(dataChangeOfDeathsByDeaths.get(0).size() - 2).get("x"));
 		dashStats.setDeathsTotal((int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setDeathsToday((int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) dataDeathsByTime.get(0).get(dataDeathsByTime.get(0).size() - 2).get("y"));
 		dashStats.setRateOfDeathsToday(
 				(double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
-				((double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 1).get("y")
-				/ (double) dataRateOfDeathsByTime.get(0).get(dataRateOfDeathsByTime.get(0).size() - 2).get("y") - 1)
-				* 100.0
-		);
+				(double) dataAccelOfDeathsByTime.get(0).get(dataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
+		
+		log.info("Making all the DASHBOARD STATISTICS - NEW ONES");
+		log.info("Getting the region population from the Regions enum");
+		int pop = Regions.USA.getRegionData().getPopulation();
+		log.info("Making total tests conducted");
+		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
+				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
+		log.info("Making ProportionOfPositiveTests");
+		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
+				* 100.0 / dashStats.getTotalTestsConducted());
+		log.info("Making ProportionOfPopulationTested");
+		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
+				* 100.0 / pop);
+		log.info("Making ProportionOfDeathsFromPositives");
+		dashStats.setProportionOfDeathsFromPositives(dataList.get(dataList.size() - 1).getTotalDeaths()
+				* 100.0 / dataList.get(dataList.size() - 1).getTotalPositiveCases());
+		log.info("Making ProportionOfDeathsFromTested");
+		dashStats.setProportionOfDeathsFromTested(dataList.get(dataList.size() - 1).getTotalDeaths()
+				* 100.0 / dashStats.getTotalTestsConducted());
+		log.info("Making ProportionOfDeathsOfExtrapolatedCases");
+		dashStats.setProportionOfDeathsOfExtrapolatedCases(dataList.get(dataList.size() - 1).getTotalDeaths()
+				* 100.0 / (dashStats.getProportionOfPositiveTests() * pop));
 
 		////////// CASES CHARTS ///////////
+		log.info("Configuring all the charts for CASES...");
 		DashboardChartConfig configCasesByTime = new DashboardChartConfig("Time History of Cases " + region,
 				"Days Since Cases > 0", "Total Cases", "scatter");
 		configCasesByTime.setyAxisNumberSuffix("");
@@ -92,7 +111,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		configCasesByTime.setyAxisMax(maxY / factor * factor + factor);
 		configCasesByTime.setyAxisInterval(factor);
-//			log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configCasesByTime.getyAxisMax());
 
 		configCasesByTime.setLegendHorizonalAlign("left");
 		configCasesByTime.setLegendVerticalAlign("top");
@@ -115,7 +133,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfChangeOfCasesChartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
 		rateOfChangeOfCasesChartConfig.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(dataRateOfCasesByTime.get(0));
-//			log.info("rate of cases, maxY = " + maxY);
 		maxY = maxY >= 100 ? 99 : maxY;
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
@@ -154,7 +171,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			factor = 10;
 		}
 		accelerationOfCasesChartConfig.setyAxisMin(minY / factor * factor - factor);
-		log.info("Accel of cases: minY = " + minY + ", factor: " + factor + ", actual minY as set: " + accelerationOfCasesChartConfig.getyAxisMin());
+//		log.info("Accel of cases: minY = " + minY + ", factor: " + factor + ", actual minY as set: " + accelerationOfCasesChartConfig.getyAxisMin());
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -197,6 +214,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfCasesVersusCasesChartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
 		
 		////////// DEATHS CHARTS ///////////
+		log.info("Configuring all the charts for DEATHS...");
 		DashboardChartConfig configDeathsByTime = new DashboardChartConfig("Time History of Deaths in " + region,
 				"Days Since Deaths > 0", "Total Deaths", "scatter");
 		configDeathsByTime.setyAxisNumberSuffix("");
@@ -215,7 +233,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		configDeathsByTime.setyAxisMax(maxY / factor * factor + factor);
 		configDeathsByTime.setyAxisInterval(factor);
-//			log.info("1: factor = " + factor + ", maxY = " + maxY + ", yAxisMax = " + configDeathsByTime.getyAxisMax());
 
 		configDeathsByTime.setLegendHorizonalAlign("left");
 		configDeathsByTime.setLegendVerticalAlign("top");
@@ -305,7 +322,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		cases = (cases <= 0) ? 1 : cases;
 		exp = (int) Math.log10(cases);
 		rateOfDeathsVersusDeathsChartConfig.setxAxisMax((int) Math.pow(10, 1 + exp));
-		minValue = Double.valueOf(getMinValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(0))); // (Double)dataChangeOfDeathsByDeaths.get(0).get(0).get("y");
+		minValue = Double.valueOf(getMinValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(0)));
 		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
 		rateOfDeathsVersusDeathsChartConfig.setyAxisMin((int) Math.pow(10, exp));
 		double maxValue = (double) getMaxValueFromListOfXYMaps(dataChangeOfDeathsByDeaths.get(1));
@@ -318,6 +335,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		rateOfDeathsVersusDeathsChartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
 		
 		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
+		log.info("Writing all the configurations to the dashboardList...");
 		dashboardList.add(new Dashboard(new DashboardChartData(dataCasesByTime), configCasesByTime));
 		dashboardList.add(new Dashboard(new DashboardChartData(dataRateOfCasesByTime), rateOfChangeOfCasesChartConfig));
 		dashboardList.add(new Dashboard(new DashboardChartData(dataAccelOfCasesByTime), accelerationOfCasesChartConfig));
@@ -352,7 +370,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				max = Double.valueOf(xy.get("y").toString());
 			}
 		}
-//			log.info("getMaxValueFromListOfXYMaps, max = " + max);
 		if (max.isNaN() || max.isInfinite()) {
 			max = 99.0;
 		}

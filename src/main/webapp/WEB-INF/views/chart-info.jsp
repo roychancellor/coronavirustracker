@@ -22,6 +22,29 @@
 		<table class="table table-dark">
 			<tr>
 				<td class="col-md-2">
+				<div id="dashboardContainer" style="height: 280px; width: 100%">
+				<img style="max-height:100%; max-width:100%;" src="resources/images/chartinfo/dashboard.png">
+				</div>
+				</td>
+				<td class="col-md-2">
+				<div id="dashboardExplanation" style="height: 280px; width: 100%">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">The dashboard shows relevant statistics for
+				the current day. Some of the statistics are self-describing, but others need some explanation.</p>
+				<ul style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">
+					<li>Cases: Total: gives the total number of confirmed positive cases (increase in cases from the previous day)</li>
+					<li>Cases: Rate: gives the % increase in number of cases, computed as (today - yesterday) / yesterday * 100
+					(change: the % change in the rate computed as (rate today - rate yesterday) / rate yesterday * 100)</li>
+					<li>Deaths: Total: and Rate: the same as for cases, but for deaths</li>
+					<li>By Population: Cases: total cases divided by the population * 100 (total cases / population * 1,000,000)</li>
+					<li>By Population: Deaths: same as cases, but for deaths</li>
+					<li>By Testing: Cases: total positive cases divided by total tests * 100</li>
+					<li>By Testing: Deaths: total deaths divided by total positives * 100 (total deaths / total tests * 100)
+				</ul>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="col-md-2">
 				<div id="chartContainer11" style="height: 380px; width: 100%"><img src="resources/images/chartinfo/Chart-11.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows a 4-day moving average of the daily
 				new cases as well as the total cases to date. The moving average smoothes out some of the daily noise and allows seeing the trend more cleanly.
@@ -58,15 +81,27 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer31" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-31.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the previous
-				chart, except for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
+				<td class="col-md-2"><div id="chartContainer31" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-31.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the time history
+				chart for cases, but for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
 				</div>
 				</td>
-				<td class="col-md-2"><div id="chartContainer32" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-32.png">
+				<td class="col-md-2"><div id="chartContainer32" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-32.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
-				the rate of change of cases (speed-o-meter), except for deaths.  Note that deaths lags cases by a few days,
+				the rate of change of cases (speed-o-meter), but for deaths.  Note that deaths lags cases by a few days,
 				but the time scale here is the same as cases.</p>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer41" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-41.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
+				acceleration chart for cases, but for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
+				</div>
+				</td>
+				<td class="col-md-2"><div id="chartContainer42" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-42.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
+				the chart for detecting inflection in cases, but for deaths.</p>
 				</div>
 				</td>
 			</tr>

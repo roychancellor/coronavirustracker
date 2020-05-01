@@ -1,27 +1,18 @@
 package com.royware.corona.dashboard.model;
 
 import com.royware.corona.dashboard.enums.RegionLevels;
-import com.royware.corona.dashboard.enums.Regions;
 
 public class RegionData {
-	private Regions abbreviation;
 	private int population;
 	private RegionLevels regionLevel;
 	private String fullName;
 	
-	public RegionData(Regions abbreviation, int population, RegionLevels regionLevel, String fullName) {
-		this.abbreviation = abbreviation;
+	public RegionData(int population, RegionLevels regionLevel, String fullName) {
 		this.population = population;
 		this.regionLevel = regionLevel;
 		this.fullName = fullName;
 	}
 	
-	public Regions getAbbreviation() {
-		return abbreviation;
-	}
-	public void setAbbreviation(Regions abbreviation) {
-		this.abbreviation = abbreviation;
-	}
 	public int getPopulation() {
 		return population;
 	}

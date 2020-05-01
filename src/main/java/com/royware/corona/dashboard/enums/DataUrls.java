@@ -2,17 +2,17 @@ package com.royware.corona.dashboard.enums;
 
 public enum DataUrls {
 	WORLD_DATA_URL("https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"),
-	STATE_DATA_URL("https://covidtracking.com/api/states/daily?state="),
-	US_DATA_URL("https://covidtracking.com/api/us/daily");
+	STATE_DATA_URL_START("https://covidtracking.com/api/v1/states/"),
+	STATE_DATA_URL_END("/daily.json"),
+	US_DATA_URL("https://covidtracking.com/api/v1/us/daily.json");
 	
-	public final String name;
+	public final String url;
 	
-	private DataUrls(String name) {
-		this.name = name;
+	private DataUrls(String url) {
+		this.url = url;
 	}
 	
-	@Override
-	public String toString() {
-		return this.name;
+	public String getName() {
+		return this.url;
 	}
 }

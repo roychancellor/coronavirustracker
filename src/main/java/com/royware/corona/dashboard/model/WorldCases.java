@@ -10,7 +10,7 @@ public class WorldCases implements CanonicalCases {
 	@JsonProperty("dateRep") private String stringDate;
 	@JsonProperty("cases") private int dailyNewCases;
 	@JsonProperty("deaths") private int dailyNewDeaths;
-	@JsonProperty("countryterritoryCode") private String regionAbbrev;
+	@JsonProperty("countryterritoryCode") private String regionString;
 	@JsonProperty("popData2018") private long population2018;
 	
 	@JsonIgnore private int totalPositiveCases;
@@ -34,8 +34,8 @@ public class WorldCases implements CanonicalCases {
 	}
 
 	@Override
-	public String getRegionAbbrev() {
-		return regionAbbrev;
+	public String getRegionString() {
+		return regionString;
 	}
 
 	public long getPopulation2018() {
@@ -87,7 +87,7 @@ public class WorldCases implements CanonicalCases {
 	@Override
 	public String toString() {
 		return "WorldCases [dateDDMMYYYY=" + stringDate + ", dailyNewCases=" + dailyNewCases + ", dailyNewDeaths="
-				+ dailyNewDeaths + ", countryAbbrev=" + regionAbbrev + ", population2018=" + population2018 + "]";
+				+ dailyNewDeaths + ", countryAbbrev=" + regionString + ", population2018=" + population2018 + "]";
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class WorldCases implements CanonicalCases {
 		result = prime * result + dailyNewCases;
 		result = prime * result + dailyNewDeaths;
 		result = prime * result + (int) (population2018 ^ (population2018 >>> 32));
-		result = prime * result + ((regionAbbrev == null) ? 0 : regionAbbrev.hashCode());
+		result = prime * result + ((regionString == null) ? 0 : regionString.hashCode());
 		result = prime * result + ((stringDate == null) ? 0 : stringDate.hashCode());
 		result = prime * result + totalDeaths;
 		result = prime * result + totalNegativeCases;
@@ -120,10 +120,10 @@ public class WorldCases implements CanonicalCases {
 			return false;
 		if (population2018 != other.population2018)
 			return false;
-		if (regionAbbrev == null) {
-			if (other.regionAbbrev != null)
+		if (regionString == null) {
+			if (other.regionString != null)
 				return false;
-		} else if (!regionAbbrev.equals(other.regionAbbrev))
+		} else if (!regionString.equals(other.regionString))
 			return false;
 		if (stringDate == null) {
 			if (other.stringDate != null)

@@ -55,7 +55,7 @@
 			</tr>
 			<tr style="line-height:12px;">
 				<td style="color:#522398;">
-					Per Capita:
+					By Population:
 				</td>
 				<td style="color:#FFFFFF;">
 					Cases: <fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" />%
@@ -66,6 +66,22 @@
 					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${deathspermillion}" /> per million)
 				</td>
 			</tr>
+			<chart:set var = "type" scope = "session" value = "${regionType}" />
+			<chart:if test = "${type == 'us'}">
+			<tr style="line-height:12px;">
+				<td style="color:#522398;">
+					By Testing:
+				</td>
+				<td style="color:#FFFFFF;">
+					Cases: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfPositiveTests}" />%
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalTestsConducted}" /> total tests
+				</td>
+				<td style="color:#FFFFFF;">
+					Deaths: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfDeathsFromPositives}" />% of positives
+					(<fmt:formatNumber type = "number" pattern = "#.###" value = "${dashstats.proportionOfDeathsFromTested}" />% of tested)
+				</td>
+			</tr>
+			</chart:if>
 		</table>
 		</div>
 		<div class="dashboardCharts">

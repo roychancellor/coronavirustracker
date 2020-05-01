@@ -36,7 +36,7 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 		do {	
 			try {
 				log.info("***** ABOUT TO HIT ENDPOINT FOR ALL WORLD DATA *****");
-				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL.toString(), WorldRecords.class);				
+				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL.getName(), WorldRecords.class);				
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
 			} catch (RestClientException e) {
 				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");

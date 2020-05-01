@@ -33,8 +33,8 @@ public class UsDataServiceImpl implements ExternalDataService {
 		int tries = 0;
 		do {
 			try {
-				log.info("***** ABOUT TO HIT ENDPOINT FOR UNITED STATES DATA *****");
-				usDataArray = restTemplate.getForObject(DataUrls.US_DATA_URL.toString(), UnitedStatesCases[].class);
+				log.info("***** ABOUT TO HIT ENDPOINT FOR UNITED STATES DATA AT URL " + DataUrls.US_DATA_URL.getName());
+				usDataArray = restTemplate.getForObject(DataUrls.US_DATA_URL.getName(), UnitedStatesCases[].class);
 				log.info("***** GOT THROUGH PARSING UNITED STATES DATA *****");
 			} catch(RestClientException e) {
 				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");

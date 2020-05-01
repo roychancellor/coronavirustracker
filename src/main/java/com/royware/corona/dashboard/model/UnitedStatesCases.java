@@ -1,15 +1,20 @@
 package com.royware.corona.dashboard.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class UnitedStatesCases implements CanonicalCases {
 	@JsonProperty("date") private int date;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
+	@JsonProperty("posNeg") private int totalPositivePlusNegative;
 	@JsonProperty("death") private int totalDeaths;
+	@JsonProperty("pending") private int pendingTests;
 	@JsonProperty("state") private String regionString;
 		
 	public UnitedStatesCases() {
@@ -44,12 +49,28 @@ public class UnitedStatesCases implements CanonicalCases {
 		this.totalDeaths = death;
 	}
 
-	public String getRegionAbbrev() {
+	public String getRegionString() {
 		return regionString;
 	}
 
-	public void setRegionAbbrev(String regionAbbrev) {
-		this.regionString = regionAbbrev;
+	public void setRegionString(String regionString) {
+		this.regionString = regionString;
+	}
+
+	public int getTotalPositivePlusNegative() {
+		return totalPositivePlusNegative;
+	}
+
+	public void setTotalPositivePlusNegative(int totalPositivePlusNegative) {
+		this.totalPositivePlusNegative = totalPositivePlusNegative;
+	}
+
+	public int getPendingTests() {
+		return pendingTests;
+	}
+
+	public void setPendingTests(int pendingTests) {
+		this.pendingTests = pendingTests;
 	}
 
 	@Override

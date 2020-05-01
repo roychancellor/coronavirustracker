@@ -28,18 +28,12 @@ public class SingleStateDataServiceImpl implements ExternalDataService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesCases> makeDataListFromExternalSource(String stateAbbreviation) {
-		log.info("***** ABOUT TO GET STATE: " + stateAbbreviation + " ****");
-		UnitedStatesCases[] stateDataArray = restTemplate.getForObject(
-				DataUrls.STATE_DATA_URL.toString() + stateAbbreviation.toUpperCase(),
-				UnitedStatesCases[].class
-		);
+		String url = DataUrls.STATE_DATA_URL_START.getName() + stateAbbreviation.toUpperCase() + DataUrls.STATE_DATA_URL_END.getName();
+		log.info("***** ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + url + " FOR " + stateAbbreviation);
+		UnitedStatesCases[] stateDataArray = restTemplate.getForObject(url, UnitedStatesCases[].class);
 		List<UnitedStatesCases> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
 		Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDate() < US_CUTOFF_DATE));
-		
-//		for(UnitedStatesCases usc:stateDataList) {
-//			log.info(usc.toString());
-//		}
 		
 		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
 		
