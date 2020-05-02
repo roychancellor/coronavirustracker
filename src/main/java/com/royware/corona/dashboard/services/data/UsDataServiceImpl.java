@@ -52,13 +52,6 @@ public class UsDataServiceImpl implements ExternalDataService {
 		Collections.reverse(usDataList);
 		usDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		
-		log.info("About to print out the dates...usDataList = " + usDataList.toString());
-		for(UnitedStatesCases us : usDataList) {
-			log.info("year: " + us.getDateChecked().getYear() + ", month: "
-					+ us.getDateChecked().getMonthValue()
-					+ ", day: " + us.getDateChecked().getDayOfMonth());
-		}
-		
 		log.info("***** FINISHED HITTING ENDPOINT FOR UNITED STATES DATA *****");
 		return usDataList;
 	}
