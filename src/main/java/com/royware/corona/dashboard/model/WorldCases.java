@@ -20,6 +20,7 @@ public class WorldCases implements CanonicalCases {
 	@JsonIgnore private int totalPositiveCases;
 	@JsonIgnore private int totalNegativeCases;
 	@JsonIgnore private int totalDeaths;
+	@JsonIgnore private LocalDate dateChecked;
 	
 	public WorldCases() {
 		super();
@@ -28,7 +29,7 @@ public class WorldCases implements CanonicalCases {
 	public LocalDate getDateChecked() {
 		return LocalDate.of(year, month, day);
 	}
-	
+		
 	public String getStringDate() {
 		return stringDate;
 	}

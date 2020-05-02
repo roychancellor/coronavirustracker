@@ -39,6 +39,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", cc.getTotalPositiveCases());
+			xyPair.put("date", cc.getDateChecked().toString());
 			dataList.add(xyPair);
 			dayIndex++;
 		}
@@ -404,6 +405,7 @@ public class ChartListServiceImpl implements ChartListService {
 			divisor = 0;
 			
 			xyPair = new HashMap<>();
+//			xyPair.put("x", dayIndex);
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", movingAverage);
 			movingAverageList.add(xyPair);
