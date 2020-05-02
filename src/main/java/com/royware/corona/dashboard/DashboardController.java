@@ -78,9 +78,11 @@ public class DashboardController {
 	private boolean populateDashboardModelMap(String region, ModelMap map) {
 		try {
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
+			log.info("Success, got the dataService: " + dataService.toString());
 		
 			List<? extends CanonicalCases> dataList = new ArrayList<>();
 			dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
+			
 			log.info("About to call makeAllDashboardCharts with region = " + Regions.valueOf(region).getRegionData().getFullName());
 			map.addAttribute("allDashboardCharts", dashConfigSvc
 					.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));

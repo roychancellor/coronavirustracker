@@ -2,6 +2,8 @@ package com.royware.corona.dashboard.enums;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.CanonicalCases;
@@ -20,6 +22,8 @@ public enum Regions {
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			Logger log = LoggerFactory.getLogger(Regions.class);
+			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
 		}
 	},

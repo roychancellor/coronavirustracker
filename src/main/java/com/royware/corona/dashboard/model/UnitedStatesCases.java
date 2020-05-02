@@ -1,8 +1,8 @@
 package com.royware.corona.dashboard.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -13,14 +13,16 @@ import com.royware.corona.dashboard.interfaces.CanonicalCases;
 @JsonInclude(Include.NON_NULL)
 public class UnitedStatesCases implements CanonicalCases {
 	@JsonProperty("date") private int dateInteger;
-	@JsonProperty("dateChecked") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-mm-ddThh:mm:ssZ") private Date dateChecked;
+	@JsonProperty("dateChecked") private String dateTimeString;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
 	@JsonProperty("posNeg") private int totalPositivePlusNegative;
 	@JsonProperty("death") private int totalDeaths;
 	@JsonProperty("pending") private int pendingTests;
 	@JsonProperty("state") private String regionString;
-		
+	
+	@JsonIgnore private LocalDate dateChecked;
+			
 	public UnitedStatesCases() {
 		super();
 	}
@@ -77,19 +79,30 @@ public class UnitedStatesCases implements CanonicalCases {
 		this.pendingTests = pendingTests;
 	}
 
-	public Date getDateChecked() {
+	public String getDateTimeString() {
+		return dateTimeString;
+	}
+
+	public void setDateTimeString(String dateTimeChecked) {
+		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeChecked.substring(0,4)),
+				Integer.parseInt(dateTimeChecked.substring(5,7)), Integer.parseInt(dateTimeChecked.substring(8,10)));
+		this.dateTimeString = dateTimeChecked;
+	}
+
+	public LocalDate getDateChecked() {
 		return dateChecked;
 	}
 
-	public void setDateChecked(Date dateChecked) {
-		this.dateChecked = dateChecked;
+	public void setDateChecked(LocalDate dateChecked) {
+		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
+				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
 	}
 
 	@Override
 	public String toString() {
 		return "UnitedStatesCases [date=" + dateInteger + ", totalPositiveCases=" + totalPositiveCases
 				+ ", totalNegativeCases=" + totalNegativeCases + ", totalDeaths=" + totalDeaths + ", regionString="
-				+ regionString + "]";
+				+ regionString + ", dateTimeString=" + dateTimeString + "]";
 	}
 
 	@Override
