@@ -39,7 +39,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", cc.getTotalPositiveCases());
-			xyPair.put("date", cc.getDateChecked().toString());
+			xyPair.put("dateChecked", cc.getDateChecked().toString());
 			dataList.add(xyPair);
 			dayIndex++;
 		}
@@ -88,6 +88,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", percentChange);
+			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
@@ -124,6 +125,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", accelerationOfCases);
+			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
@@ -164,6 +166,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", (valueToday + valueYesterday) / 2);  //use average of yesterday and today as the current case number
 			xyPair.put("y", changeInCases);
+			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
@@ -201,6 +204,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", regionDataList.get(dayIndex).getTotalDeaths());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 			dayIndex++;
 		}
@@ -253,6 +257,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", percentChange);
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
@@ -290,6 +295,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", accelerationOfDeaths);
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
@@ -332,6 +338,7 @@ public class ChartListServiceImpl implements ChartListService {
 			xyPair = new HashMap<>();
 			xyPair.put("x", (valueToday + valueYesterday) / 2);  //use average of yesterday and today as the current case number
 			xyPair.put("y", changeInDeaths);
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);

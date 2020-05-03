@@ -115,7 +115,6 @@
 		var containers = [];
  		var configObjects = [];
 		var chartArray = [];
-		var chartLabelsArray = [];
 		
 		var mapIndexToContainerRowCol = new Map();
 		mapIndexToContainerRowCol.set(0, "11");
@@ -136,7 +135,7 @@
 		makeChartConfigs(); 		
  		for(var i = 0; i < numCharts; i++) {
  			if(i == CASES_TIME_HISTORY || i == DEATHS_TIME_HISTORY) {
- 				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i], chartLabelsArray[i]));
+ 				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
  			}
@@ -229,7 +228,11 @@
 					showLine: false,
 					dataPoints: dataPointsArr[0],
 					showInLegend: true,
-					color: config.colorPoints
+					color: config.colorPoints,
+					indexLabelPlacement: "outside",
+					indexLabelOrientation: "vertical",
+					indexLabelFontColor: "white",
+					indexLabelFontSize: 0
 				},
 				{
 					type: "line",
@@ -241,13 +244,17 @@
 					showLine: true,
 					dataPoints: dataPointsArr[1],
 					showInLegend: true,
-					lineColor: config.colorLine
+					lineColor: config.colorLine,
+					indexLabelPlacement: "outside",
+					indexLabelOrientation: "vertical",
+					indexLabelFontColor: "white",
+					indexLabelFontSize: 0
 				}]
 			});
 			chart.render();
 		}
 		
-		function makeChartCasesOrDeathsByTime(chartContainerString, config, dataPointsArr, labelsArr) {
+		function makeChartCasesOrDeathsByTime(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
 				exportEnabled: true,
@@ -296,7 +303,10 @@
 						dataPoints: dataPointsArr[0],
 						showInLegend: true,
 						color: config.colorPoints,
-						labels: labelsArr[0]
+						indexLabelPlacement: "outside",
+						indexLabelOrientation: "vertical",
+						indexLabelFontColor: "white",
+						indexLabelFontSize: 0
 					},
 					{
 						axisYType: "secondary",
@@ -310,7 +320,10 @@
 						dataPoints: dataPointsArr[1],
 						showInLegend: true,
 						lineColor: config.colorLine,
-						labels: labelsArr[1]
+						indexLabelPlacement: "outside",
+						indexLabelOrientation: "vertical",
+						indexLabelFontColor: "white",
+						indexLabelFontSize: 0
 					}
 				]
 			});
@@ -320,7 +333,8 @@
         //The tool tip content formatter function
 		function contentFormatterFunction(e) {
         	var content = " ";
-    		content = "Date: " + "xxx" + "</br>"
+    		content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>"
+    		//content = ""
         	for(var i = 0; i < e.entries.length; i++) {
         		content += e.entries[i].dataSeries.name + ": " + "<strong>"
         			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###") + "</strong>";
@@ -347,35 +361,41 @@
 		function makeChartDataFromJavaLists() {
 			var xValue;
 			var yValue;
+			var loopIndex;
 			var dateString;
 			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
 				var dataPointsArr = [[], []];
-				var labelsArr = [[], []];
 				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");
-						//dateString = "${dataPoint.indexLabel}";
-						dateString = "xxx";
-						labelsArr[parseInt("${loop.index}")].push("xxx");
-						dataPointsArr[parseInt("${loop.index}")].push({
-							x: xValue,
-							y: yValue
-						});
+						loopIndex = parseInt("${loop.index}");
+						if(loopIndex == 0) {
+							dateString = "${dataPoint.dateChecked}";
+							dataPointsArr[loopIndex].push({
+								x: xValue,
+								y: yValue,
+								indexLabel: dateString
+							});
+						} else {
+							dataPointsArr[loopIndex].push({
+								x: xValue,
+								y: yValue
+							});
+						}
 					</chart:forEach>
 				</chart:forEach>
 				chartArray[parseInt("${c.index}")] = dataPointsArr;
-				chartLabelsArray[parseInt("${c.index}")] = labelsArr;
 			</chart:forEach>	
-			/*logChartDataToConsole(chartArray, chartLabelsArray);*/
+			/*logChartDataToConsole(chartArray);*/
 		}
 		
-		function logChartDataToConsole(chartArray, labelsArr) {
+		function logChartDataToConsole(chartArray) {
 			for(var c = 0; c < chartArray.length; c++) {
 				console.log("dataset[" + c + "]");
 				for(var i = 0; i < chartArray[c].length; i++) {
 					for(var j = 0; j < chartArray[c][i].length; j++) {
-						console.log("data: " + chartArray[c][i][j] + ", dates: " + labelsArr[c][i][j]);
+						console.log("data: " + chartArray[c][i][j]);
 					}
 				}
 			}
