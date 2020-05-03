@@ -197,7 +197,7 @@
 			   	toolTip: {
 			   		shared: true,
 		            contentFormatter: function(e) {
-		            	return contentFormatterFunction(e);
+		            	return contentFormatterFunction(e, chartContainerString);
 		            }
 				},				
 				title: {
@@ -267,7 +267,7 @@
 			   	toolTip: {
 			   		shared: true,
 		            contentFormatter: function(e) {
-		            	return contentFormatterFunction(e);
+		            	return contentFormatterFunction(e, chartContainerString);
 		            }
 				},				
 				title: {
@@ -330,16 +330,48 @@
 			chart.render();
 		}
 		
-        //The tool tip content formatter function
-		function contentFormatterFunction(e) {
-        	var content = " ";
-    		content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>"
-    		//content = ""
-        	for(var i = 0; i < e.entries.length; i++) {
-        		content += e.entries[i].dataSeries.name + ": " + "<strong>"
-        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###") + "</strong>";
-        		content += "<br/>";
-        	}
+        //The tool tip content formatter functions for each chart type
+		function contentFormatterFunction(e, chartContainerString) {
+        	var content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>";
+        	var positionRowCol = chartContainerString.substring(chartContainerString.length - 2, chartContainerString.length);
+        	
+        	if(positionRowCol == "22") {
+        		content += "Total Cases: "
+        			+ "<strong>"
+        			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
+     				+ "</strong>"
+     				+ "</br>"
+     				+ "Daily Change in Cases: "
+     				+ "<strong>"
+     				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
+     				+ "</strong>";
+     		} else if(positionRowCol == "42") {
+        		content += "Total Deaths: "
+        			+ "<strong>"
+        			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
+	 				+ "</strong>"
+	 				+ "</br>"
+	 				+ "Daily Change in Deaths: "
+	 				+ "<strong>"
+	 				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
+	 				+ "</strong>";
+ 			} else {      	
+	        	for(var i = 0; i < e.entries.length; i++) {
+	        		if(positionRowCol == "11" || positionRowCol == "31") {
+		        		content += e.entries[i].dataSeries.name + ": "
+		        			+ "<strong>"
+		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")
+		        			+ "</strong>";
+		        		content += "<br/>";
+	        		} else if(positionRowCol == "12" || positionRowCol == "21" || positionRowCol == "32" || positionRowCol == "41") {
+		        		content += e.entries[i].dataSeries.name + ": "
+		        			+ "<strong>"
+	        				+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#.##") + "%"
+	        				+ "</strong>";
+		        		content += "<br/>";
+	        		}
+	        	}
+     		}
            	return content;
         }
 
