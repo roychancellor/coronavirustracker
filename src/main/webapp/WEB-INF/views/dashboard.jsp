@@ -194,6 +194,12 @@
 					horizontalAlign: config.legendHAlign, //left, right
 					dockInsidePlotArea: true
 				},
+			   	toolTip: {
+			   		shared: true,
+		            contentFormatter: function(e) {
+		            	return contentFormatterFunction(e, chartContainerString);
+		            }
+				},				
 				title: {
 					text: config.chartTitle,
 					fontSize: 14
@@ -222,7 +228,11 @@
 					showLine: false,
 					dataPoints: dataPointsArr[0],
 					showInLegend: true,
-					color: config.colorPoints
+					color: config.colorPoints,
+					indexLabelPlacement: "outside",
+					indexLabelOrientation: "vertical",
+					indexLabelFontColor: "white",
+					indexLabelFontSize: 0
 				},
 				{
 					type: "line",
@@ -234,7 +244,11 @@
 					showLine: true,
 					dataPoints: dataPointsArr[1],
 					showInLegend: true,
-					lineColor: config.colorLine
+					lineColor: config.colorLine,
+					indexLabelPlacement: "outside",
+					indexLabelOrientation: "vertical",
+					indexLabelFontColor: "white",
+					indexLabelFontSize: 0
 				}]
 			});
 			chart.render();
@@ -250,6 +264,12 @@
 					horizontalAlign: config.legendHAlign, //left, right
 					dockInsidePlotArea: true
 				},
+			   	toolTip: {
+			   		shared: true,
+		            contentFormatter: function(e) {
+		            	return contentFormatterFunction(e, chartContainerString);
+		            }
+				},				
 				title: {
 					text: config.chartTitle,
 					fontSize: 14
@@ -282,7 +302,11 @@
 						showLine: false,
 						dataPoints: dataPointsArr[0],
 						showInLegend: true,
-						color: config.colorPoints
+						color: config.colorPoints,
+						indexLabelPlacement: "outside",
+						indexLabelOrientation: "vertical",
+						indexLabelFontColor: "white",
+						indexLabelFontSize: 0
 					},
 					{
 						axisYType: "secondary",
@@ -295,13 +319,62 @@
 						showLine: true,
 						dataPoints: dataPointsArr[1],
 						showInLegend: true,
-						lineColor: config.colorLine
+						lineColor: config.colorLine,
+						indexLabelPlacement: "outside",
+						indexLabelOrientation: "vertical",
+						indexLabelFontColor: "white",
+						indexLabelFontSize: 0
 					}
 				]
 			});
 			chart.render();
 		}
 		
+        //The tool tip content formatter functions for each chart type
+		function contentFormatterFunction(e, chartContainerString) {
+        	var content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>";
+        	var positionRowCol = chartContainerString.substring(chartContainerString.length - 2, chartContainerString.length);
+        	
+        	if(positionRowCol == "22") {
+        		content += "Total Cases: "
+        			+ "<strong>"
+        			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
+     				+ "</strong>"
+     				+ "</br>"
+     				+ "Daily Change in Cases: "
+     				+ "<strong>"
+     				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
+     				+ "</strong>";
+     		} else if(positionRowCol == "42") {
+        		content += "Total Deaths: "
+        			+ "<strong>"
+        			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
+	 				+ "</strong>"
+	 				+ "</br>"
+	 				+ "Daily Change in Deaths: "
+	 				+ "<strong>"
+	 				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
+	 				+ "</strong>";
+ 			} else {      	
+	        	for(var i = 0; i < e.entries.length; i++) {
+	        		if(positionRowCol == "11" || positionRowCol == "31") {
+		        		content += e.entries[i].dataSeries.name + ": "
+		        			+ "<strong>"
+		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")
+		        			+ "</strong>";
+		        		content += "<br/>";
+	        		} else if(positionRowCol == "12" || positionRowCol == "21" || positionRowCol == "32" || positionRowCol == "41") {
+		        		content += e.entries[i].dataSeries.name + ": "
+		        			+ "<strong>"
+	        				+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#.##") + "%"
+	        				+ "</strong>";
+		        		content += "<br/>";
+	        		}
+	        	}
+     		}
+           	return content;
+        }
+
 	//<!-- From h t t p s www.htmlgoodies.com/beyond/javascript/article.php/3724571/using-multiple-javascript-onload-functions.htm -->	
 		function addLoadEvent(func) {
 		  var oldonload = window.onload;
@@ -320,30 +393,41 @@
 		function makeChartDataFromJavaLists() {
 			var xValue;
 			var yValue;
+			var loopIndex;
+			var dateString;
 			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
 				var dataPointsArr = [[], []];
 				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");
-						
-						dataPointsArr[parseInt("${loop.index}")].push({
-							x: xValue,
-							y: yValue,
-						});
+						loopIndex = parseInt("${loop.index}");
+						if(loopIndex == 0) {
+							dateString = "${dataPoint.dateChecked}";
+							dataPointsArr[loopIndex].push({
+								x: xValue,
+								y: yValue,
+								indexLabel: dateString
+							});
+						} else {
+							dataPointsArr[loopIndex].push({
+								x: xValue,
+								y: yValue
+							});
+						}
 					</chart:forEach>
 				</chart:forEach>
 				chartArray[parseInt("${c.index}")] = dataPointsArr;
 			</chart:forEach>	
-			/* logChartDataToConsole(chartArray); */
+			/*logChartDataToConsole(chartArray);*/
 		}
 		
 		function logChartDataToConsole(chartArray) {
 			for(var c = 0; c < chartArray.length; c++) {
 				console.log("dataset[" + c + "]");
-				for(var i = 0; i < dataPointsArr.length; i++) {
-					for(var j = 0; j < dataPointsArr[i].length; j++) {
-						console.log(dataPointsArr[i][j]);
+				for(var i = 0; i < chartArray[c].length; i++) {
+					for(var j = 0; j < chartArray[c][i].length; j++) {
+						console.log("data: " + chartArray[c][i][j]);
 					}
 				}
 			}

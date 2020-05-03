@@ -1,5 +1,7 @@
 package com.royware.corona.dashboard.services.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,15 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 	@Qualifier(value = "singleCountry")
 	private ExternalDataService singleCountryDataService;
 	
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceFactoryImpl.class);
+	
 	@Override
 	public ExternalDataService getExternalDataService(String regionOfService) {
 		ExternalDataService dataService;
 		
+		log.info("getExternalDataService trying to make dataService for " + regionOfService);
 		if(regionOfService.equalsIgnoreCase(Regions.USA.name())) {
+			log.info("Making dataService for " + Regions.USA.name());
 			dataService = usDataService;
 		} else if(regionOfService.equalsIgnoreCase(Regions.USA_NO_NY.name())) {
 			dataService = usExcludingStateDataService;
@@ -39,6 +45,7 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 		} else if(regionOfService.length() == 3){
 			dataService = singleCountryDataService;
 		} else {
+			log.info("getExternalDataService NO MATCHES to regionOfService: " + regionOfService + ", throwing exception!!!");
 			throw new IllegalArgumentException();
 		}
 		

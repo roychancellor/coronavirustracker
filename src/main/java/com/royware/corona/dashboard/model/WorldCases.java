@@ -1,5 +1,6 @@
 package com.royware.corona.dashboard.model;
 
+import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +9,9 @@ import com.royware.corona.dashboard.interfaces.CanonicalCases;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorldCases implements CanonicalCases {
 	@JsonProperty("dateRep") private String stringDate;
+	@JsonProperty("year") private int year;
+	@JsonProperty("month") private int month;
+	@JsonProperty("day") private int day;
 	@JsonProperty("cases") private int dailyNewCases;
 	@JsonProperty("deaths") private int dailyNewDeaths;
 	@JsonProperty("countryterritoryCode") private String regionString;
@@ -16,11 +20,16 @@ public class WorldCases implements CanonicalCases {
 	@JsonIgnore private int totalPositiveCases;
 	@JsonIgnore private int totalNegativeCases;
 	@JsonIgnore private int totalDeaths;
+	@JsonIgnore private LocalDate dateChecked;
 	
 	public WorldCases() {
 		super();
 	}
 
+	public LocalDate getDateChecked() {
+		return LocalDate.of(year, month, day);
+	}
+		
 	public String getStringDate() {
 		return stringDate;
 	}
@@ -44,7 +53,7 @@ public class WorldCases implements CanonicalCases {
 
 	@Override
 	@JsonIgnore
-	public int getDate() {
+	public int getDateInteger() {
 		return Integer.parseInt(stringDate.replace("/", ""));
 	}
 

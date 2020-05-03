@@ -1,10 +1,13 @@
 package com.royware.corona.dashboard.interfaces;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public interface CanonicalCases {
-	public int getDate();
+	public int getDateInteger();
+	public LocalDate getDateChecked();
 	public int getTotalPositiveCases();
 	public void setTotalPositiveCases(int positive);
 	public int getTotalNegativeCases();
