@@ -33,7 +33,21 @@
 		      <div class="col-md-4"><button class="btn btn-secondary btn-md btn-block" name="region" value=${USA_NO_NY} type="submit">United States without New York State</button></div>
 		      <div class="col-md-4"></div>
 		    </div>
-		    <h4 style="color:#232f98;">States</h4>
+		    <h4 style="color:#232f98;">Multi-Region Picker</h4>
+		    <div class="row">
+		      <div class="col-md-8">
+		      	<select class="selectpicker show-tick" multiple title="Select (or search for) regions, then click MAKE DASHBOARD button"
+		      			data-live-search="true" data-style="btn-warning" data-width="100%">
+				  <option>Arizona</option>
+				  <option>California</option>
+				  <option>New Mexico</option>
+				</select>
+		      </div>
+		      <div class="col-md-4">
+		      	<button class="btn btn-warning btn-md btn-block" name="region" value=${MULTI_REGION} type="submit">MAKE DASHBOARD</button>
+		      </div>
+		    </div>
+		    <h4 style="color:#232f98;">Individual States</h4>
 		    <div class="row">
 		      <div class="col-md-2"><button class="btn btn-danger btn-md" name="region" value=${AL} type="submit">Alabama</button></div>
 		      <div class="col-md-2"><button class="btn btn-danger btn-md" name="region" value=${AK} type="submit">Alaska</button></div>
