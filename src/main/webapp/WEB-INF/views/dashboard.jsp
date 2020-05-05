@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet">
 	<spring:url value="/resources/css/style.css" var="mainCss" />
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Data Dashboard</title>
@@ -105,8 +105,8 @@
 		</table>
 		</div>
 	</div>
-	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
  	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 	
@@ -122,7 +122,7 @@
 		const TIME_SERIES_CASES = "11";
 		const TIME_SERIES_DEATHS = "31";
 		const TIME_SERIES_RATE_OF_CASES = "12";
-		const TIME_SERIES_ACCEL_OF CASES = "21";
+		const TIME_SERIES_ACCEL_OF_CASES = "21";
 		const TIME_SERIES_RATE_OF_DEATHS = "32";
 		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
 	 		
@@ -131,7 +131,7 @@
 		var mapIndexToContainerRowCol = new Map();
 		mapIndexToContainerRowCol.set(0, TIME_SERIES_CASES);
 		mapIndexToContainerRowCol.set(1, TIME_SERIES_RATE_OF_CASES);
-		mapIndexToContainerRowCol.set(2, TIME_SERIES_ACCEL_OF CASES);
+		mapIndexToContainerRowCol.set(2, TIME_SERIES_ACCEL_OF_CASES);
 		mapIndexToContainerRowCol.set(3, CHANGE_IN_CASES_VS_TOTAL_CASES);
 		mapIndexToContainerRowCol.set(4, TIME_SERIES_DEATHS);
 		mapIndexToContainerRowCol.set(5, TIME_SERIES_RATE_OF_DEATHS);
@@ -146,7 +146,7 @@
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
  		for(var i = 0; i < NUM_CHARTS; i++) {
- 			if(i == CASES_TIME_HISTORY || i == DEATHS_TIME_HISTORY_INDEX) {
+ 			if(i == CASES_TIME_HISTORY_INDEX || i == DEATHS_TIME_HISTORY_INDEX) {
  				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
@@ -379,7 +379,7 @@
 		        			+ "</strong>";
 		        		content += "<br/>";
 	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES
-	        				|| positionRowCol == TIME_SERIES_ACCEL_OF CASES
+	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_CASES
 	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS
 	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS) {
 		        		content += e.entries[i].dataSeries.name + ": "
