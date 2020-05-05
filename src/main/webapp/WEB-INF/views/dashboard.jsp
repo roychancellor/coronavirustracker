@@ -112,23 +112,11 @@
 	
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
-		var containers = [];
- 		var configObjects = [];
-		var chartArray = [];
-		
-		var mapIndexToContainerRowCol = new Map();
-		mapIndexToContainerRowCol.set(0, "11");
-		mapIndexToContainerRowCol.set(1, "12");
-		mapIndexToContainerRowCol.set(2, "21");
-		mapIndexToContainerRowCol.set(3, "22");
-		mapIndexToContainerRowCol.set(4, "31");
-		mapIndexToContainerRowCol.set(5, "32");
-		mapIndexToContainerRowCol.set(6, "41");
-		mapIndexToContainerRowCol.set(7, "42");
-		
 		const NUM_CHARTS = 8;
 		const CASES_TIME_HISTORY_INDEX = 0;
 		const DEATHS_TIME_HISTORY_INDEX = 4;
+		
+		//Constants that define the row-column of the chart position on the dashboard
 		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
 		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
 		const TIME_SERIES_CASES = "11";
@@ -137,8 +125,24 @@
 		const TIME_SERIES_ACCEL_OF CASES = "21";
 		const TIME_SERIES_RATE_OF_DEATHS = "32";
 		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
-		 		
-		//ACTIONS
+	 		
+		//Maps the index of the chart data to the row-column constant
+		//for referencing the chartContainer div tags above
+		var mapIndexToContainerRowCol = new Map();
+		mapIndexToContainerRowCol.set(0, TIME_SERIES_CASES);
+		mapIndexToContainerRowCol.set(1, TIME_SERIES_RATE_OF_CASES);
+		mapIndexToContainerRowCol.set(2, TIME_SERIES_ACCEL_OF CASES);
+		mapIndexToContainerRowCol.set(3, CHANGE_IN_CASES_VS_TOTAL_CASES);
+		mapIndexToContainerRowCol.set(4, TIME_SERIES_DEATHS);
+		mapIndexToContainerRowCol.set(5, TIME_SERIES_RATE_OF_DEATHS);
+		mapIndexToContainerRowCol.set(6, TIME_SERIES_ACCEL_OF_DEATHS);
+		mapIndexToContainerRowCol.set(7, CHANGE_IN_DEATHS_VS_TOTAL_DEATHS);
+		
+		//MAIN ACTIONS
+		var containers = [];
+ 		var configObjects = [];
+		var chartArray = [];
+		
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
  		for(var i = 0; i < NUM_CHARTS; i++) {
@@ -148,8 +152,9 @@
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
  			}
  		}
- 		//END ACTIONS
+ 		//END MAIN ACTIONS
  		
+ 		//Function that makes a chart configuration object for each chart
 		function makeChartConfigs() {
 	 		<chart:forEach items = "${allDashboardCharts}" var = "config" varStatus = "loop">
  				var c = parseInt("${loop.index}");
@@ -192,6 +197,7 @@
 	 		</chart:forEach>
 		}
  		
+ 		//Function that makes every chart except the time series of total and daily cases/deaths
 		function makeChart(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
@@ -262,6 +268,7 @@
 			chart.render();
 		}
 		
+ 		//Function that makes the time series charts for cases and deaths
 		function makeChartCasesOrDeathsByTime(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
@@ -401,6 +408,7 @@
 		  }
 		}
 
+		//Function that constructs the chart data objects for each chart in the dashboard
 		function makeChartDataFromJavaLists() {
 			var xValue;
 			var yValue;
@@ -433,6 +441,7 @@
 			/*logChartDataToConsole(chartArray);*/
 		}
 		
+		//Helper function to log the data to the console for debugging purposes
 		function logChartDataToConsole(chartArray) {
 			for(var c = 0; c < chartArray.length; c++) {
 				console.log("dataset[" + c + "]");
