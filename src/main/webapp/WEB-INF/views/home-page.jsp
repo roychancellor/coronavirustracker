@@ -36,15 +36,18 @@
 		    <h4 style="color:#232f98;">Multi-Region Picker</h4>
 		    <div class="row">
 		      <div class="col-md-8">
-		      	<select class="selectpicker show-tick" multiple title="Select (or search for) regions, then click MAKE DASHBOARD button"
-		      			data-live-search="true" data-style="btn-warning" data-width="100%">
-				  <option>Arizona</option>
-				  <option>California</option>
-				  <option>New Mexico</option>
+		      	<select
+		      		id="states" name="states[]" class="selectpicker show-tick" multiple
+		      		title="Select (or search for) regions, then click MAKE DASHBOARD button"
+		      		data-live-search="true" data-style="btn-warning" data-width="100%"
+		      	>
+				  <option value=${AZ}>Arizona</option>
+				  <option value=${CA}>California</option>
+				  <option value=${NM}>New Mexico</option>
 				</select>
 		      </div>
 		      <div class="col-md-4">
-		      	<button class="btn btn-warning btn-md btn-block" name="region" value=${MULTI_REGION} type="submit">MAKE DASHBOARD</button>
+		      	<button class="btn btn-warning btn-md btn-block" id="multi-region" name="region" value=${MULTI_REGION} type="submit">MAKE DASHBOARD</button>
 		      </div>
 		    </div>
 		    <h4 style="color:#232f98;">Individual States</h4>
@@ -144,6 +147,57 @@
 	<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
     <script src="webjars/bootstrap-select/1.9.4/js/bootstrap-select.min.js"></script>
-</body>
+	
+	<!-- Process the multi-region selection -->
+	<script type="text/javascript">
+	
+	// arguments: reference to select list, callback function (optional)
+	function getSelectedOptions(sel, fn) {
+	    var opts = [], opt;
+	    
+	    // loop through options in select list
+	    for (var i=0, len=sel.options.length; i<len; i++) {
+	        opt = sel.options[i];
+	        
+	        // check if selected
+	        if ( opt.selected ) {
+	            // add to array of option elements to return from this function
+	            opts.push(opt);
+	            
+	            // invoke optional callback function if provided
+	            if (fn) {
+	                fn(opt);
+	            }
+	        }
+	    }
+	    
+	    // return array containing references to selected option elements
+	    return opts;
+	}
+	
+	// anonymous function onchange for select list with id demoSel
+	document.getElementById('states').onchange = function(e) {
+	    // get reference to display textarea
+	    var display = document.getElementById('display');
+	    display.innerHTML = ''; // reset
+	    
+	    // callback fn handles selected options
+	    getSelectedOptions(this, callback);
+	    
+	    // remove ', ' at end of string
+	    var str = display.innerHTML.slice(0, -2);
+	    display.innerHTML = str;
+	};
 
+	document.getElementById('multi-region').onsubmit = function(e) {
+	    // reference to select list using this keyword and form elements collection
+	    // no callback function used this time
+	    var opts = getSelectedOptions( this.elements['states[]'] );
+	    
+	    alert( 'The number of options selected is: ' + opts.length ); //  number of selected options
+	    
+	    return false; // don't return online form
+	};
+	</script>
+</body>
 </html>
