@@ -22,6 +22,8 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    
+    <!--  Spring dependencies -->
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
@@ -32,11 +34,19 @@
 	    <artifactId>spring-context</artifactId>
 	    <version>5.1.8.RELEASE</version>
 	</dependency>
+	
+	<!--  Java EE web application dependencies -->
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.2</version>
     </dependency>
+	<dependency>
+	   <groupId>org.hibernate</groupId>
+	   <artifactId>hibernate-validator</artifactId>
+	   <version>5.4.3.Final</version>
+	</dependency>
+        
     <!--  THIS MUST BE COMMENTED OUT FOR JUNIT TESTING BUT UNCOMMENTED FOR RUNTIME -->
     <dependency>
         <groupId>javax</groupId>
@@ -45,6 +55,7 @@
         <scope>provided</scope>
     </dependency>
     <!--  END OF COMMENTED OUT FOR JUNIT TESTING -->
+    
 	<!-- THESE ARE REQUIRED FOR JUNIT TESTING ON FORM VALIDATION -->
 	<dependency>
 	   <groupId>javax.el</groupId>
@@ -59,6 +70,8 @@
 	   <scope>test</scope>
 	</dependency>
 	<!-- END OF FORM VALIDATION REQUIREMENTS -->
+	
+	<!--  Webjars dependencies -->
 	<dependency>
         <groupId>org.webjars</groupId>
         <artifactId>bootstrap</artifactId>
@@ -70,20 +83,13 @@
         <version>3.1.1</version>
     </dependency>
 	<dependency>
-	   <groupId>org.hibernate</groupId>
-	   <artifactId>hibernate-validator</artifactId>
-	   <version>5.4.3.Final</version>
+	    <groupId>org.webjars</groupId>
+	    <artifactId>bootstrap-select</artifactId>
+	    <version>1.9.4</version>
+	    <scope>runtime</scope>
 	</dependency>
-	<dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-web</artifactId>
-		<version>4.0.1.RELEASE</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-config</artifactId>
-        <version>4.0.1.RELEASE</version>
-    </dependency>
+	
+    <!-- Jackson dependencies -->
     <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
@@ -94,12 +100,8 @@
         <artifactId>jackson-databind</artifactId>
         <version>2.9.10.3</version>
     </dependency>
-    <dependency>
-    	<groupId>org.apache.commons</groupId>
-    	<artifactId>commons-math3</artifactId>
-    	<version>3.5</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+
+	<!--  SLF4J dependencies -->
 	<dependency>
 	    <groupId>org.slf4j</groupId>
 	    <artifactId>slf4j-api</artifactId>
