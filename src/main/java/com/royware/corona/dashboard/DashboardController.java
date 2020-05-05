@@ -88,6 +88,7 @@ public class DashboardController {
 					.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
 			log.info("Done calling makeAllDashboardCharts");
 			
+			//This setting determines whether the last row of the statistics table will show
 			map.addAttribute("regionType", "us");
 			if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
 				map.put("regionType", "world");
