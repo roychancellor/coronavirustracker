@@ -126,15 +126,23 @@
 		mapIndexToContainerRowCol.set(6, "41");
 		mapIndexToContainerRowCol.set(7, "42");
 		
-		const numCharts = 8;
-		const CASES_TIME_HISTORY = 0;
-		const DEATHS_TIME_HISTORY = 4;
- 		
+		const NUM_CHARTS = 8;
+		const CASES_TIME_HISTORY_INDEX = 0;
+		const DEATHS_TIME_HISTORY_INDEX = 4;
+		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
+		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
+		const TIME_SERIES_CASES = "11";
+		const TIME_SERIES_DEATHS = "31";
+		const TIME_SERIES_RATE_OF_CASES = "12";
+		const TIME_SERIES_ACCEL_OF CASES = "21";
+		const TIME_SERIES_RATE_OF_DEATHS = "32";
+		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
+		 		
 		//ACTIONS
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
- 		for(var i = 0; i < numCharts; i++) {
- 			if(i == CASES_TIME_HISTORY || i == DEATHS_TIME_HISTORY) {
+ 		for(var i = 0; i < NUM_CHARTS; i++) {
+ 			if(i == CASES_TIME_HISTORY || i == DEATHS_TIME_HISTORY_INDEX) {
  				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
@@ -150,13 +158,13 @@
 	 			var axis2TitleValue = "";
 	 			var pointColorStr = "blue";
 	 			var lineColorStr = "red";
-	 			if(c == CASES_TIME_HISTORY) {
+	 			if(c == CASES_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Cases";
-	 			} else if(c == DEATHS_TIME_HISTORY) {
+	 			} else if(c == DEATHS_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Deaths";
 	 			}
 	 			
-	 			if(c >= 4) {
+	 			if(c >= DEATHS_TIME_HISTORY_INDEX) {
 	 				pointColorStr = "purple";
 	 				lineColorStr = "green";
 	 			}
@@ -335,7 +343,7 @@
         	var content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>";
         	var positionRowCol = chartContainerString.substring(chartContainerString.length - 2, chartContainerString.length);
         	
-        	if(positionRowCol == "22") {
+        	if(positionRowCol == CHANGE_IN_CASES_VS_TOTAL_CASES) {
         		content += "Total Cases: "
         			+ "<strong>"
         			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
@@ -345,7 +353,7 @@
      				+ "<strong>"
      				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
      				+ "</strong>";
-     		} else if(positionRowCol == "42") {
+     		} else if(positionRowCol == CHANGE_IN_DEATHS_VS_TOTAL_DEATHS) {
         		content += "Total Deaths: "
         			+ "<strong>"
         			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
@@ -357,13 +365,16 @@
 	 				+ "</strong>";
  			} else {      	
 	        	for(var i = 0; i < e.entries.length; i++) {
-	        		if(positionRowCol == "11" || positionRowCol == "31") {
+	        		if(positionRowCol == TIME_SERIES_CASES || positionRowCol == TIME_SERIES_DEATHS) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")
 		        			+ "</strong>";
 		        		content += "<br/>";
-	        		} else if(positionRowCol == "12" || positionRowCol == "21" || positionRowCol == "32" || positionRowCol == "41") {
+	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES
+	        				|| positionRowCol == TIME_SERIES_ACCEL_OF CASES
+	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS
+	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 	        				+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#.##") + "%"
