@@ -79,7 +79,12 @@ public class DashboardController {
 		try {
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
 			log.info("Success, got the dataService: " + dataService.toString());
-		
+			
+			//Delete this eventually, just to keep the program working for now.
+			if(region.length() > 3 && region.substring(0, 5).equalsIgnoreCase("MULTI")) {
+				region = "USA";
+			}
+			
 			List<? extends CanonicalCases> dataList = new ArrayList<>();
 			dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
 			
@@ -107,7 +112,7 @@ public class DashboardController {
 			map.addAttribute("dashstats", dashStats);
 			return true;
 		} catch(IllegalArgumentException e) {
-			log.error("Unable to find data source for region " + region + ", no dashboard to build");
+			log.error("Unable to find data source for region '" + region + "'. No dashboard to build!");
 			return false;
 		}
 	}

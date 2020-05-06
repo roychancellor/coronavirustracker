@@ -44,9 +44,12 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 			dataService = singleStateDataService;
 		} else if(regionOfService.length() == 3){
 			dataService = singleCountryDataService;
+		} else if(regionOfService.substring(0,5).equalsIgnoreCase("MULTI")) {
+			log.info("STUB OUT ONLY!!! Making dataService for " + regionOfService + " (but not really, just returning usDataService)");
+			dataService = usDataService;
 		} else {
-			log.info("getExternalDataService NO MATCHES to regionOfService: " + regionOfService + ", throwing exception!!!");
-			throw new IllegalArgumentException();
+			log.info("getExternalDataService NO MATCHES to regionOfService: '" + regionOfService + "'. Throwing exception!!!");
+			throw new IllegalArgumentException("NO MATCH TO regionOfService");
 		}
 		
 		return dataService;
