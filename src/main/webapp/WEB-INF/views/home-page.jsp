@@ -37,12 +37,10 @@
 		    <div class="row">
 			    <div class="col-md-8">
 			    	<select
-			    		id="states" name="states[]" class="selectpicker show-tick" multiple
+			    		id="states-select" name="states[]" class="selectpicker show-tick" multiple
 			    		title="Select (or search for) regions, then click MAKE DASHBOARD button"
 			    		data-live-search="true" data-style="btn-warning" data-width="100%">
-					  <option value=${AZ}>Arizona</option>
-					  <option value=${CA}>California</option>
-					  <option value=${NM}>New Mexico</option>
+			    		<!-- Options get made in a script tag below -->
 					</select>
 			    </div>
 				<div class="col-md-4">
@@ -147,33 +145,90 @@
 	<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
     <script src="webjars/bootstrap-select/1.9.4/js/bootstrap-select.min.js"></script>
+
+    <!-- Setup the states selection list -->    
+    <script>
+		var select = document.getElementById("states-select");
+		select.options[select.options.length] = new Option('Alabama', '${AL}');
+		select.options[select.options.length] = new Option('Alaska', '${AK}');
+		select.options[select.options.length] = new Option('Arizona', '${AZ}');
+		select.options[select.options.length] = new Option('Arkansas', '${AR}');
+		select.options[select.options.length] = new Option('California', '${CA}');
+		select.options[select.options.length] = new Option('Colorado', '${CO}');
+		select.options[select.options.length] = new Option('Connecticut', '${CT}');
+		select.options[select.options.length] = new Option('Delaware', '${DE}');
+		select.options[select.options.length] = new Option('District of Columbia', '${DC}');
+		select.options[select.options.length] = new Option('Florida', '${FL}');
+		select.options[select.options.length] = new Option('Georgia', '${GA}');
+		select.options[select.options.length] = new Option('Hawaii', '${HI}');
+		select.options[select.options.length] = new Option('Idaho', '${ID}');
+		select.options[select.options.length] = new Option('Illinois', '${IL}');
+		select.options[select.options.length] = new Option('Indiana', '${IN}');
+		select.options[select.options.length] = new Option('Iowa', '${IA}');
+		select.options[select.options.length] = new Option('Kansas', '${KS}');
+		select.options[select.options.length] = new Option('Kentucky', '${KY}');
+		select.options[select.options.length] = new Option('Louisiana', '${LA}');
+		select.options[select.options.length] = new Option('Maine', '${ME}');
+		select.options[select.options.length] = new Option('Maryland', '${MD}');
+		select.options[select.options.length] = new Option('Massachusetts', '${MA}');
+		select.options[select.options.length] = new Option('Michigan', '${MI}');
+		select.options[select.options.length] = new Option('Minnesota', '${MN}');
+		select.options[select.options.length] = new Option('Mississippi', '${MS}');
+		select.options[select.options.length] = new Option('Missouri', '${MO}');
+		select.options[select.options.length] = new Option('Montana', '${MT}');
+		select.options[select.options.length] = new Option('Nebraska', '${NE}');
+		select.options[select.options.length] = new Option('Nevada', '${NV}');
+		select.options[select.options.length] = new Option('New Hampshire', '${NH}');
+		select.options[select.options.length] = new Option('New Jersey', '${NJ}');
+		select.options[select.options.length] = new Option('New Mexico', '${NM}');
+		select.options[select.options.length] = new Option('New York', '${NY}');
+		select.options[select.options.length] = new Option('North Carolina', '${NC}');
+		select.options[select.options.length] = new Option('North Dakota', '${ND}');
+		select.options[select.options.length] = new Option('Ohio', '${OH}');
+		select.options[select.options.length] = new Option('Oklahoma', '${OK}');
+		select.options[select.options.length] = new Option('Oregon', '${OR}');
+		select.options[select.options.length] = new Option('Pennsylvania', '${PA}');
+		select.options[select.options.length] = new Option('Rhode Island', '${RI}');
+		select.options[select.options.length] = new Option('South Carolina', '${SC}');
+		select.options[select.options.length] = new Option('South Dakota', '${SD}');
+		select.options[select.options.length] = new Option('Tennessee', '${TN}');
+		select.options[select.options.length] = new Option('Texas', '${TX}');
+		select.options[select.options.length] = new Option('Utah', '${UT}');
+		select.options[select.options.length] = new Option('Vermont', '${VT}');
+		select.options[select.options.length] = new Option('Virginia', '${VA}');
+		select.options[select.options.length] = new Option('Washington', '${WA}');
+		select.options[select.options.length] = new Option('West Virginia', '${WV}');
+		select.options[select.options.length] = new Option('Wisconsin', '${WI}');
+		select.options[select.options.length] = new Option('Wyoming', '${WY}');
+    </script>
 	
 	<!-- Process the multi-region selection -->
 	<script type="text/javascript">
 	document.getElementById('region-form').onsubmit = function(e) {
-	    console.log("The MAKE DASHBOARD button was clicked!");
+	    //console.log("The MAKE DASHBOARD button was clicked!");
 	    
 	    var optionsSelected = getSelectedOptions( this.elements['states[]'] );
 	    var optionStr = "MULTI:";
+	    var numItems = optionsSelected.length;
 	    
-	    for(var i = 0; i < optionsSelected.length; i++) {
+	    for(var i = 0; i < numItems; i++) {
 	    	optionStr += optionsSelected[i].value;
-	    	if (i < optionsSelected.length - 1) {
+	    	if (i < numItems - 1) {
 	    		optionStr += ",";
 	    	}
 	    }
 	    
-	    console.log("Setting the value of the multi-region-button to: " + optionStr)
+	    //console.log("Setting the value of the multi-region-button to: " + optionStr)
 	    document.getElementById("multi-region-button").value = optionStr;
-	    console.log("The value of the multi-region-button is: " + document.getElementById("multi-region-button").value);
-	    alert( "Options selected: " + optionStr);
+	    //console.log("The value of the multi-region-button is: " + document.getElementById("multi-region-button").value);
+	    //alert( "Options selected: " + optionStr);
 	    
 	    return optionStr;
 	};
 	
 	// arguments: reference to select list, callback function (optional)
 	function getSelectedOptions(sel) {
-	    console.log("In getSelectedOptions...")
+	    //console.log("In getSelectedOptions...")
 		var optionsSelected = [];
 	    var opt;
 	    
@@ -185,7 +240,7 @@
 	        if ( opt.selected ) {
 	            // add to array of option elements to return from this function
 	            optionsSelected.push(opt);
-	            console.log("Selected: " + opt);
+	            //console.log("Selected: " + opt);
 	        }
 	    }
 	    
