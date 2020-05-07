@@ -198,7 +198,7 @@ public enum Regions {
 	USA_NO_NY {
 		public RegionData getRegionData() {
 			return new RegionData(USA.getRegionData().getPopulation() - NY.getRegionData().getPopulation(),
-					RegionLevels.COUNTRY, "United States without New York State");
+					RegionLevels.COUNTRY, "U.S. without New York State");
 		}
 		@SuppressWarnings("unchecked")
 		@Override
