@@ -21,6 +21,7 @@ import com.royware.corona.dashboard.model.Dashboard;
 import com.royware.corona.dashboard.model.DashboardChartConfig;
 import com.royware.corona.dashboard.model.DashboardChartData;
 import com.royware.corona.dashboard.model.DashboardStatistics;
+import com.royware.corona.dashboard.model.UnitedStatesCases;
 
 @Service
 public class DashboardConfigServiceImpl implements DashboardConfigService {
@@ -38,20 +39,30 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	@Override
 	public boolean populateDashboardModelMap(String region, ModelMap map) {
 		try {
+			List<? extends CanonicalCases> dataList = new ArrayList<>();
+			String fullRegionName;
+			int regionPopulation;
+			
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
 			log.info("Success, got the dataService: " + dataService.toString());
 			
-			//Delete this eventually, just to keep the program working for now.
-			if(region.length() > 3 && region.substring(0, 5).equalsIgnoreCase("MULTI")) {
+			//Need to get the data differently for a multi-region selection 
+			if(region.length() > 3 && region.substring(0,5).equalsIgnoreCase("MULTI")) {
 				region = "USA";
+				fullRegionName = region.substring(5);
+				regionPopulation = getMultiRegionPopulation(fullRegionName);
+				log.info("The multi-region " + region + " has population " + regionPopulation);
+				log.info("About to call getCoronaVirusDataFromExternalSource for region " + region);
+				dataList = getMultiRegionDataFromExternalSource(fullRegionName, dataService);
+			} else {
+				fullRegionName = Regions.valueOf(region).getRegionData().getFullName();
+				regionPopulation = Regions.valueOf(region).getRegionData().getPopulation();
+				log.info("About to call getCoronaVirusDataFromExternalSource for region " + region);
+				dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
 			}
 			
-			log.info("About to call getCoronaVirusDataFromExternalSource for region " + region);
-			List<? extends CanonicalCases> dataList = new ArrayList<>();
-			dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
-			
-			log.info("About to call makeAllDashboardCharts with region = " + Regions.valueOf(region).getRegionData().getFullName());
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
+			log.info("About to call makeAllDashboardCharts with region = " + fullRegionName);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(dataList, fullRegionName, dashStats));
 			log.info("Done calling makeAllDashboardCharts");
 			
 			//This setting determines whether the last row of the statistics table will show
@@ -60,16 +71,12 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				map.put("regionType", "world");
 			}
 		
-			map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
-			map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("casespermillion", dashStats
-					.getCasesTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("casespercent", dashStats
-					.getCasesTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("deathspermillion", dashStats
-					.getDeathsTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("deathspercent", dashStats
-					.getDeathsTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
+			map.addAttribute("fullregion", fullRegionName);
+			map.addAttribute("population", regionPopulation);
+			map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / regionPopulation);
+			map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
+			map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / regionPopulation);
+			map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
 			map.addAttribute("dashstats", dashStats);
 			return true;
 		} catch(IllegalArgumentException e) {
@@ -78,6 +85,23 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 	}	
 
+	private int getMultiRegionPopulation(String fullRegionName) {
+		//Split the full region name into individual states, then iterate through the states and sum their populations
+		int sumPop = 0;
+		for(String state : fullRegionName.split(",")) {
+			sumPop += Regions.valueOf(state).getRegionData().getPopulation();
+		}
+		
+		return sumPop;
+	}
+	
+	private List<UnitedStatesCases> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
+		List<UnitedStatesCases> dataList = new ArrayList<>();
+		//This one is tougher...need to be sure the region cases and deaths are being summed for the SAME DAY
+		//Make maps of the data with date as the key?
+		return dataList;
+	}
+	
 	@Override
 	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> dataList, String region, DashboardStatistics dashStats) {
 		List<Dashboard> dashboardList = new ArrayList<>();
