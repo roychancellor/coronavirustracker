@@ -5,5 +5,5 @@ import java.util.List;
 public interface ExternalDataService {
 	public static final int US_CUTOFF_DATE = 20200304;
 	
-	public <T extends CanonicalCases> List<T> makeDataListFromExternalSource(String cacheKey);
+	public <T extends CanonicalData> List<T> makeDataListFromExternalSource(String cacheKey);
 }

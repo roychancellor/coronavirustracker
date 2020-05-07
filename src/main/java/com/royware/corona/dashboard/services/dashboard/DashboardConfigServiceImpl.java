@@ -12,7 +12,7 @@ import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.CanonicalData;
 import com.royware.corona.dashboard.interfaces.ChartService;
 import com.royware.corona.dashboard.interfaces.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
@@ -21,7 +21,7 @@ import com.royware.corona.dashboard.model.Dashboard;
 import com.royware.corona.dashboard.model.DashboardChartConfig;
 import com.royware.corona.dashboard.model.DashboardChartData;
 import com.royware.corona.dashboard.model.DashboardStatistics;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.UnitedStatesData;
 
 @Service
 public class DashboardConfigServiceImpl implements DashboardConfigService {
@@ -39,7 +39,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	@Override
 	public boolean populateDashboardModelMap(String region, ModelMap map) {
 		try {
-			List<? extends CanonicalCases> dataList = new ArrayList<>();
+			List<? extends CanonicalData> dataList = new ArrayList<>();
 			String fullRegionName;
 			int regionPopulation;
 			
@@ -95,15 +95,17 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		return sumPop;
 	}
 	
-	private List<UnitedStatesCases> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
-		List<UnitedStatesCases> dataList = new ArrayList<>();
+	private List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
+		List<UnitedStatesData> dataList = new ArrayList<>();
 		//This one is tougher...need to be sure the region cases and deaths are being summed for the SAME DAY
-		//Make maps of the data with date as the key?
+		//As a first cut, will find the latest date for cases and the latest data for deaths from among all of the states
+		//in the multi-region selection. Then, put each list into a map with the key being the state abbreviation
+		//and do 
 		return dataList;
 	}
 	
 	@Override
-	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> dataList, String region, DashboardStatistics dashStats) {
+	public <T extends CanonicalData> List<Dashboard> makeAllDashboardCharts(List<T> dataList, String region, DashboardStatistics dashStats) {
 		List<Dashboard> dashboardList = new ArrayList<>();
 		
 		////////// CASES //////////

@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.CanonicalData;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.RegionData;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
-import com.royware.corona.dashboard.model.WorldCases;
+import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.model.WorldData;
 
 @Service
 public enum Regions {
@@ -21,7 +21,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
@@ -33,7 +33,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -45,7 +45,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -57,7 +57,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -69,7 +69,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -81,7 +81,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -93,7 +93,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -105,7 +105,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -117,7 +117,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -129,7 +129,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -141,7 +141,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -153,7 +153,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -165,7 +165,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -177,7 +177,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -189,7 +189,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<WorldCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -202,7 +202,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource("NY");
@@ -214,7 +214,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -226,7 +226,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -238,7 +238,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -250,7 +250,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -262,7 +262,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -274,7 +274,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -286,7 +286,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -298,7 +298,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -310,7 +310,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -322,7 +322,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -334,7 +334,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -346,7 +346,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -358,7 +358,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -370,7 +370,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -382,7 +382,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -394,7 +394,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -406,7 +406,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -418,7 +418,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -430,7 +430,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -442,7 +442,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -454,7 +454,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -466,7 +466,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -478,7 +478,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -490,7 +490,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -502,7 +502,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -514,7 +514,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -526,7 +526,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -538,7 +538,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -550,7 +550,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -562,7 +562,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -574,7 +574,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -586,7 +586,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -598,7 +598,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -610,7 +610,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -622,7 +622,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -634,7 +634,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -646,7 +646,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -658,7 +658,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -670,7 +670,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -682,7 +682,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -694,7 +694,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -706,7 +706,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -718,7 +718,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -730,7 +730,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -742,7 +742,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -754,7 +754,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -766,7 +766,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -778,7 +778,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -790,7 +790,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -802,7 +802,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -814,7 +814,7 @@ public enum Regions {
 		}
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<UnitedStatesCases> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
 			return eds.makeDataListFromExternalSource(this.name());
@@ -822,5 +822,5 @@ public enum Regions {
 	};
 	
 	public abstract RegionData getRegionData();
-	public abstract <T extends CanonicalCases> List<T> getCoronaVirusDataFromExternalSource(ExternalDataService dataService);
+	public abstract <T extends CanonicalData> List<T> getCoronaVirusDataFromExternalSource(ExternalDataService dataService);
 }

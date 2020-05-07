@@ -11,5 +11,5 @@ import com.royware.corona.dashboard.model.DashboardStatistics;
 @Service
 public interface DashboardConfigService {
 	public boolean populateDashboardModelMap(String region, ModelMap map);
-	public <T extends CanonicalCases> List<Dashboard> makeAllDashboardCharts(List<T> caseList, String region, DashboardStatistics dashStats);
+	public <T extends CanonicalData> List<Dashboard> makeAllDashboardCharts(List<T> caseList, String region, DashboardStatistics dashStats);
 }

@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.CanonicalData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WorldCases implements CanonicalCases {
+public class WorldData implements CanonicalData {
 	@JsonProperty("dateRep") private String stringDate;
 	@JsonProperty("year") private int year;
 	@JsonProperty("month") private int month;
@@ -22,7 +22,7 @@ public class WorldCases implements CanonicalCases {
 	@JsonIgnore private int totalDeaths;
 	@JsonIgnore private LocalDate dateChecked;
 	
-	public WorldCases() {
+	public WorldData() {
 		super();
 	}
 
@@ -122,7 +122,7 @@ public class WorldCases implements CanonicalCases {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		WorldCases other = (WorldCases) obj;
+		WorldData other = (WorldData) obj;
 		if (dailyNewCases != other.dailyNewCases)
 			return false;
 		if (dailyNewDeaths != other.dailyNewDeaths)

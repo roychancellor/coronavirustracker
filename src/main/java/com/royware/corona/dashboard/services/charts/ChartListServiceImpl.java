@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.ChartListService;
-import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.CanonicalData;
  
 @Service
 public class ChartListServiceImpl implements ChartListService {
@@ -28,14 +28,14 @@ public class ChartListServiceImpl implements ChartListService {
 	//DEATHS WILL HAVE A VARIABLE-INDEX --> DAY = 0 (DEATHS LAG CASES AND VARIES AMONG REGIONS)
 	
 	////////// CASES ///////////
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
 		log.info("***** MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		int dayIndex = 0;
-		for(CanonicalCases cc : regionCaseList) {
+		for(CanonicalData cc : regionCaseList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", cc.getTotalPositiveCases());
@@ -67,7 +67,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> regionCaseList) {
 		log.info("***** MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -102,7 +102,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> regionCaseList) {
 		log.info("***** MAKING ACCELERATION OF DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -139,7 +139,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 	
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
 		log.info("***** MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -190,7 +190,7 @@ public class ChartListServiceImpl implements ChartListService {
 
 	////////////// DEATHS ///////////////
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeTotalDeathsVersusTimeWithExponentialFitList(List<T> regionDataList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeTotalDeathsVersusTimeWithExponentialFitList(List<T> regionDataList) {
 		log.info("***** MAKING TOTAL AND DAILY DEATHS VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -234,7 +234,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionDataList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionDataList) {
 		log.info("***** MAKING RATE OF CHANGE OF DAILY DEATHS VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -271,7 +271,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 	
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeDailyAccelerationOfDeathsWithMovingAverageList(List<T> regionDataList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAccelerationOfDeathsWithMovingAverageList(List<T> regionDataList) {
 		log.info("***** MAKING ACCELERATION OF DAILY DEATHS VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -309,7 +309,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	@Override
-	public <T extends CanonicalCases> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsWithExponentialLineList(List<T> regionDataList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsWithExponentialLineList(List<T> regionDataList) {
 		log.info("***** MAKING CHANGE IN DAILY DEATHS VERSUS TOTAL DEATHS *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -361,7 +361,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 
 	//////////// HELPER METHODS /////////////
-	private <T extends CanonicalCases> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
+	private <T extends CanonicalData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getTotalDeaths() > 0 /*&& regionDataList.get(dayIndex - 1).getTotalDeaths() >= 0*/) {
 				log.info("first day index with positive deaths: " + dayIndex

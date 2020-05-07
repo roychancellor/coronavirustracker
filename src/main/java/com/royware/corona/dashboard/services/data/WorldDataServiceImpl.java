@@ -18,7 +18,7 @@ import com.royware.corona.dashboard.enums.CacheKeys;
 import com.royware.corona.dashboard.enums.DataUrls;
 import com.royware.corona.dashboard.interfaces.CacheActions;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.WorldCases;
+import com.royware.corona.dashboard.model.WorldData;
 import com.royware.corona.dashboard.model.WorldRecords;
 
 public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
@@ -30,7 +30,7 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Cacheable(value = CACHE_NAME)
-	public List<WorldCases> makeDataListFromExternalSource(String cacheKey) {
+	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
 		do {	

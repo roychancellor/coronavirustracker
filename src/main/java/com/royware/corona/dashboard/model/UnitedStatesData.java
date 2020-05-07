@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.royware.corona.dashboard.interfaces.CanonicalCases;
+import com.royware.corona.dashboard.interfaces.CanonicalData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UnitedStatesCases implements CanonicalCases {
+public class UnitedStatesData implements CanonicalData {
 	@JsonProperty("date") private int dateInteger;
 	@JsonProperty("dateChecked") private String dateTimeString;
 	@JsonProperty("positive") private int totalPositiveCases;
@@ -23,7 +23,7 @@ public class UnitedStatesCases implements CanonicalCases {
 	
 	@JsonIgnore private LocalDate dateChecked;
 			
-	public UnitedStatesCases() {
+	public UnitedStatesData() {
 		super();
 	}
 
@@ -125,7 +125,7 @@ public class UnitedStatesCases implements CanonicalCases {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UnitedStatesCases other = (UnitedStatesCases) obj;
+		UnitedStatesData other = (UnitedStatesData) obj;
 		if (dateInteger != other.dateInteger)
 			return false;
 		if (regionString == null) {

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface CanonicalCases {
+public interface CanonicalData {
 	public int getDateInteger();
 	public LocalDate getDateChecked();
 	public int getTotalPositiveCases();

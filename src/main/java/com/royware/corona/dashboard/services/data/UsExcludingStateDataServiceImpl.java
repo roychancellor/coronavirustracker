@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.CacheKeys;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
@@ -28,11 +28,11 @@ public class UsExcludingStateDataServiceImpl implements ExternalDataService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<UnitedStatesCases> makeDataListFromExternalSource(String stateToExclude) {
+	public List<UnitedStatesData> makeDataListFromExternalSource(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		log.info("***** ABOUT TO FILTER *OUT* STATE: " + stateToExclude + " ****");
-		List<UnitedStatesCases> usDataExcludingState = usDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
-		List<UnitedStatesCases> stateDataToExclude = stateDataService.makeDataListFromExternalSource(stateToExclude);
+		List<UnitedStatesData> usDataExcludingState = usDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
+		List<UnitedStatesData> stateDataToExclude = stateDataService.makeDataListFromExternalSource(stateToExclude);
 		
 		for(int i = 0; i < usDataExcludingState.size(); i++) {
 			usDataExcludingState.get(i).setTotalPositiveCases(

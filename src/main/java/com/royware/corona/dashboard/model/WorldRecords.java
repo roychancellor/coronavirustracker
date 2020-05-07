@@ -7,17 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorldRecords {
-	@JsonProperty("records") private WorldCases[] records;
+	@JsonProperty("records") private WorldData[] records;
 
 	public WorldRecords() {
 		super();
 	}
 
-	public WorldCases[] getRecords() {
+	public WorldData[] getRecords() {
 		return records;
 	}
 
-	public void setRecords(WorldCases[] records) {
+	public void setRecords(WorldData[] records) {
 		this.records = records;
 	}
 
