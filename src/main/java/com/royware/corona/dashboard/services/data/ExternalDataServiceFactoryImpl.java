@@ -21,6 +21,10 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 	private ExternalDataService singleStateDataService;
 	
 	@Autowired
+	@Qualifier(value = "multiState")
+	private ExternalDataService multiStateDataService;
+	
+	@Autowired
 	@Qualifier(value = "usExcludingState")
 	private ExternalDataService usExcludingStateDataService;
 	
@@ -45,8 +49,7 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 		} else if(regionOfService.length() == 3){
 			dataService = singleCountryDataService;
 		} else if(regionOfService.substring(0,5).equalsIgnoreCase("MULTI")) {
-			log.info("STUB OUT ONLY!!! Making dataService for " + regionOfService + " (but not really, just returning usDataService)");
-			dataService = usDataService;
+			dataService = multiStateDataService;
 		} else {
 			log.info("getExternalDataService NO MATCHES to regionOfService: '" + regionOfService + "'. Throwing exception!!!");
 			throw new IllegalArgumentException("NO MATCH TO regionOfService");

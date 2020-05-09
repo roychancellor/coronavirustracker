@@ -1,8 +1,11 @@
 package com.royware.corona.dashboard.services.dashboard;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +39,12 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean populateDashboardModelMap(String region, ModelMap map) {
 		try {
 			List<? extends CanonicalData> dataList = new ArrayList<>();
-			String fullRegionName;
+			String regionCsvList;
 			int regionPopulation;
 			
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
@@ -48,21 +52,28 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			
 			//Need to get the data differently for a multi-region selection 
 			if(region.length() > 3 && region.substring(0,5).equalsIgnoreCase("MULTI")) {
-				region = "USA";
-				fullRegionName = region.substring(5);
-				regionPopulation = getMultiRegionPopulation(fullRegionName);
+				regionCsvList = region.substring(region.indexOf(':') + 1);
+				
+				regionPopulation = getMultiRegionPopulation(regionCsvList);
 				log.info("The multi-region " + region + " has population " + regionPopulation);
-				log.info("About to call getCoronaVirusDataFromExternalSource for region " + region);
-				dataList = getMultiRegionDataFromExternalSource(fullRegionName, dataService);
+				
+				log.info("About to call getMultiRegionDataFromExternalSource for region " + regionCsvList);
+				dataList = getMultiRegionDataFromExternalSource(regionCsvList, dataService);
+				log.info("Finished making the data list...");
+				for(UnitedStatesData us : (List<UnitedStatesData>)dataList) {
+					log.info("Date: " + us.getDateChecked().toString()
+							+ ", Total Positive Cases: " + us.getTotalPositiveCases()
+							+ ", Total Deaths: " + us.getTotalDeaths());
+				}
 			} else {
-				fullRegionName = Regions.valueOf(region).getRegionData().getFullName();
+				regionCsvList = Regions.valueOf(region).getRegionData().getFullName();
 				regionPopulation = Regions.valueOf(region).getRegionData().getPopulation();
 				log.info("About to call getCoronaVirusDataFromExternalSource for region " + region);
 				dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
 			}
 			
-			log.info("About to call makeAllDashboardCharts with region = " + fullRegionName);
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(dataList, fullRegionName, dashStats));
+			log.info("About to call makeAllDashboardCharts with region = " + regionCsvList);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(dataList, regionCsvList, dashStats));
 			log.info("Done calling makeAllDashboardCharts");
 			
 			//This setting determines whether the last row of the statistics table will show
@@ -71,7 +82,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				map.put("regionType", "world");
 			}
 		
-			map.addAttribute("fullregion", fullRegionName);
+			map.addAttribute("fullregion", regionCsvList);
 			map.addAttribute("population", regionPopulation);
 			map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / regionPopulation);
 			map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
@@ -96,12 +107,114 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	}
 	
 	private List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
-		List<UnitedStatesData> dataList = new ArrayList<>();
-		//This one is tougher...need to be sure the region cases and deaths are being summed for the SAME DAY
-		//As a first cut, will find the latest date for cases and the latest data for deaths from among all of the states
-		//in the multi-region selection. Then, put each list into a map with the key being the state abbreviation
-		//and do 
-		return dataList;
+		List<UnitedStatesData> multiRegionDataList = new ArrayList<>();
+		Map<String, List<UnitedStatesData>> stateDataLists = new HashMap<String, List<UnitedStatesData>>();
+		String[] states = fullRegionName.split(",");
+		
+		//Make a map where the key is the state and the value is the list of data for the state
+		for(String state : states) {
+			stateDataLists.put(state, dataService.makeDataListFromExternalSource(state));
+		}
+		log.info("Made the map containing all state data lists");
+		
+		//Iterate through the state data lists and find the latest (maximum) date for when cases > 0 and deaths > 0
+		int latestDateValueCases = 20200101;
+		int latestDateValueDeaths = 20200101;
+		for(String state : states) {
+			for(UnitedStatesData usd : stateDataLists.get(state)) {
+				if(usd != null && usd.getTotalPositiveCases() > 0) {
+					if(usd.getDateInteger() > latestDateValueCases) {
+						latestDateValueCases = usd.getDateInteger();
+					}
+					break;
+				}
+			}
+		}
+		for(String state : states) {
+			for(UnitedStatesData usd : stateDataLists.get(state)) {
+				if(usd.getTotalDeaths() > 0) {
+					if(usd.getDateInteger() > latestDateValueDeaths) {
+						latestDateValueDeaths = usd.getDateInteger();
+					}
+					break;
+				}
+			}
+		}
+		log.info("Found the latest date for cases: " + latestDateValueCases + " and the latest date for deaths: " + latestDateValueDeaths);
+		
+		//Go through the state data lists and create a list of UnitedStatesData objects whose
+		//cases and deaths are the sum of cases and deaths for each state AND where the date > latest date
+		Map<Integer, Integer> regionPositiveCases = new TreeMap<>();
+		Map<Integer, Integer> regionNegativeCases = new TreeMap<>();
+		Map<Integer, Integer> regionPosNegCases = new TreeMap<>();
+		Map<Integer, Integer> regionPendingTests = new TreeMap<>();
+		Map<Integer, Integer> regionDeaths = new TreeMap<>();
+		for(String state : states) {
+			for(UnitedStatesData usd : stateDataLists.get(state)) {
+				Integer dateInteger = usd.getDateInteger();
+				if(usd.getDateInteger() >= latestDateValueCases) {
+					if(regionPositiveCases.containsKey(dateInteger)) {
+						regionPositiveCases.put(dateInteger, regionPositiveCases.get(dateInteger) + usd.getTotalPositiveCases());
+					} else {
+						regionPositiveCases.put(dateInteger, usd.getTotalPositiveCases());
+					}
+					if(regionNegativeCases.containsKey(dateInteger)) {
+						regionNegativeCases.put(dateInteger, regionNegativeCases.get(dateInteger) + usd.getTotalNegativeCases());
+					} else {
+						regionNegativeCases.put(dateInteger, usd.getTotalNegativeCases());
+					}
+					if(regionPosNegCases.containsKey(dateInteger)) {
+						regionPosNegCases.put(dateInteger, regionPosNegCases.get(dateInteger) + usd.getTotalPositivePlusNegative());
+					} else {
+						regionPosNegCases.put(dateInteger, usd.getTotalPositivePlusNegative());
+					}
+					if(regionPendingTests.containsKey(dateInteger)) {
+						regionPendingTests.put(dateInteger, regionPendingTests.get(dateInteger) + usd.getPendingTests());
+					} else {
+						regionPendingTests.put(dateInteger, usd.getPendingTests());
+					}
+				}
+				if(usd.getDateInteger() >= latestDateValueDeaths && usd.getDateInteger() >= latestDateValueCases) {
+					if(regionDeaths.containsKey(dateInteger)) {
+						regionDeaths.put(dateInteger, regionDeaths.get(dateInteger) + usd.getTotalDeaths());
+					} else {
+						regionDeaths.put(dateInteger, usd.getTotalDeaths());
+					}
+				}
+			}			
+		}
+		log.info("Made all the DATA FIELD maps containing the SUMS for all states in the multi-region");
+		
+		//NOW, iterate through the keys from the latest case date through the current day as an integer
+		//and construct a list of UnitedStatesData objects that will contain the sum for the whole region for each day
+		//Get all available date strings and create a list of UnitedStatesData objects from the various maps
+		for(Integer dateInteger : regionPositiveCases.keySet()) {
+			log.info("dateInteger: " + dateInteger);
+			multiRegionDataList.add(new UnitedStatesData());
+			UnitedStatesData thisItem = multiRegionDataList.get(multiRegionDataList.size() - 1);
+			log.info("about to call localDateFromStringDate and will pass in the String '" + dateInteger + "'");
+			LocalDate localDate = localDateFromStringDate(dateInteger + "");
+			log.info("Received back: " + localDate.toString());
+			thisItem.setDateTimeString(localDate.toString());  //also sets dateChecked
+			thisItem.setTotalPositiveCases(regionPositiveCases.get(dateInteger));
+			thisItem.setTotalNegativeCases(regionNegativeCases.get(dateInteger));
+			thisItem.setTotalPositivePlusNegative(regionPosNegCases.get(dateInteger));
+			thisItem.setPendingTests(regionPendingTests.get(dateInteger));
+			if(regionDeaths.containsKey(dateInteger)) {
+				thisItem.setTotalDeaths(regionDeaths.get(dateInteger));
+			} else {
+				thisItem.setTotalDeaths(0);
+			}
+		}
+		log.info("Finished making the region data list and ready to return it.");
+		
+		return multiRegionDataList;
+	}
+	
+	private LocalDate localDateFromStringDate(String dateString) {
+		//Brings in a string of the form 20200506 and makes a local date
+		return LocalDate.of(Integer.parseInt(dateString.substring(0,4)),
+				Integer.parseInt(dateString.substring(4,6)), Integer.parseInt(dateString.substring(6)));
 	}
 	
 	@Override

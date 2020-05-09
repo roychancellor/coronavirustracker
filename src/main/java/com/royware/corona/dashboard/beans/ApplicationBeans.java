@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.services.data.MultiStateDataServiceImpl;
 import com.royware.corona.dashboard.services.data.SingleCountryDataServiceImpl;
 import com.royware.corona.dashboard.services.data.SingleStateDataServiceImpl;
 import com.royware.corona.dashboard.services.data.UsDataServiceImpl;
@@ -51,6 +52,12 @@ public class ApplicationBeans {
 	@Qualifier("singleState")
 	public ExternalDataService dataServiceSingleState() {
 		return new SingleStateDataServiceImpl();
+	}
+	
+	@Bean
+	@Qualifier("multiState")
+	public ExternalDataService dataServiceMultiState() {
+		return new MultiStateDataServiceImpl();
 	}
 	
 	@Bean
