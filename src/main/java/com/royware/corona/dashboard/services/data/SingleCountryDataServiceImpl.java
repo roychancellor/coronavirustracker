@@ -34,7 +34,7 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 	public List<WorldData> makeDataListFromExternalSource(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldData> casesInOneCountry = new ArrayList<>();
-		List<WorldData> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.toString());
+		List<WorldData> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		casesInOneCountry = worldCases
