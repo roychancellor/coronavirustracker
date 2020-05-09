@@ -1,6 +1,7 @@
 package com.royware.corona.dashboard.beans;
 
 import java.util.Arrays;
+import java.util.concurrent.Executor;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
@@ -9,9 +10,13 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
@@ -24,6 +29,7 @@ import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
 
 @Configuration
 @EnableScheduling
+@EnableAsync
 @ComponentScan("com.royware.corona")
 public class ApplicationBeans {
 	@Bean
@@ -79,4 +85,14 @@ public class ApplicationBeans {
         cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("dataCache")));
         return cacheManager;
     }
+	
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
+    }    
+	
+	@Bean
+    public Executor taskExecutor() {
+        return new SimpleAsyncTaskExecutor();
+    }	
 }
