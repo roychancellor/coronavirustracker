@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.CacheKeys;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.WorldCases;
+import com.royware.corona.dashboard.model.WorldData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
@@ -31,10 +31,10 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<WorldCases> makeDataListFromExternalSource(String countryThreeLetterCode) {
+	public List<WorldData> makeDataListFromExternalSource(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
-		List<WorldCases> casesInOneCountry = new ArrayList<>();
-		List<WorldCases> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.toString());
+		List<WorldData> casesInOneCountry = new ArrayList<>();
+		List<WorldData> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		casesInOneCountry = worldCases
@@ -47,7 +47,7 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 		
 		Collections.reverse(casesInOneCountry);
 		
-		WorldCases wc;
+		WorldData wc;
 		int positiveCases = 0;
 		int negativeCases = 0;
 		int totalDeaths = 0;

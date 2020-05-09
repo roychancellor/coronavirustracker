@@ -19,7 +19,7 @@ import com.royware.corona.dashboard.model.UnitedStatesData;
 /**
  * Provides service methods for getting dashboard data from external sources
  */
-public class SingleStateDataServiceImpl implements ExternalDataService {
+public class MultiStateDataServiceImpl implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -27,15 +27,15 @@ public class SingleStateDataServiceImpl implements ExternalDataService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<UnitedStatesData> makeDataListFromExternalSource(String stateAbbreviation) {
-		String url = DataUrls.STATE_DATA_URL_START.getName() + stateAbbreviation.toUpperCase() + DataUrls.STATE_DATA_URL_END.getName();
-		log.info("***** ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + url + " FOR " + stateAbbreviation);
+	public List<UnitedStatesData> makeDataListFromExternalSource(String multiRegionState) {
+		String url = DataUrls.STATE_DATA_URL_START.getName() + multiRegionState.toUpperCase() + DataUrls.STATE_DATA_URL_END.getName();
+		log.info("***** MULTI_REGION: ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + url + " FOR " + multiRegionState);
 		UnitedStatesData[] stateDataArray = restTemplate.getForObject(url, UnitedStatesData[].class);
 		List<UnitedStatesData> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
 		Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		
-		log.info("***** FINISHED GETTING STATE: " + stateAbbreviation + " ****");
+		log.info("***** FINISHED GETTING STATE: " + multiRegionState + " ****");
 		
 		return stateDataList;
 	}

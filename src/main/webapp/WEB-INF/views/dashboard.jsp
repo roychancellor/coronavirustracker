@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
 	<spring:url value="/resources/css/style.css" var="mainCss" />
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Data Dashboard</title>
@@ -105,43 +105,56 @@
 		</table>
 		</div>
 	</div>
-	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
  	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 	
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
+		const NUM_CHARTS = 8;
+		const CASES_TIME_HISTORY_INDEX = 0;
+		const DEATHS_TIME_HISTORY_INDEX = 4;
+		
+		//Constants that define the row-column of the chart position on the dashboard
+		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
+		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
+		const TIME_SERIES_CASES = "11";
+		const TIME_SERIES_DEATHS = "31";
+		const TIME_SERIES_RATE_OF_CASES = "12";
+		const TIME_SERIES_ACCEL_OF_CASES = "21";
+		const TIME_SERIES_RATE_OF_DEATHS = "32";
+		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
+	 		
+		//Maps the index of the chart data to the row-column constant
+		//for referencing the chartContainer div tags above
+		var mapIndexToContainerRowCol = new Map();
+		mapIndexToContainerRowCol.set(0, TIME_SERIES_CASES);
+		mapIndexToContainerRowCol.set(1, TIME_SERIES_RATE_OF_CASES);
+		mapIndexToContainerRowCol.set(2, TIME_SERIES_ACCEL_OF_CASES);
+		mapIndexToContainerRowCol.set(3, CHANGE_IN_CASES_VS_TOTAL_CASES);
+		mapIndexToContainerRowCol.set(4, TIME_SERIES_DEATHS);
+		mapIndexToContainerRowCol.set(5, TIME_SERIES_RATE_OF_DEATHS);
+		mapIndexToContainerRowCol.set(6, TIME_SERIES_ACCEL_OF_DEATHS);
+		mapIndexToContainerRowCol.set(7, CHANGE_IN_DEATHS_VS_TOTAL_DEATHS);
+		
+		//MAIN ACTIONS
 		var containers = [];
  		var configObjects = [];
 		var chartArray = [];
 		
-		var mapIndexToContainerRowCol = new Map();
-		mapIndexToContainerRowCol.set(0, "11");
-		mapIndexToContainerRowCol.set(1, "12");
-		mapIndexToContainerRowCol.set(2, "21");
-		mapIndexToContainerRowCol.set(3, "22");
-		mapIndexToContainerRowCol.set(4, "31");
-		mapIndexToContainerRowCol.set(5, "32");
-		mapIndexToContainerRowCol.set(6, "41");
-		mapIndexToContainerRowCol.set(7, "42");
-		
-		const numCharts = 8;
-		const CASES_TIME_HISTORY = 0;
-		const DEATHS_TIME_HISTORY = 4;
- 		
-		//ACTIONS
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
- 		for(var i = 0; i < numCharts; i++) {
- 			if(i == CASES_TIME_HISTORY || i == DEATHS_TIME_HISTORY) {
+ 		for(var i = 0; i < NUM_CHARTS; i++) {
+ 			if(i == CASES_TIME_HISTORY_INDEX || i == DEATHS_TIME_HISTORY_INDEX) {
  				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
  			}
  		}
- 		//END ACTIONS
+ 		//END MAIN ACTIONS
  		
+ 		//Function that makes a chart configuration object for each chart
 		function makeChartConfigs() {
 	 		<chart:forEach items = "${allDashboardCharts}" var = "config" varStatus = "loop">
  				var c = parseInt("${loop.index}");
@@ -150,13 +163,13 @@
 	 			var axis2TitleValue = "";
 	 			var pointColorStr = "blue";
 	 			var lineColorStr = "red";
-	 			if(c == CASES_TIME_HISTORY) {
+	 			if(c == CASES_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Cases";
-	 			} else if(c == DEATHS_TIME_HISTORY) {
+	 			} else if(c == DEATHS_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Deaths";
 	 			}
 	 			
-	 			if(c >= 4) {
+	 			if(c >= DEATHS_TIME_HISTORY_INDEX) {
 	 				pointColorStr = "purple";
 	 				lineColorStr = "green";
 	 			}
@@ -184,6 +197,7 @@
 	 		</chart:forEach>
 		}
  		
+ 		//Function that makes every chart except the time series of total and daily cases/deaths
 		function makeChart(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
@@ -254,6 +268,7 @@
 			chart.render();
 		}
 		
+ 		//Function that makes the time series charts for cases and deaths
 		function makeChartCasesOrDeathsByTime(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
@@ -335,7 +350,7 @@
         	var content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>";
         	var positionRowCol = chartContainerString.substring(chartContainerString.length - 2, chartContainerString.length);
         	
-        	if(positionRowCol == "22") {
+        	if(positionRowCol == CHANGE_IN_CASES_VS_TOTAL_CASES) {
         		content += "Total Cases: "
         			+ "<strong>"
         			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
@@ -345,7 +360,7 @@
      				+ "<strong>"
      				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
      				+ "</strong>";
-     		} else if(positionRowCol == "42") {
+     		} else if(positionRowCol == CHANGE_IN_DEATHS_VS_TOTAL_DEATHS) {
         		content += "Total Deaths: "
         			+ "<strong>"
         			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
@@ -357,13 +372,16 @@
 	 				+ "</strong>";
  			} else {      	
 	        	for(var i = 0; i < e.entries.length; i++) {
-	        		if(positionRowCol == "11" || positionRowCol == "31") {
+	        		if(positionRowCol == TIME_SERIES_CASES || positionRowCol == TIME_SERIES_DEATHS) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")
 		        			+ "</strong>";
 		        		content += "<br/>";
-	        		} else if(positionRowCol == "12" || positionRowCol == "21" || positionRowCol == "32" || positionRowCol == "41") {
+	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES
+	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_CASES
+	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS
+	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 	        				+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#.##") + "%"
@@ -390,6 +408,7 @@
 		  }
 		}
 
+		//Function that constructs the chart data objects for each chart in the dashboard
 		function makeChartDataFromJavaLists() {
 			var xValue;
 			var yValue;
@@ -422,6 +441,7 @@
 			/*logChartDataToConsole(chartArray);*/
 		}
 		
+		//Helper function to log the data to the console for debugging purposes
 		function logChartDataToConsole(chartArray) {
 			for(var c = 0; c < chartArray.length; c++) {
 				console.log("dataset[" + c + "]");

@@ -7,9 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,9 +20,11 @@ import com.royware.corona.dashboard.enums.CacheKeys;
 import com.royware.corona.dashboard.enums.DataUrls;
 import com.royware.corona.dashboard.interfaces.CacheActions;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.WorldCases;
+import com.royware.corona.dashboard.model.WorldData;
 import com.royware.corona.dashboard.model.WorldRecords;
 
+@Component
+@CacheConfig(cacheNames= {CacheActions.CACHE_NAME})
 public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Autowired
 	private RestTemplate restTemplate;
@@ -29,8 +33,8 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable(value = CACHE_NAME)
-	public List<WorldCases> makeDataListFromExternalSource(String cacheKey) {
+	@Cacheable
+	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
 		do {	
@@ -50,7 +54,7 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	}
 	
 	@CacheEvict(value = CACHE_NAME, allEntries = true)
-	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
+	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS, initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
 	@Override
 	public void cacheEvict() {
 		log.info("WORLD DATA CACHE EVICTED AT: " + LocalDateTime.now());
@@ -60,6 +64,6 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	}
 	
 	private void repopulateCache() {
-		makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.toString());
+		makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}
 }

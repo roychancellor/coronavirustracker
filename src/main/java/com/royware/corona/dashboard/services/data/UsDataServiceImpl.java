@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.DataUrls;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.UnitedStatesCases;
+import com.royware.corona.dashboard.model.UnitedStatesData;
 
 public class UsDataServiceImpl implements ExternalDataService {
 	@Autowired
@@ -27,14 +27,14 @@ public class UsDataServiceImpl implements ExternalDataService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<UnitedStatesCases> makeDataListFromExternalSource(String cacheKey) {
-		UnitedStatesCases[] usDataArray = null;
+	public List<UnitedStatesData> makeDataListFromExternalSource(String cacheKey) {
+		UnitedStatesData[] usDataArray = null;
 		int tries = 0;
 		do {
 			try {
 				String url = DataUrls.US_DATA_URL.getName();
 				log.info("***** ABOUT TO HIT ENDPOINT FOR UNITED STATES DATA AT URL " + url);
-				usDataArray = restTemplate.getForObject(url, UnitedStatesCases[].class);
+				usDataArray = restTemplate.getForObject(url, UnitedStatesData[].class);
 				log.info("***** GOT THROUGH PARSING UNITED STATES DATA *****");
 			} catch(RestClientException e) {
 				log.info("*** ERROR CONNECTING TO U.S. DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
@@ -48,7 +48,7 @@ public class UsDataServiceImpl implements ExternalDataService {
 			}
 		} while(tries <= 3 && usDataArray == null);
 		
-		List<UnitedStatesCases> usDataList = new ArrayList<>(Arrays.asList(usDataArray));
+		List<UnitedStatesData> usDataList = new ArrayList<>(Arrays.asList(usDataArray));
 		Collections.reverse(usDataList);
 		usDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		

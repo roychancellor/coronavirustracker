@@ -1,13 +1,9 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 package com.royware.corona.dashboard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,29 +13,18 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.Pages;
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.CanonicalCases;
 import com.royware.corona.dashboard.interfaces.DashboardConfigService;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.ExternalDataServiceFactory;
-import com.royware.corona.dashboard.model.DashboardStatistics;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
  * Controls all HTTP GET and POST requests
  * All return statements are the names of Java Server Page (jsp) files
  */
-@EnableCaching
 @EnableWebMvc
 @Controller
 public class DashboardController {
 	@Autowired
-	private DashboardStatistics dashStats;
-	
-	@Autowired
-	private DashboardConfigService dashConfigSvc;
-	
-	@Autowired
-	private ExternalDataServiceFactory dataFactory;
+	private DashboardConfigService dashboardConfigService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
@@ -69,48 +54,12 @@ public class DashboardController {
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		log.info("Making dashboard for region: " + region);
 		
-		if(!populateDashboardModelMap(region, map)) {
+		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
 			return "redirect:corona";
 		}
 		return Pages.DASHBOARD_PAGE.toString();
 	}
 
-	private boolean populateDashboardModelMap(String region, ModelMap map) {
-		try {
-			ExternalDataService dataService = dataFactory.getExternalDataService(region);
-			log.info("Success, got the dataService: " + dataService.toString());
-		
-			List<? extends CanonicalCases> dataList = new ArrayList<>();
-			dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
-			
-			log.info("About to call makeAllDashboardCharts with region = " + Regions.valueOf(region).getRegionData().getFullName());
-			map.addAttribute("allDashboardCharts", dashConfigSvc
-					.makeAllDashboardCharts(dataList, Regions.valueOf(region).getRegionData().getFullName(), dashStats));
-			log.info("Done calling makeAllDashboardCharts");
-			
-			map.addAttribute("regionType", "us");
-			if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
-				map.put("regionType", "world");
-			}
-		
-			map.addAttribute("fullregion", Regions.valueOf(region).getRegionData().getFullName());
-			map.addAttribute("population", Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("casespermillion", dashStats
-					.getCasesTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("casespercent", dashStats
-					.getCasesTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("deathspermillion", dashStats
-					.getDeathsTotal() * 1000000.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("deathspercent", dashStats
-					.getDeathsTotal() * 100.0 / Regions.valueOf(region).getRegionData().getPopulation());
-			map.addAttribute("dashstats", dashStats);
-			return true;
-		} catch(IllegalArgumentException e) {
-			log.error("Unable to find data source for region " + region + ", no dashboard to build");
-			return false;
-		}
-	}
-	
 	/**
 	 * HTTP GET request handler for /about to direct to the about-dashboard jsp
 	 * @param map the current ModelMap

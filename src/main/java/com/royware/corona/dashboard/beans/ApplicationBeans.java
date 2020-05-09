@@ -1,20 +1,28 @@
 package com.royware.corona.dashboard.beans;
 
 import java.util.Arrays;
+import java.util.concurrent.Executor;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
+import com.royware.corona.dashboard.interfaces.CacheActions;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.services.data.MultiStateDataServiceImpl;
 import com.royware.corona.dashboard.services.data.SingleCountryDataServiceImpl;
 import com.royware.corona.dashboard.services.data.SingleStateDataServiceImpl;
 import com.royware.corona.dashboard.services.data.UsDataServiceImpl;
@@ -22,7 +30,9 @@ import com.royware.corona.dashboard.services.data.UsExcludingStateDataServiceImp
 import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
 
 @Configuration
+@EnableCaching
 @EnableScheduling
+@EnableAsync
 @ComponentScan("com.royware.corona")
 public class ApplicationBeans {
 	@Bean
@@ -54,6 +64,12 @@ public class ApplicationBeans {
 	}
 	
 	@Bean
+	@Qualifier("multiState")
+	public ExternalDataService dataServiceMultiState() {
+		return new MultiStateDataServiceImpl();
+	}
+	
+	@Bean
 	@Qualifier("usExcludingState")
 	public ExternalDataService dataServiceUsExcludingState() {
 		return new UsExcludingStateDataServiceImpl();
@@ -69,7 +85,17 @@ public class ApplicationBeans {
     public CacheManager cacheManager() {
         // configure and return an implementation of Spring's CacheManager SPI
         SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("dataCache")));
+        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache(CacheActions.CACHE_NAME)));
         return cacheManager;
     }
+	
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
+    }    
+	
+	@Bean
+    public Executor taskExecutor() {
+        return new SimpleAsyncTaskExecutor();
+    }	
 }
