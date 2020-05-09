@@ -39,12 +39,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean populateDashboardModelMap(String region, ModelMap map) {
 		try {
 			List<? extends CanonicalData> dataList = new ArrayList<>();
-			String regionCsvList;
+			String fullRegionString;
 			int regionPopulation;
 			
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
@@ -52,28 +51,24 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			
 			//Need to get the data differently for a multi-region selection 
 			if(region.length() > 3 && region.substring(0,5).equalsIgnoreCase("MULTI")) {
-				regionCsvList = region.substring(region.indexOf(':') + 1);
+				fullRegionString = region;
+				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
 				
-				regionPopulation = getMultiRegionPopulation(regionCsvList);
+				regionPopulation = getMultiRegionPopulation(regionsOnlyString);
 				log.info("The multi-region " + region + " has population " + regionPopulation);
 				
-				log.info("About to call getMultiRegionDataFromExternalSource for region " + regionCsvList);
-				dataList = getMultiRegionDataFromExternalSource(regionCsvList, dataService);
+				log.info("About to call getMultiRegionDataFromExternalSource for region " + regionsOnlyString);
+				dataList = getMultiRegionDataFromExternalSource(regionsOnlyString, dataService);
 				log.info("Finished making the data list...");
-				for(UnitedStatesData us : (List<UnitedStatesData>)dataList) {
-					log.info("Date: " + us.getDateChecked().toString()
-							+ ", Total Positive Cases: " + us.getTotalPositiveCases()
-							+ ", Total Deaths: " + us.getTotalDeaths());
-				}
 			} else {
-				regionCsvList = Regions.valueOf(region).getRegionData().getFullName();
+				fullRegionString = Regions.valueOf(region).getRegionData().getFullName();
 				regionPopulation = Regions.valueOf(region).getRegionData().getPopulation();
 				log.info("About to call getCoronaVirusDataFromExternalSource for region " + region);
 				dataList = Regions.valueOf(region).getCoronaVirusDataFromExternalSource(dataService);
 			}
 			
-			log.info("About to call makeAllDashboardCharts with region = " + regionCsvList);
-			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(dataList, regionCsvList, dashStats));
+			log.info("About to call makeAllDashboardCharts with region = " + fullRegionString);
+			map.addAttribute("allDashboardCharts", makeAllDashboardCharts(dataList, fullRegionString, dashStats));
 			log.info("Done calling makeAllDashboardCharts");
 			
 			//This setting determines whether the last row of the statistics table will show
@@ -82,7 +77,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 				map.put("regionType", "world");
 			}
 		
-			map.addAttribute("fullregion", regionCsvList);
+			map.addAttribute("fullregion", fullRegionString);
 			map.addAttribute("population", regionPopulation);
 			map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / regionPopulation);
 			map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
@@ -189,12 +184,9 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		//and construct a list of UnitedStatesData objects that will contain the sum for the whole region for each day
 		//Get all available date strings and create a list of UnitedStatesData objects from the various maps
 		for(Integer dateInteger : regionPositiveCases.keySet()) {
-			log.info("dateInteger: " + dateInteger);
 			multiRegionDataList.add(new UnitedStatesData());
 			UnitedStatesData thisItem = multiRegionDataList.get(multiRegionDataList.size() - 1);
-			log.info("about to call localDateFromStringDate and will pass in the String '" + dateInteger + "'");
 			LocalDate localDate = localDateFromStringDate(dateInteger + "");
-			log.info("Received back: " + localDate.toString());
 			thisItem.setDateTimeString(localDate.toString());  //also sets dateChecked
 			thisItem.setTotalPositiveCases(regionPositiveCases.get(dateInteger));
 			thisItem.setTotalNegativeCases(regionNegativeCases.get(dateInteger));
