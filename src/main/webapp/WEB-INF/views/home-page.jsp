@@ -131,7 +131,7 @@
 		    <div class="row">
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${JPN} type="submit">Japan</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${MEX} type="submit">Mexico</button></div>
-		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${SGP} type="submit">Singapore</button></div>
+		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${NOR} type="submit">Norway</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${KOR} type="submit">South Korea</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${ESP} type="submit">Spain</button></div>
 		      <div class="col-md-2"><button class="btn btn-success btn-lg" name="region" value=${SWE} type="submit">Sweden</button></div>
