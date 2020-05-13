@@ -159,6 +159,18 @@ public enum Regions {
 			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
+	NOR {
+		public RegionData getRegionData() {
+			return new RegionData(5638000, RegionLevels.COUNTRY, "Norway");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			Logger log = LoggerFactory.getLogger(Regions.class);
+			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
+			return eds.makeDataListFromExternalSource(this.name());
+		}
+	},
 	PRI {
 		public RegionData getRegionData() {
 			return new RegionData(3194000, RegionLevels.COUNTRY, "Puerto Rico");
