@@ -45,12 +45,13 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			List<? extends CanonicalData> dataList = new ArrayList<>();
 			String fullRegionString;
 			int regionPopulation;
+			boolean isMultiRegion = region.length() > 3 ? region.substring(0,5).equalsIgnoreCase("MULTI") : false;
 			
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
 			log.info("Success, got the dataService: " + dataService.toString());
 			
 			//Need to get the data differently for a multi-region selection 
-			if(region.length() > 3 && region.substring(0,5).equalsIgnoreCase("MULTI")) {
+			if(isMultiRegion) {
 				fullRegionString = region;
 				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
 				
@@ -75,6 +76,17 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			map.addAttribute("regionType", "us");
 			if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
 				map.put("regionType", "world");
+			} else if(region.length() == 2 || isMultiRegion) {
+				log.info("Getting US data for populating dashboard...");
+				map.put("regionType", "state");
+				List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
+				int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
+				map.addAttribute("totaluscases", totalUsCases);
+				map.addAttribute("casesregion_totaluscases", dashStats.getCasesTotal() * 100.0 / totalUsCases);
+				int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
+				map.addAttribute("totalusdeaths", totalUsDeaths);
+				map.addAttribute("deathsregion_totalusdeaths", dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
+				map.addAttribute("regionpop_uspop", regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
 			}
 		
 			map.addAttribute("fullregion", fullRegionString);
@@ -84,6 +96,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / regionPopulation);
 			map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
 			map.addAttribute("dashstats", dashStats);
+			
 			return true;
 		} catch(IllegalArgumentException e) {
 			log.error("Unable to find data source for region '" + region + "'. No dashboard to build!");
