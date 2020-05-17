@@ -118,8 +118,12 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			StringBuilder sb = new StringBuilder();
 			String[] regions = regionsOnly.split(",");
 			for(int i = 0; i < regions.length; i++) {
-				GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regions[i]);
-				sb.append(regionEnum.getStatesInRegion(regionEnum.getLabel()));
+				if(regions[i].length() == 2) {
+					sb.append(regions[i]);
+				} else {
+					GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regions[i]);
+					sb.append(regionEnum.getStatesInRegion(regionEnum.getLabel()));
+				}
 				if(i < regions.length - 1) {
 					sb.append(",");
 				}
