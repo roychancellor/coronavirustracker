@@ -36,7 +36,7 @@ public enum GeographicalRegions {
 		return this.label;
 	}
 	
-	public GeographicalRegions valueOfLabel(String label) {
+	public static GeographicalRegions valueOfLabel(String label) {
 		for(GeographicalRegions e : values()) {
 			if(label.equalsIgnoreCase(e.label)) {
 				return e;
