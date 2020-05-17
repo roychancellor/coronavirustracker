@@ -145,14 +145,14 @@
     <!-- Setup the states selection list -->    
     <script type="text/javascript">
 		var select = document.getElementById("states-select");
-		select.options[select.options.length] = new Option('Far West (WA, OR, CA, NV)', 'far_West');
-		select.options[select.options.length] = new Option('Rocky Mountain (MT, ID, WY, UT, CO)', 'rocky_mountain');
-		select.options[select.options.length] = new Option('Southwest (AZ, NM, OK, TX)', 'southwest');
-		select.options[select.options.length] = new Option('Plains (ND, SD, NE, KS, MN, IA, MO)', 'plains');
-		select.options[select.options.length] = new Option('Great Lakes (WI, IL, MI, IN, OH)', 'great_lakes');
-		select.options[select.options.length] = new Option('Southeast (AR, LA, KY, TN, MS, AL, WV, VA, NC, SC, GA, FL)', 'southeast');
-		select.options[select.options.length] = new Option('Mideast (NY, PA, NJ, DE, MD, DC)', 'mideast');
-		select.options[select.options.length] = new Option('New England (ME, NH, VT, MA, CT, RI)', 'new_england');
+		select.options[select.options.length] = new Option('Far West (WA, OR, CA, NV)', 'Far West');
+		select.options[select.options.length] = new Option('Rocky Mountain (MT, ID, WY, UT, CO)', 'Rocky Mountain');
+		select.options[select.options.length] = new Option('Southwest (AZ, NM, OK, TX)', 'Southwest');
+		select.options[select.options.length] = new Option('Plains (ND, SD, NE, KS, MN, IA, MO)', 'Plains');
+		select.options[select.options.length] = new Option('Great Lakes (WI, IL, MI, IN, OH)', 'Great Lakes');
+		select.options[select.options.length] = new Option('Southeast (AR, LA, KY, TN, MS, AL, WV, VA, NC, SC, GA, FL)', 'Southeast');
+		select.options[select.options.length] = new Option('Mideast (NY, PA, NJ, DE, MD, DC)', 'Mideast');
+		select.options[select.options.length] = new Option('New England (ME, NH, VT, MA, CT, RI)', 'New England');
 		select.options[select.options.length] = new Option('Alabama', '${AL}');
 		select.options[select.options.length] = new Option('Alaska', '${AK}');
 		select.options[select.options.length] = new Option('Arizona', '${AZ}');

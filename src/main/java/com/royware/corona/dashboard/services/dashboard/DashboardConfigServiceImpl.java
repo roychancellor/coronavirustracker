@@ -56,7 +56,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			if(isMultiRegion) {
 				fullRegionString = region;
 //				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
-				String regionsOnlyString = getStatesFromRegionString(region);
+				String regionsOnlyString = getStatesFromMultiRegionString(region);
 				log.info("The regionsOnlyString is: " + regionsOnlyString);
 				
 				regionPopulation = getMultiRegionPopulation(regionsOnlyString);
@@ -108,20 +108,28 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 	}	
 
-	private String getStatesFromRegionString(String region) {
+	private String getStatesFromMultiRegionString(String region) {
 		String regionsOnly = region.substring(region.indexOf(':') + 1);
-		log.info("The full region is: " + region + " and the regionsOnly string is: " + regionsOnly);
 		if(regionsOnly.contains(",")) {
-			log.info("The state string is: " + regionsOnly);
-			return regionsOnly;
+			if(regionsOnly.indexOf(",") == 2) {
+				return regionsOnly;
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			String[] regions = regionsOnly.split(",");
+			for(int i = 0; i < regions.length; i++) {
+				GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regions[i]);
+				sb.append(regionEnum.getStatesInRegion(regionEnum.getLabel()));
+				if(i < regions.length - 1) {
+					sb.append(",");
+				}
+			}
+			return sb.toString();
 		} else {
-			log.info("About to check the GeographicalRegionsEnum for regionsOnly = " + regionsOnly);
 			GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regionsOnly);
 			if(regionEnum == null) {
-				log.info("The regionEnum is NULL!!!!!");
 				return null;
 			}
-			log.info("Ready to return the state list from the Geographical region enum...");
 			return regionEnum.getStatesInRegion(regionEnum.getLabel());
 		}
 	}

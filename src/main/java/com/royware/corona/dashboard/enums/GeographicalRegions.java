@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum GeographicalRegions {
-	FAR_WEST("far_west"),
-	SOUTHWEST("southwest"),
-	ROCKY_MOUNTAIN("rocky_mountain"),
-	PLAINS("plains"),
-	GREAT_LAKES("great_lakes"),
-	SOUTHEAST("southeast"),
-	MIDEAST("mideast"),
-	NEW_ENGLAND("new_england");
+	FAR_WEST("Far West"),
+	SOUTHWEST("Southwest"),
+	ROCKY_MOUNTAIN("Rocky Mountain"),
+	PLAINS("Plains"),
+	GREAT_LAKES("Great Lakes"),
+	SOUTHEAST("Southeast"),
+	MIDEAST("Mideast"),
+	NEW_ENGLAND("New England");
 	
 	private final String label;
 	
