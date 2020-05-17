@@ -2,9 +2,12 @@ package com.royware.corona.dashboard.services.dashboard;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -55,7 +58,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			log.info("The value of isMultiRegion is: " + isMultiRegion);
 			if(isMultiRegion) {
 				fullRegionString = region;
-//				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
 				String regionsOnlyString = getStatesFromMultiRegionString(region);
 				log.info("The regionsOnlyString is: " + regionsOnlyString);
 				
@@ -139,22 +141,35 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	}
 	
 	private int getMultiRegionPopulation(String fullRegionName) {
+		String[] arrayOfStates = makeUniqueArrayOfStates(fullRegionName);
+		log.info("The array of states for getting data is:");
 		//Split the full region name into individual states, then iterate through the states and sum their populations
 		int sumPop = 0;
-		for(String state : fullRegionName.split(",")) {
+		for(String state : arrayOfStates) {
+			log.info(state);
 			sumPop += Regions.valueOf(state).getRegionData().getPopulation();
 		}
-		
 		return sumPop;
+	}
+	
+	private String[] makeUniqueArrayOfStates(String fullRegionName) {
+		//Make a set of unique state names, then put into an array
+		Set<String> stateSet = new HashSet<>(Arrays.asList(fullRegionName.split(",")));
+		String[] states = new String[stateSet.size()];
+		stateSet.toArray(states);
+		return states;
 	}
 	
 	private List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
 		List<UnitedStatesData> multiRegionDataList = new ArrayList<>();
 		Map<String, List<UnitedStatesData>> stateDataLists = new HashMap<String, List<UnitedStatesData>>();
-		String[] states = fullRegionName.split(",");
+		
+		String[] states = makeUniqueArrayOfStates(fullRegionName);
 		
 		//Make a map where the key is the state and the value is the list of data for the state
+		log.info("The array of states for getting data is:");
 		for(String state : states) {
+			log.info(state);
 			stateDataLists.put(state, dataService.makeDataListFromExternalSource(state));
 		}
 		log.info("Made the map containing all state data lists");
@@ -249,7 +264,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		
 		return multiRegionDataList;
 	}
-	
+
 	private LocalDate localDateFromStringDate(String dateString) {
 		//Brings in a string of the form 20200506 and makes a local date
 		return LocalDate.of(Integer.parseInt(dateString.substring(0,4)),
