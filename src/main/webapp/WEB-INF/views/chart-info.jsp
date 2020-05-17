@@ -31,14 +31,12 @@
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">The dashboard shows relevant statistics for
 				the current day. Some of the statistics are self-describing, but others need some explanation.</p>
 				<ul style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">
-					<li>Cases: Total: gives the total number of confirmed positive cases (increase in cases from the previous day)</li>
-					<li>Cases: Rate: gives the % increase in number of cases, computed as (today - yesterday) / yesterday * 100
+					<li><strong style="color:#00FF00;">Region Total:</strong> gives the total number of confirmed positive cases or deaths (increase in cases or deaths from the previous day)</li>
+					<li><strong style="color:#FFA500;">Rate of Change:</strong> gives the % increase in number of cases or deaths, computed as (today - yesterday) / yesterday * 100
 					(change: the % change in the rate computed as (rate today - rate yesterday) / rate yesterday * 100)</li>
-					<li>Deaths: Total: and Rate: the same as for cases, but for deaths</li>
-					<li>By Population: Cases: total cases divided by the population * 100 (total cases / population * 1,000,000)</li>
-					<li>By Population: Deaths: same as cases, but for deaths</li>
-					<li>By Testing: Cases: total positive cases divided by total tests * 100</li>
-					<li>By Testing: Deaths: total deaths divided by total positives * 100 (total deaths / total tests * 100)
+					<li><strong style="color:#FF0000;">By Region Population:</strong> Total cases or deaths divided by the population * 100 (i.e. total / population * 1,000,000)</li>
+					<li><strong style="color:FFFFFF;">By Testing:</strong> Total positive cases or deaths divided by total tests * 100</li>
+					<li><strong style="color:#0000FF;">By U.S. Totals:</strong> Total region cases (or deaths) divided by total U.S. cases (or deaths) * 100 (i.e. total region cases / total U.S. cases * 100)
 				</ul>
 				</div>
 				</td>
