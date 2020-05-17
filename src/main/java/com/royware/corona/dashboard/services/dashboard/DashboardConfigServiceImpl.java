@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.DashboardController;
+import com.royware.corona.dashboard.enums.GeographicalRegions;
 import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalData;
 import com.royware.corona.dashboard.interfaces.ChartService;
@@ -53,7 +54,8 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			//Need to get the data differently for a multi-region selection 
 			if(isMultiRegion) {
 				fullRegionString = region;
-				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
+//				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
+				String regionsOnlyString = getStatesFromRegionString(region);
 				
 				regionPopulation = getMultiRegionPopulation(regionsOnlyString);
 				log.info("The multi-region " + region + " has population " + regionPopulation);
@@ -104,6 +106,19 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 	}	
 
+	private String getStatesFromRegionString(String region) {
+		String regionsOnly = region.substring(region.indexOf(':') + 1);
+		if(regionsOnly.contains(",")) {
+			return regionsOnly;
+		} else {
+			GeographicalRegions regionEnum = GeographicalRegions.valueOf(regionsOnly);
+			if(regionEnum == null) {
+				return null;
+			}
+			return regionEnum.getStatesInRegion(regionsOnly);
+		}
+	}
+	
 	private int getMultiRegionPopulation(String fullRegionName) {
 		//Split the full region name into individual states, then iterate through the states and sum their populations
 		int sumPop = 0;
