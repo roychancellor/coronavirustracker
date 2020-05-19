@@ -14,74 +14,99 @@
 </head>
 
 <body>
+	<chart:set var = "type" scope = "session" value = "${regionType}" />
 	<div class="container">
 	    <div class="row row-no-gutters">
-	      <div class="col-md-7"><p style="color:#522398;font-size:2em;">Dashboard Region</p></div>
-	      <div class="col-md-3"><p style="color:#522398;font-size:2em;">Population</p></div>
+	      <div class="col-md-6"><p style="color:#10A5F5;font-size:2em;">Dashboard Region</p></div>
+	      <div class="col-md-4"><p style="color:#10A5F5;font-size:2em;">Population</p></div>
 	      <div class="col-md-2"><a class="btn btn-md btn-success" href="${pageContext.request.contextPath}/chart-info">Chart Info</a></div>
 	    </div>
 	    <div class="row row-no-gutters">
-	      <div class="col-md-7"><p><strong style="color:#FFFFFF;font-size:2em;">${fullregion}</strong></p></div>
-	      <div class="col-md-3"><p><strong style="color:#FFFFFF;font-size:2em;"><fmt:formatNumber type = "number" pattern = "#,###" value = "${population}" /></strong></p></div>
+	      <div class="col-md-6"><p><strong style="color:#FFFFFF;font-size:2em;">${fullregion}</strong></p></div>
+	      <div class="col-md-4">
+	      	<p><strong style="color:#FFFFFF;font-size:2em;">
+	      		<fmt:formatNumber type = "number" pattern = "#,###" value = "${population}" /></strong>
+				<chart:if test = "${type == 'state'}">
+		      		<strong style="color:#FFFFFF;font-size:1.25em;">
+		      		(<fmt:formatNumber type = "number" pattern = "#.##" value = "${regionpop_uspop}" /> % of U.S.)
+		      		</strong>
+				</chart:if>
+	      	</p>
+	      </div>
 	      <div class="col-md-2"><a class="btn btn-md btn-warning" href="${pageContext.request.contextPath}/corona">Return Home</a></div>
 	    </div>
 		<div>
 		<table class="table table-bordered">
 			<tr style="line-height:12px;">
-				<td style="color:#522398;">
-					Cases:
-				</td>
-				<td style="color:#FFFFFF;">
-					Total: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesTotal}" />
+				<td></td>
+				<td style="color:#0000FF;font-size:2em;font-weight:bold;">Cases</td>
+				<td style="color:#770077;font-size:2em;font-weight:bold;">Deaths</td>
+			</tr>
+			<tr style="line-height:12px;">
+				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">Region Total:</td>
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesTotal}" />
 					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" /> today)
 				</td>
-				<td style="color:#FFFFFF;">
-					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfCasesToday}" />% per day
-					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfCasesToday}" />%)
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsTotal}" />
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" /> today)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
-				<td style="color:#522398;">
-					Deaths:
+				<td style="color:#FFA500;font-size:1.5em;font-weight:bold;text-align:right;">Rate of Change:</td>
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfCasesToday}" />% per day
+					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfCasesToday}" />%)
 				</td>
-				<td style="color:#FFFFFF;">
-					Total: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsTotal}" />
-					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" /> today)
-				</td>
-				<td style="color:#FFFFFF;">
-					Rate: <fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfDeathsToday}" />% per day
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfDeathsToday}" />% per day
 					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfDeathsToday}" />%)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
-				<td style="color:#522398;">
-					By Population:
+				<td style="text-align:right;color:#FF0000;">
+					By Region Population:
 				</td>
 				<td style="color:#FFFFFF;">
-					Cases: <fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" />%
+					<fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" />%
 					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${casespermillion}" /> per million)
 				</td>
 				<td style="color:#FFFFFF;">
-					Deaths: <fmt:formatNumber type = "number" pattern = "#.#####" value = "${deathspercent}" />%
+					<fmt:formatNumber type = "number" pattern = "#.#####" value = "${deathspercent}" />%
 					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${deathspermillion}" /> per million)
 				</td>
 			</tr>
-			<chart:set var = "type" scope = "session" value = "${regionType}" />
-			<chart:if test = "${type == 'us'}">
+			<chart:if test = "${(type == 'us' or type == 'state')}">
 			<tr style="line-height:12px;">
-				<td style="color:#522398;">
+				<td style="text-align:right;color:#FFFFFF;">
 					By Testing:
 				</td>
 				<td style="color:#FFFFFF;">
-					Cases: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfPositiveTests}" />%
+					<fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfPositiveTests}" />%
 					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalTestsConducted}" /> total tests
 				</td>
 				<td style="color:#FFFFFF;">
-					Deaths: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfDeathsFromPositives}" />% of positives
+					<fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfDeathsFromPositives}" />% of positives
 					(<fmt:formatNumber type = "number" pattern = "#.###" value = "${dashstats.proportionOfDeathsFromTested}" />% of tested)
 				</td>
 			</tr>
 			</chart:if>
+			<chart:if test = "${type == 'state'}">
+			<tr style="line-height:12px;">
+				<td style="text-align:right;color:#0000FF;">
+					By U.S. Totals:
+				</td>
+				<td style="color:#FFFFFF;">
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${casesregion_totaluscases}" />%
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${totaluscases}" /> U.S. cases
+				</td>
+				<td style="color:#FFFFFF;">
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${deathsregion_totalusdeaths}" />%
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${totalusdeaths}" /> U.S. deaths
+				</td>
+			</tr>
+			</chart:if>			
 		</table>
 		</div>
 		<div class="dashboardCharts">

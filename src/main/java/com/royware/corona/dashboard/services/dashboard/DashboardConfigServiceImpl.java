@@ -2,9 +2,12 @@ package com.royware.corona.dashboard.services.dashboard;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.DashboardController;
+import com.royware.corona.dashboard.enums.GeographicalRegions;
 import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalData;
 import com.royware.corona.dashboard.interfaces.ChartService;
@@ -45,14 +49,17 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			List<? extends CanonicalData> dataList = new ArrayList<>();
 			String fullRegionString;
 			int regionPopulation;
+			boolean isMultiRegion = region.length() > 3 ? region.substring(0,5).equalsIgnoreCase("MULTI") : false;
 			
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
 			log.info("Success, got the dataService: " + dataService.toString());
 			
 			//Need to get the data differently for a multi-region selection 
-			if(region.length() > 3 && region.substring(0,5).equalsIgnoreCase("MULTI")) {
+			log.info("The value of isMultiRegion is: " + isMultiRegion);
+			if(isMultiRegion) {
 				fullRegionString = region;
-				String regionsOnlyString = region.substring(region.indexOf(':') + 1);
+				String regionsOnlyString = getStatesFromMultiRegionString(region);
+				log.info("The regionsOnlyString is: " + regionsOnlyString);
 				
 				regionPopulation = getMultiRegionPopulation(regionsOnlyString);
 				log.info("The multi-region " + region + " has population " + regionPopulation);
@@ -75,15 +82,30 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			map.addAttribute("regionType", "us");
 			if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
 				map.put("regionType", "world");
+			} else if(region.length() == 2 || isMultiRegion) {
+				log.info("Getting US data for populating dashboard...");
+				map.put("regionType", "state");
+				List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
+				int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
+				map.addAttribute("totaluscases", totalUsCases);
+				map.addAttribute("casesregion_totaluscases", dashStats.getCasesTotal() * 100.0 / totalUsCases);
+				int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
+				map.addAttribute("totalusdeaths", totalUsDeaths);
+				map.addAttribute("deathsregion_totalusdeaths", dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
+				map.addAttribute("regionpop_uspop", regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
 			}
-		
+
 			map.addAttribute("fullregion", fullRegionString);
+			if(fullRegionString.length() > 25) {
+				map.addAttribute("fullregion", fullRegionString.substring(0, 26) + "...");
+			}
 			map.addAttribute("population", regionPopulation);
 			map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / regionPopulation);
 			map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
 			map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / regionPopulation);
 			map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
 			map.addAttribute("dashstats", dashStats);
+			
 			return true;
 		} catch(IllegalArgumentException e) {
 			log.error("Unable to find data source for region '" + region + "'. No dashboard to build!");
@@ -91,23 +113,66 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 	}	
 
+	private String getStatesFromMultiRegionString(String region) {
+		String regionsOnly = region.substring(region.indexOf(':') + 1);
+		if(regionsOnly.contains(",")) {
+			if(regionsOnly.indexOf(",") == 2) {
+				return regionsOnly;
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			String[] regions = regionsOnly.split(",");
+			for(int i = 0; i < regions.length; i++) {
+				if(regions[i].length() == 2) {
+					sb.append(regions[i]);
+				} else {
+					GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regions[i]);
+					sb.append(regionEnum.getStatesInRegion(regionEnum.getLabel()));
+				}
+				if(i < regions.length - 1) {
+					sb.append(",");
+				}
+			}
+			return sb.toString();
+		} else {
+			GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regionsOnly);
+			if(regionEnum == null) {
+				return null;
+			}
+			return regionEnum.getStatesInRegion(regionEnum.getLabel());
+		}
+	}
+	
 	private int getMultiRegionPopulation(String fullRegionName) {
+		String[] arrayOfStates = makeUniqueArrayOfStates(fullRegionName);
+		log.info("The array of states for getting data is:");
 		//Split the full region name into individual states, then iterate through the states and sum their populations
 		int sumPop = 0;
-		for(String state : fullRegionName.split(",")) {
+		for(String state : arrayOfStates) {
+			log.info(state);
 			sumPop += Regions.valueOf(state).getRegionData().getPopulation();
 		}
-		
 		return sumPop;
+	}
+	
+	private String[] makeUniqueArrayOfStates(String fullRegionName) {
+		//Make a set of unique state names, then put into an array
+		Set<String> stateSet = new HashSet<>(Arrays.asList(fullRegionName.split(",")));
+		String[] states = new String[stateSet.size()];
+		stateSet.toArray(states);
+		return states;
 	}
 	
 	private List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
 		List<UnitedStatesData> multiRegionDataList = new ArrayList<>();
 		Map<String, List<UnitedStatesData>> stateDataLists = new HashMap<String, List<UnitedStatesData>>();
-		String[] states = fullRegionName.split(",");
+		
+		String[] states = makeUniqueArrayOfStates(fullRegionName);
 		
 		//Make a map where the key is the state and the value is the list of data for the state
+		log.info("The array of states for getting data is:");
 		for(String state : states) {
+			log.info(state);
 			stateDataLists.put(state, dataService.makeDataListFromExternalSource(state));
 		}
 		log.info("Made the map containing all state data lists");
@@ -202,7 +267,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		
 		return multiRegionDataList;
 	}
-	
+
 	private LocalDate localDateFromStringDate(String dateString) {
 		//Brings in a string of the form 20200506 and makes a local date
 		return LocalDate.of(Integer.parseInt(dateString.substring(0,4)),
