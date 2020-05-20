@@ -135,6 +135,10 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			}
 			return sb.toString();
 		} else {
+			//Determine if it's a single state picked from the drop-down or a pre-defined geographical region
+			if(regionsOnly.length() == 2) {
+				return regionsOnly;
+			}
 			GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regionsOnly);
 			if(regionEnum == null) {
 				return null;

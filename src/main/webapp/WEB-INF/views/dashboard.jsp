@@ -179,6 +179,40 @@
  		}
  		//END MAIN ACTIONS
  		
+		//Function that constructs the chart data objects for each chart in the dashboard
+		function makeChartDataFromJavaLists() {
+			var xValue;
+			var yValue;
+			var loopIndex;
+			var dateString;
+			var allCharts = "${allDashboardCharts}";
+			
+			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
+				var dataPointsArr = [[], []];
+				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
+					<chart:forEach items="${dataPoints}" var="dataPoint">
+						xValue = parseFloat("${dataPoint.x}");
+						yValue = parseFloat("${dataPoint.y}");
+						loopIndex = parseInt("${loop.index}");
+						if(loopIndex == 0) {
+							dateString = "${dataPoint.dateChecked}";
+							dataPointsArr[loopIndex].push({
+								x: xValue,
+								y: yValue,
+								indexLabel: dateString
+							});
+						} else {
+							dataPointsArr[loopIndex].push({
+								x: xValue,
+								y: yValue
+							});
+						}
+					</chart:forEach>
+				</chart:forEach>
+				chartArray[parseInt("${c.index}")] = dataPointsArr;
+			</chart:forEach>	
+		}
+		
  		//Function that makes a chart configuration object for each chart
 		function makeChartConfigs() {
 	 		<chart:forEach items = "${allDashboardCharts}" var = "config" varStatus = "loop">
@@ -431,51 +465,6 @@
 		      func();
 		    }
 		  }
-		}
-
-		//Function that constructs the chart data objects for each chart in the dashboard
-		function makeChartDataFromJavaLists() {
-			var xValue;
-			var yValue;
-			var loopIndex;
-			var dateString;
-			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
-				var dataPointsArr = [[], []];
-				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
-					<chart:forEach items="${dataPoints}" var="dataPoint">
-						xValue = parseFloat("${dataPoint.x}");
-						yValue = parseFloat("${dataPoint.y}");
-						loopIndex = parseInt("${loop.index}");
-						if(loopIndex == 0) {
-							dateString = "${dataPoint.dateChecked}";
-							dataPointsArr[loopIndex].push({
-								x: xValue,
-								y: yValue,
-								indexLabel: dateString
-							});
-						} else {
-							dataPointsArr[loopIndex].push({
-								x: xValue,
-								y: yValue
-							});
-						}
-					</chart:forEach>
-				</chart:forEach>
-				chartArray[parseInt("${c.index}")] = dataPointsArr;
-			</chart:forEach>	
-			/*logChartDataToConsole(chartArray);*/
-		}
-		
-		//Helper function to log the data to the console for debugging purposes
-		function logChartDataToConsole(chartArray) {
-			for(var c = 0; c < chartArray.length; c++) {
-				console.log("dataset[" + c + "]");
-				for(var i = 0; i < chartArray[c].length; i++) {
-					for(var j = 0; j < chartArray[c][i].length; j++) {
-						console.log("data: " + chartArray[c][i][j]);
-					}
-				}
-			}
 		}
 	</script>
 </body>

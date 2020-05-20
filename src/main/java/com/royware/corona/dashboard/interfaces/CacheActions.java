@@ -5,4 +5,5 @@ public interface CacheActions {
 	public static final String CACHE_NAME = "dataCache";
 	
 	public void cacheEvict();
+	public void repopulateCache();
 }
