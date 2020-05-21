@@ -20,6 +20,11 @@ public class DashboardStatistics {
 	private double proportionOfDeathsFromPositives;
 	private double proportionOfDeathsFromTested;
 	private double proportionOfDeathsOfExtrapolatedCases;
+	private double totalUsCases;
+	private double proportionOfRegionCasesToUsCases;
+	private double totalUsDeaths;
+	private double proportionOfRegionDeathsToUsDeaths;
+	private double proportionOfRegionPopToUsPop;
 	
 	public DashboardStatistics() {
 	}
@@ -150,5 +155,45 @@ public class DashboardStatistics {
 
 	public void setProportionOfDeathsOfExtrapolatedCases(double proportionOfDeathsOfExtrapolatedCases) {
 		this.proportionOfDeathsOfExtrapolatedCases = proportionOfDeathsOfExtrapolatedCases;
+	}
+
+	public double getTotalUsCases() {
+		return totalUsCases;
+	}
+
+	public void setTotalUsCases(double totalUsCases) {
+		this.totalUsCases = totalUsCases;
+	}
+
+	public double getProportionOfRegionCasesToUsCases() {
+		return proportionOfRegionCasesToUsCases;
+	}
+
+	public void setProportionOfRegionCasesToUsCases(double proportionOfRegionCasesToUsCases) {
+		this.proportionOfRegionCasesToUsCases = proportionOfRegionCasesToUsCases;
+	}
+
+	public double getTotalUsDeaths() {
+		return totalUsDeaths;
+	}
+
+	public void setTotalUsDeaths(double totalUsDeaths) {
+		this.totalUsDeaths = totalUsDeaths;
+	}
+
+	public double getProportionOfRegionDeathsToUsDeaths() {
+		return proportionOfRegionDeathsToUsDeaths;
+	}
+
+	public void setProportionOfRegionDeathsToUsDeaths(double proportionOfRegionDeathsToUsDeaths) {
+		this.proportionOfRegionDeathsToUsDeaths = proportionOfRegionDeathsToUsDeaths;
+	}
+
+	public double getProportionOfRegionPopToUsPop() {
+		return proportionOfRegionPopToUsPop;
+	}
+
+	public void setProportionOfRegionPopToUsPop(double proportionOfRegionPopToUsPop) {
+		this.proportionOfRegionPopToUsPop = proportionOfRegionPopToUsPop;
 	}
 }

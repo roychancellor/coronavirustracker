@@ -12,6 +12,7 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.GeographicalRegions;
@@ -20,6 +21,7 @@ import com.royware.corona.dashboard.interfaces.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
+@Component
 public class DashboardMultiRegionServiceImpl implements DashboardMultiRegionService {
 
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);

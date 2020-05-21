@@ -6,22 +6,20 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.Regions;
 import com.royware.corona.dashboard.interfaces.CanonicalData;
-import com.royware.corona.dashboard.interfaces.ChartService;
 import com.royware.corona.dashboard.interfaces.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.model.DashboardStatistics;
-import com.royware.corona.dashboard.model.UnitedStatesData;
 
-@Service
+@Component
 public class DashboardConfigServiceImpl implements DashboardConfigService {
 	@Autowired
 	private ExternalDataServiceFactory dataFactory;
@@ -63,7 +61,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		log.info("Finished making the data list...");
 		
 		log.info("About to call makeAllDashboardCharts with region = " + fullRegionString);
-		map.addAttribute("allDashboardCharts", dashboardChartService.makeAllDashboardCharts(dataList, fullRegionString, dashStats));
+		map.addAttribute("allDashboardCharts", dashboardChartService.makeAllDashboardCharts(dataList, fullRegionString, regionPopulation, dashStats));
 		log.info("Done calling makeAllDashboardCharts");
 		
 		//This setting determines whether the last row of the statistics table will show
@@ -71,8 +69,8 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		if(rawRegionString.length() == 3 && !rawRegionString.equalsIgnoreCase("USA")) {
 			map.put("regionType", "world");
 		} else if(rawRegionString.length() == 2 || isMultiRegion) {
-			log.info("Getting U.S. data for populating By U.S. Totals row of dashboard...");
-			makeByUsTotalsRowOfDashboard(map, regionPopulation);
+			map.put("regionType", "state");
+			dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
 		}
 
 		map.addAttribute("fullregion", fullRegionString);
@@ -99,16 +97,16 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			throw(e);
 		}
 	}	
-	
-	private void makeByUsTotalsRowOfDashboard(ModelMap map, int regionPopulation) {
-		map.put("regionType", "state");
-		List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
-		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
-		map.addAttribute("totaluscases", totalUsCases);
-		map.addAttribute("casesregion_totaluscases", dashStats.getCasesTotal() * 100.0 / totalUsCases);
-		int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
-		map.addAttribute("totalusdeaths", totalUsDeaths);
-		map.addAttribute("deathsregion_totalusdeaths", dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
-		map.addAttribute("regionpop_uspop", regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
-	}	
+//	
+//	private void makeByUsTotalsRowOfDashboard(ModelMap map, int regionPopulation) {
+//		map.put("regionType", "state");
+//		List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
+//		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
+//		map.addAttribute("totaluscases", totalUsCases);
+//		map.addAttribute("casesregion_totaluscases", dashStats.getCasesTotal() * 100.0 / totalUsCases);
+//		int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
+//		map.addAttribute("totalusdeaths", totalUsDeaths);
+//		map.addAttribute("deathsregion_totalusdeaths", dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
+//		map.addAttribute("regionpop_uspop", regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
+//	}	
 }
