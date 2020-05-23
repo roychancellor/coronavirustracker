@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.CacheKeys;
@@ -15,6 +16,7 @@ import com.royware.corona.dashboard.model.UnitedStatesData;
 /**
  * Provides service methods for getting dashboard data from external sources
  */
+@Component("usExcludingState")
 public class UsExcludingStateDataServiceImpl implements ExternalDataService {
 	@Autowired
 	@Qualifier(value = "us")

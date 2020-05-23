@@ -24,8 +24,8 @@ import com.royware.corona.dashboard.interfaces.ExternalDataService;
 import com.royware.corona.dashboard.model.WorldData;
 import com.royware.corona.dashboard.model.WorldRecords;
 
-@Component
-@CacheConfig(cacheNames= {CacheActions.CACHE_NAME})
+@Component("world")
+@CacheConfig(cacheNames = {CacheActions.CACHE_NAME})
 public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Autowired
 	private RestTemplate restTemplate;
@@ -54,19 +54,24 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 		return Arrays.asList(worldData.getRecords());
 	}
 	
-	@CacheEvict(value = CACHE_NAME, allEntries = true)
-	@Scheduled(fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS, initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS)
 	@Override
-	public void cacheEvict() {
-		log.info("WORLD DATA CACHE EVICTED AT: " + LocalDateTime.now());
+	@Scheduled(initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD, fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD)
+	public void cacheEvictAndRepopulate() {
+		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
+		evictCache();
+		log.info("DONE EVICTING: " + LocalDateTime.now());
+		repopulateCache();
+		log.info("DONE REPOPULATING: " + LocalDateTime.now());
+	}
+	
+	@CacheEvict(value = CACHE_NAME, allEntries = true)
+	private void evictCache() {
+		log.info("\tIn the evictCache method: " + LocalDateTime.now());
 	}	
 
-	@CachePut
-	@Scheduled(fixedDelay = (CACHE_EVICT_PERIOD_MILLISECONDS + 1000), initialDelay = (CACHE_EVICT_PERIOD_MILLISECONDS + 1000))
-	@Override
-	public void repopulateCache() {
-		log.info("Repopulating cache...");
-		makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
-		log.info("DONE REPOPULATING WORLD CACHE");
+	@CachePut(value = CACHE_NAME)
+	private List<WorldData> repopulateCache() {
+		log.info("In the repopulateCache method: " + LocalDateTime.now());
+		return makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}	
 }
