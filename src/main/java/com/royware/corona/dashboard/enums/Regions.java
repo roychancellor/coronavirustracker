@@ -24,7 +24,7 @@ public enum Regions {
 		public List<UnitedStatesData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
 			Logger log = LoggerFactory.getLogger(Regions.class);
 			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
-			return eds.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
+			return eds.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.getName());
 		}
 	},
 	AUS {
