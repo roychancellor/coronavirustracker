@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.enums;
+package com.royware.corona.dashboard.enums.regions;
 
 import java.util.HashMap;
 import java.util.Map;

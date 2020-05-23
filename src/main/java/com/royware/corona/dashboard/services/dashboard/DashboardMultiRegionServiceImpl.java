@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.enums.GeographicalRegions;
-import com.royware.corona.dashboard.enums.Regions;
+import com.royware.corona.dashboard.enums.regions.GeographicalRegions;
+import com.royware.corona.dashboard.enums.regions.Regions;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
 @Component
 public class DashboardMultiRegionServiceImpl implements DashboardMultiRegionService {

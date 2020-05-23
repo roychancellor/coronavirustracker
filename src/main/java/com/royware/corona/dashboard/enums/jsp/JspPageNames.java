@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.enums;
+package com.royware.corona.dashboard.enums.jsp;
 
 public enum JspPageNames {
 	HOME_PAGE("home-page"),

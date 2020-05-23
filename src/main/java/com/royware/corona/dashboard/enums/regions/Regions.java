@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.enums;
+package com.royware.corona.dashboard.enums.regions;
 
 import java.util.List;
 
@@ -6,11 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
-import com.royware.corona.dashboard.model.RegionData;
-import com.royware.corona.dashboard.model.UnitedStatesData;
-import com.royware.corona.dashboard.model.WorldData;
+import com.royware.corona.dashboard.model.data.RegionData;
+import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.WorldData;
 
 @Service
 public enum Regions {

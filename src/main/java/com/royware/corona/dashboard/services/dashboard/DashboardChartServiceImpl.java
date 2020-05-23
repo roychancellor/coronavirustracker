@@ -10,16 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.enums.Regions;
+import com.royware.corona.dashboard.enums.regions.Regions;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
-import com.royware.corona.dashboard.model.Dashboard;
-import com.royware.corona.dashboard.model.DashboardChartConfig;
-import com.royware.corona.dashboard.model.DashboardChartData;
-import com.royware.corona.dashboard.model.DashboardStatistics;
-import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.model.dashboard.Dashboard;
+import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
+import com.royware.corona.dashboard.model.dashboard.DashboardChartData;
+import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
+import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
 @Component
 public class DashboardChartServiceImpl implements DashboardChartService {

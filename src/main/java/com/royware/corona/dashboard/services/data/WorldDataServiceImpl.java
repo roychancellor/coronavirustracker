@@ -17,12 +17,12 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.enums.CacheKeys;
-import com.royware.corona.dashboard.enums.DataUrls;
+import com.royware.corona.dashboard.enums.data.CacheKeys;
+import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.CacheActions;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.WorldData;
-import com.royware.corona.dashboard.model.WorldRecords;
+import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.WorldRecords;
 
 @Component("world")
 @CacheConfig(cacheNames = {CacheActions.CACHE_NAME})

@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
-import com.royware.corona.dashboard.model.Dashboard;
-import com.royware.corona.dashboard.model.DashboardStatistics;
+import com.royware.corona.dashboard.model.dashboard.Dashboard;
+import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 @Service
 public interface DashboardChartService {

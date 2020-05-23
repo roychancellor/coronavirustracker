@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.enums.DataUrls;
+import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
 @Component("us")
 public class UsDataServiceImpl implements ExternalDataService {

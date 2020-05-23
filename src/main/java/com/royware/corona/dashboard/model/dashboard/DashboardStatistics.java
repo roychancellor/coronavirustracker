@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model;
+package com.royware.corona.dashboard.model.dashboard;
 
 import org.springframework.stereotype.Service;
 

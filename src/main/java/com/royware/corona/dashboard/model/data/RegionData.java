@@ -1,6 +1,6 @@
-package com.royware.corona.dashboard.model;
+package com.royware.corona.dashboard.model.data;
 
-import com.royware.corona.dashboard.enums.RegionTypes;
+import com.royware.corona.dashboard.enums.regions.RegionTypes;
 
 public class RegionData {
 	private int population;
