@@ -1,13 +1,13 @@
 package com.royware.corona.dashboard.model;
 
-import com.royware.corona.dashboard.enums.RegionLevels;
+import com.royware.corona.dashboard.enums.RegionTypes;
 
 public class RegionData {
 	private int population;
-	private RegionLevels regionLevel;
+	private RegionTypes regionLevel;
 	private String fullName;
 	
-	public RegionData(int population, RegionLevels regionLevel, String fullName) {
+	public RegionData(int population, RegionTypes regionLevel, String fullName) {
 		this.population = population;
 		this.regionLevel = regionLevel;
 		this.fullName = fullName;
@@ -19,10 +19,10 @@ public class RegionData {
 	public void setPopulation(int population) {
 		this.population = population;
 	}
-	public RegionLevels getRegionLevel() {
+	public RegionTypes getRegionLevel() {
 		return regionLevel;
 	}
-	public void setRegionLevel(RegionLevels regionLevel) {
+	public void setRegionLevel(RegionTypes regionLevel) {
 		this.regionLevel = regionLevel;
 	}
 

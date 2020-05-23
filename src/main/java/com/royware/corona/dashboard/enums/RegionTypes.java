@@ -1,5 +1,5 @@
 package com.royware.corona.dashboard.enums;
 
-public enum RegionLevels {
+public enum RegionTypes {
 	CITY, STATE, COUNTRY
 }
