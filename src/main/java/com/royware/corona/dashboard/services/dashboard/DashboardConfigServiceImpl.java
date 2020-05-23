@@ -47,6 +47,12 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		if(dataService == null) {
 			return false;
 		}
+		
+		//Check for empty multi-region
+		if(isMultiRegion && rawRegionString.substring(6).length() < 2) {
+			return false;
+		}
+		
 		//Need to get the data differently for a multi-region selection 
 		if(isMultiRegion) {
 			fullRegionString = rawRegionString;
