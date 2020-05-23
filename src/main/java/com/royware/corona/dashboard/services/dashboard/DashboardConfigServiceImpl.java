@@ -11,12 +11,12 @@ import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.CanonicalData;
-import com.royware.corona.dashboard.interfaces.DashboardChartService;
-import com.royware.corona.dashboard.interfaces.DashboardConfigService;
-import com.royware.corona.dashboard.interfaces.DashboardMultiRegionService;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 import com.royware.corona.dashboard.model.DashboardStatistics;
 
 @Component

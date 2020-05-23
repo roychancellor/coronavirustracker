@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.royware.corona.dashboard.interfaces.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorldData implements CanonicalData {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.CacheKeys;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 /**

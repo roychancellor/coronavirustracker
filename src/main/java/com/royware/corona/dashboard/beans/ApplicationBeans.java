@@ -19,7 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.interfaces.CacheActions;
+import com.royware.corona.dashboard.interfaces.data.CacheActions;
 
 @Configuration
 @EnableCaching

@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.interfaces;
+package com.royware.corona.dashboard.interfaces.data;
 
 public interface CacheActions {
 	public static final long CACHE_EVICT_PERIOD_MILLISECONDS_PROD = 3 * 60 * 60 * 1000;  //every 3 hours

@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.GeographicalRegions;
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.DashboardMultiRegionService;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 @Component

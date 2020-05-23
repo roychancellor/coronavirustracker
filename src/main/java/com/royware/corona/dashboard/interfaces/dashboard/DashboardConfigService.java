@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.interfaces;
+package com.royware.corona.dashboard.interfaces.dashboard;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.JspPageNames;
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.DashboardConfigService;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 
 /**
  * The MAIN CONTROLLER for the dashboard application

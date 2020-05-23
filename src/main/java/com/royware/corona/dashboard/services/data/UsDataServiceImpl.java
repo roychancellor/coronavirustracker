@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.DataUrls;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 
 @Component("us")

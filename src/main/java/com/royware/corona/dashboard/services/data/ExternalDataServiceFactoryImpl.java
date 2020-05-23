@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 
 @Service
 public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactory {

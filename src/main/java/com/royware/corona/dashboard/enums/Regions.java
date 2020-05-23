@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.CanonicalData;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 import com.royware.corona.dashboard.model.RegionData;
 import com.royware.corona.dashboard.model.UnitedStatesData;
 import com.royware.corona.dashboard.model.WorldData;

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.CanonicalData;
-import com.royware.corona.dashboard.interfaces.ChartService;
-import com.royware.corona.dashboard.interfaces.DashboardChartService;
-import com.royware.corona.dashboard.interfaces.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.charts.ChartService;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 import com.royware.corona.dashboard.model.Dashboard;
 import com.royware.corona.dashboard.model.DashboardChartConfig;
 import com.royware.corona.dashboard.model.DashboardChartData;
