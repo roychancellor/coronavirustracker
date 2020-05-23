@@ -1,6 +1,6 @@
 package com.royware.corona.dashboard.enums;
 
-public enum Pages {
+public enum JspPageNames {
 	HOME_PAGE("home-page"),
 	ABOUT_PAGE("about-dashboard"),
 	MATH_PAGE("math"),
@@ -10,7 +10,7 @@ public enum Pages {
 	
 	public final String pageName;
 	
-	private Pages(String name) {
+	private JspPageNames(String name) {
 		this.pageName = name;
 	}
 	
