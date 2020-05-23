@@ -25,7 +25,7 @@ import com.royware.corona.dashboard.interfaces.data.CacheActions;
 @EnableCaching
 @EnableScheduling
 @EnableAsync
-@ComponentScan("com.royware.corona")
+@ComponentScan(basePackages = "com.royware.corona.dashboard")
 public class ApplicationBeans {
 	@Bean
 	public RestTemplate makeRestTemplate() {
