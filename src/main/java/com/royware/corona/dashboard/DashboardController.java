@@ -53,7 +53,7 @@ public class DashboardController {
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		log.info("Making dashboard for region: " + region);
-		
+
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
 			return "redirect:corona";
 		}
