@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.CacheActions;
@@ -30,7 +29,7 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(WorldDataServiceImpl.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -65,12 +64,14 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	}
 	
 	@CacheEvict(value = CACHE_NAME, allEntries = true)
-	private void evictCache() {
+	@Override
+	public void evictCache() {
 		log.info("\tIn the evictCache method: " + LocalDateTime.now());
 	}	
 
 	@CachePut(value = CACHE_NAME)
-	private List<WorldData> repopulateCache() {
+	@Override
+	public List<WorldData> repopulateCache() {
 		log.info("In the repopulateCache method: " + LocalDateTime.now());
 		return makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}	
