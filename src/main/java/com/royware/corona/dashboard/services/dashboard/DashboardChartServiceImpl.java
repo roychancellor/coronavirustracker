@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.regions.Regions;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
@@ -29,7 +28,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	@Autowired
 	private ExternalDataServiceFactory dataFactory;
 	
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(DashboardChartServiceImpl.class);
 	
 	@Override
 	public <T extends CanonicalData> List<Dashboard> makeAllDashboardCharts(

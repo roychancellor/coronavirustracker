@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.data.WorldData;
@@ -29,7 +28,7 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 	
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(SingleCountryDataServiceImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
-import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.regions.Regions;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
@@ -33,7 +32,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	@Autowired
 	private DashboardMultiRegionService dashboardMultiRegionService;
 	
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(DashboardConfigServiceImpl.class);
 	
 	@Override
 	public boolean populateDashboardModelMap(String rawRegionString, ModelMap map) {

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.DashboardController;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.data.UnitedStatesData;
@@ -25,7 +24,7 @@ public class MultiStateDataServiceImpl implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(MultiStateDataServiceImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override
