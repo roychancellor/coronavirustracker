@@ -23,7 +23,7 @@ import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.data.WorldData;
 import com.royware.corona.dashboard.model.data.WorldRecords;
 
-@Component("world")
+//@Component("world")
 @CacheConfig(cacheNames = {CacheActions.CACHE_NAME})
 public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Autowired
@@ -33,7 +33,7 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable
+	@Cacheable(value = CACHE_NAME, sync = true)
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
@@ -57,6 +57,7 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Scheduled(initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD, fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD)
 	public void cacheEvictAndRepopulate() {
 		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
+		log.info("In WorldDataServiceImpl class: worldDataService hashcode: " + this.hashCode());
 		evictCache();
 		log.info("DONE EVICTING: " + LocalDateTime.now());
 		repopulateCache();

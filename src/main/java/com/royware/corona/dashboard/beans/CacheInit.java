@@ -1,5 +1,7 @@
 package com.royware.corona.dashboard.beans;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -13,10 +15,12 @@ import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 public class CacheInit {
 	@Autowired
 	@Qualifier("world")
-	ExternalDataService worldDataService;
+	private ExternalDataService worldDataService;
+	private static final Logger log = LoggerFactory.getLogger(CacheInit.class);
 	
 	@EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent() {
+		log.info("In CacheInit class: worldDataService hashcode: " + this.hashCode());
 		worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}
 }

@@ -3,6 +3,8 @@ package com.royware.corona.dashboard.beans;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
@@ -10,6 +12,7 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -20,6 +23,8 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.interfaces.data.CacheActions;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
 
 @Configuration
 @EnableCaching
@@ -27,6 +32,13 @@ import com.royware.corona.dashboard.interfaces.data.CacheActions;
 @EnableAsync
 @ComponentScan(basePackages = "com.royware.corona.dashboard")
 public class ApplicationBeans {
+	@Bean
+	@Qualifier("world")
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public ExternalDataService worldDataService() {
+		return new WorldDataServiceImpl();
+	}
+	
 	@Bean
 	public RestTemplate makeRestTemplate() {
 		RestTemplate restTemplate = new RestTemplate();
