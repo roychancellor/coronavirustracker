@@ -64,7 +64,8 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	}
 	
 	@Override
-	@Scheduled(initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD, fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD)
+//	@Scheduled(initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD, fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD)
+	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
 	public void cacheEvictAndRepopulate() {
 		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
 		log.info("In WorldDataServiceImpl class: worldDataService hashcode: " + this.hashCode());

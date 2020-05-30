@@ -20,6 +20,7 @@ public class CacheInit {
 	
 	@EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent() {
+		log.info("Application has successfully started in environment: {}", System.getenv("ENVIRONMENT"));
 		log.info("In CacheInit class: worldDataService hashcode: " + this.hashCode());
 		worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}

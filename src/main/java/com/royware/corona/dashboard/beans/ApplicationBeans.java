@@ -12,6 +12,7 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
 
 @Configuration
+@PropertySource({"classpath:application-${ENVIRONMENT}.properties"})
 @EnableCaching
 @EnableScheduling
 @EnableAsync
