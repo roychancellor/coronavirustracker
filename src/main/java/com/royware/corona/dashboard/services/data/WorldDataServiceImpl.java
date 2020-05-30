@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +22,6 @@ import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.data.WorldData;
 import com.royware.corona.dashboard.model.data.WorldRecords;
 
-//@Component("world")
 @CacheConfig(cacheNames = {CacheActions.CACHE_NAME})
 public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Autowired
@@ -35,6 +33,18 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Override
 	@Cacheable(value = CACHE_NAME, sync = true)
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
+		log.info("Calling getDataFromWorldSource (should return data from cache.");
+		return getDataFromWorldSource(cacheKey);
+	}
+
+	@CachePut(value = CACHE_NAME)
+	@Override
+	public List<WorldData> repopulateCache() {
+		log.info("In the repopulateCache method: " + LocalDateTime.now());
+		return getDataFromWorldSource(CacheKeys.CACHE_KEY_WORLD.getName());
+	}	
+	
+	public List<WorldData> getDataFromWorldSource(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
 		do {	
@@ -68,12 +78,5 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 	@Override
 	public void evictCache() {
 		log.info("\tIn the evictCache method: " + LocalDateTime.now());
-	}	
-
-	@CachePut(value = CACHE_NAME)
-	@Override
-	public List<WorldData> repopulateCache() {
-		log.info("In the repopulateCache method: " + LocalDateTime.now());
-		return makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}	
 }
