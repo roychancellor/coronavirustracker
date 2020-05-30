@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.royware.corona.dashboard.enums.Pages;
-import com.royware.corona.dashboard.enums.Regions;
-import com.royware.corona.dashboard.interfaces.DashboardConfigService;
+import com.royware.corona.dashboard.enums.jsp.JspPageNames;
+import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
@@ -41,7 +41,7 @@ public class DashboardController {
 			map.addAttribute(regionEnum.name(), regionEnum.name());
 		}
 
-		return Pages.HOME_PAGE.toString();
+		return JspPageNames.HOME_PAGE.toString();
 	}
 	
 	/**
@@ -53,11 +53,11 @@ public class DashboardController {
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		log.info("Making dashboard for region: " + region);
-		
+
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
 			return "redirect:corona";
 		}
-		return Pages.DASHBOARD_PAGE.toString();
+		return JspPageNames.DASHBOARD_PAGE.toString();
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class DashboardController {
 	 */
 	@GetMapping(value = "/about")
 	public String showAboutPage(ModelMap map) {		
-		return Pages.ABOUT_PAGE.toString();
+		return JspPageNames.ABOUT_PAGE.toString();
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class DashboardController {
 	 */
 	@GetMapping(value = "/commentary")
 	public String showCommentaryPage(ModelMap map) {		
-		return Pages.COMMENTARY_PAGE.toString();
+		return JspPageNames.COMMENTARY_PAGE.toString();
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class DashboardController {
 	 */
 	@GetMapping(value = "/math")
 	public String showMathPage(ModelMap map) {		
-		return Pages.MATH_PAGE.toString();
+		return JspPageNames.MATH_PAGE.toString();
 	}
 	
 	/**
@@ -97,6 +97,6 @@ public class DashboardController {
 	 */
 	@GetMapping(value = "/chart-info")
 	public String showChartInfoPage(ModelMap map) {		
-		return Pages.CHART_INFO_PAGE.toString();
+		return JspPageNames.CHART_INFO_PAGE.toString();
 	}
 }

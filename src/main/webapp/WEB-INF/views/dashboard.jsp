@@ -28,7 +28,7 @@
 	      		<fmt:formatNumber type = "number" pattern = "#,###" value = "${population}" /></strong>
 				<chart:if test = "${type == 'state'}">
 		      		<strong style="color:#FFFFFF;font-size:1.25em;">
-		      		(<fmt:formatNumber type = "number" pattern = "#.##" value = "${regionpop_uspop}" /> % of U.S.)
+		      		(<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.proportionOfRegionPopToUsPop}" /> % of U.S.)
 		      		</strong>
 				</chart:if>
 	      	</p>
@@ -98,12 +98,12 @@
 					By U.S. Totals:
 				</td>
 				<td style="color:#FFFFFF;">
-					<fmt:formatNumber type = "number" pattern = "#.##" value = "${casesregion_totaluscases}" />%
-					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${totaluscases}" /> U.S. cases
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.proportionOfRegionCasesToUsCases}" />%
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalUsCases}" /> U.S. cases
 				</td>
 				<td style="color:#FFFFFF;">
-					<fmt:formatNumber type = "number" pattern = "#.##" value = "${deathsregion_totalusdeaths}" />%
-					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${totalusdeaths}" /> U.S. deaths
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.proportionOfRegionDeathsToUsDeaths}" />%
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalUsDeaths}" /> U.S. deaths
 				</td>
 			</tr>
 			</chart:if>			

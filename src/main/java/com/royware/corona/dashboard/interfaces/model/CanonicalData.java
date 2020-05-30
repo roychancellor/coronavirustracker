@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.interfaces;
+package com.royware.corona.dashboard.interfaces.model;
 
 import java.time.LocalDate;
 

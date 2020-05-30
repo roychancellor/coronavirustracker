@@ -6,9 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.ChartServiceDao;
-import com.royware.corona.dashboard.interfaces.CanonicalData;
-import com.royware.corona.dashboard.interfaces.ChartListService;
+import com.royware.corona.dashboard.interfaces.charts.ChartListService;
+import com.royware.corona.dashboard.interfaces.charts.ChartServiceDao;
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 
 @Service
 public class ChartServiceDaoImpl implements ChartServiceDao {

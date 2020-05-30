@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.enums;
+package com.royware.corona.dashboard.enums.data;
 
 public enum DataUrls {
 	WORLD_DATA_URL("https://opendata.ecdc.europa.eu/covid19/casedistribution/json/"),

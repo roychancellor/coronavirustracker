@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.enums;
+package com.royware.corona.dashboard.enums.data;
 
 public enum CacheKeys {
 	CACHE_KEY_WORLD("EURO_CDC"),

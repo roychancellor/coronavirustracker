@@ -9,21 +9,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.enums.DataUrls;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.UnitedStatesData;
+import com.royware.corona.dashboard.enums.data.DataUrls;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
+@Component("singleState")
 public class SingleStateDataServiceImpl implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(SingleStateDataServiceImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override

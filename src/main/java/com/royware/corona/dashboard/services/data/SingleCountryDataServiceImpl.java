@@ -10,16 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.DashboardController;
-import com.royware.corona.dashboard.enums.CacheKeys;
-import com.royware.corona.dashboard.interfaces.ExternalDataService;
-import com.royware.corona.dashboard.model.WorldData;
+import com.royware.corona.dashboard.enums.data.CacheKeys;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.model.data.WorldData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
 
+@Component("singleCountry")
 public class SingleCountryDataServiceImpl implements ExternalDataService {
 	@Autowired
 	@Qualifier(value = "world")
@@ -27,14 +28,17 @@ public class SingleCountryDataServiceImpl implements ExternalDataService {
 	
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
-	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger log = LoggerFactory.getLogger(SingleCountryDataServiceImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WorldData> makeDataListFromExternalSource(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldData> casesInOneCountry = new ArrayList<>();
+		log.info("Calling the WorldDataServiceImpl makeDataListFromExternalSource method (should be cached)");
+		log.info("In SingleCountryDataServiceImpl class: worldDataService hashcode: " + this.hashCode());
 		List<WorldData> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
+		log.info("Got the world data");
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		casesInOneCountry = worldCases

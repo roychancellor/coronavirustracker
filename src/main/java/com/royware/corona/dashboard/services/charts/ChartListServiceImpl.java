@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.ChartListService;
-import com.royware.corona.dashboard.interfaces.CanonicalData;
+import com.royware.corona.dashboard.interfaces.charts.ChartListService;
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
  
 @Service
 public class ChartListServiceImpl implements ChartListService {

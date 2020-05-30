@@ -1,9 +1,11 @@
-package com.royware.corona.dashboard.interfaces;
+package com.royware.corona.dashboard.interfaces.charts;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+
+import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 
 @Service
 public interface ChartServiceDao {
