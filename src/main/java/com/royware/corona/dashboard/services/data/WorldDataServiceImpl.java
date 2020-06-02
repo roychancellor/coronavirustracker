@@ -1,49 +1,39 @@
 package com.royware.corona.dashboard.services.data;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.CacheActions;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.model.data.WorldData;
 import com.royware.corona.dashboard.model.data.WorldRecords;
 
-@CacheConfig(cacheNames = {CacheActions.CACHE_NAME})
-public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
+@Component("world")
+public class WorldDataServiceImpl implements ExternalDataService, WorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
-	
+		
 	private static final Logger log = LoggerFactory.getLogger(WorldDataServiceImpl.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable(value = CACHE_NAME, sync = true)
+	@Cacheable(value = CacheActions.CACHE_NAME)
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
-		log.info("Calling getDataFromWorldSource (should return data from cache.");
+		log.info("Calling getDataFromWorldSource (should return data from cache).");
 		return getDataFromWorldSource(cacheKey);
 	}
 
-	@CachePut(value = CACHE_NAME)
 	@Override
-	public List<WorldData> repopulateCache() {
-		log.info("In the repopulateCache method: " + LocalDateTime.now());
-		return getDataFromWorldSource(CacheKeys.CACHE_KEY_WORLD.getName());
-	}	
-	
 	public List<WorldData> getDataFromWorldSource(String cacheKey) {
 		WorldRecords worldData = null;
 		int tries = 0;
@@ -61,23 +51,5 @@ public class WorldDataServiceImpl implements ExternalDataService, CacheActions {
 		
 		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA *****");
 		return Arrays.asList(worldData.getRecords());
-	}
-	
-	@Override
-//	@Scheduled(initialDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD, fixedDelay = CACHE_EVICT_PERIOD_MILLISECONDS_PROD)
-	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
-	public void cacheEvictAndRepopulate() {
-		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
-		log.info("In WorldDataServiceImpl class: worldDataService hashcode: " + this.hashCode());
-		evictCache();
-		log.info("DONE EVICTING: " + LocalDateTime.now());
-		repopulateCache();
-		log.info("DONE REPOPULATING: " + LocalDateTime.now());
-	}
-	
-	@CacheEvict(value = CACHE_NAME, allEntries = true)
-	@Override
-	public void evictCache() {
-		log.info("\tIn the evictCache method: " + LocalDateTime.now());
 	}	
 }

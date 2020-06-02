@@ -34,7 +34,7 @@ import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
 @EnableAsync
 @ComponentScan(basePackages = "com.royware.corona.dashboard")
 public class ApplicationBeans {
-	@Bean
+	@Bean("worldDataService")
 	@Qualifier("world")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public ExternalDataService worldDataService() {
