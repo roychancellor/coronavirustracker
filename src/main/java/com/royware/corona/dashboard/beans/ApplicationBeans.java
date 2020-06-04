@@ -51,7 +51,9 @@ public class ApplicationBeans {
 		return restTemplate;
 	}
 	
-	@Bean
+	@Bean("cacheManager")
+	@Qualifier("cacheManager")
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public CacheManager cacheManager() {
         // configure and return an implementation of Spring's CacheManager SPI
         SimpleCacheManager cacheManager = new SimpleCacheManager();

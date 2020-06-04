@@ -8,5 +8,5 @@ import com.royware.corona.dashboard.model.data.WorldData;
 
 @Service
 public interface WorldDataServiceCaller {
-	public List<WorldData> getDataFromWorldSource(String cacheKey);
+	public List<WorldData> getDataFromWorldSource();
 }

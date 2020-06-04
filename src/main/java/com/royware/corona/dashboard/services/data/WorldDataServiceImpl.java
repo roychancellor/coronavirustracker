@@ -27,14 +27,14 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable(value = CacheActions.CACHE_NAME)
+	@Cacheable(value = CacheActions.CACHE_NAME, key = "#cacheKey")
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
 		log.info("Calling getDataFromWorldSource (should return data from cache).");
-		return getDataFromWorldSource(cacheKey);
+		return getDataFromWorldSource();
 	}
 
 	@Override
-	public List<WorldData> getDataFromWorldSource(String cacheKey) {
+	public List<WorldData> getDataFromWorldSource() {
 		WorldRecords worldData = null;
 		int tries = 0;
 		do {	
