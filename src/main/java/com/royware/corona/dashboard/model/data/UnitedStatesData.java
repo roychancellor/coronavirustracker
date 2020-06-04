@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class UnitedStatesData implements CanonicalData {
 	@JsonProperty("date") private int dateInteger;
-	@JsonProperty("dateChecked") private String dateTimeString;
+//	@JsonProperty("dateChecked") private String dateTimeString;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
 	@JsonProperty("posNeg") private int totalPositivePlusNegative;
@@ -22,6 +22,7 @@ public class UnitedStatesData implements CanonicalData {
 	@JsonProperty("state") private String regionString;
 	
 	@JsonIgnore private LocalDate dateChecked;
+	@JsonIgnore private String dateTimeString;
 			
 	public UnitedStatesData() {
 		super();
@@ -31,6 +32,14 @@ public class UnitedStatesData implements CanonicalData {
 		return dateInteger;
 	}
 
+	public void setDateInteger(int dateInteger) {
+		this.dateInteger = dateInteger;
+		this.dateChecked = LocalDate.of(dateInteger/10000, (dateInteger % 10000)/100, dateInteger % 100);
+		String month = (dateInteger % 10000)/100 < 10 ? "0" + String.valueOf((dateInteger % 10000)/100) : String.valueOf((dateInteger % 10000)/100);
+		String day = dateInteger % 100 < 10 ? "0" + String.valueOf(dateInteger % 100) : String.valueOf(dateInteger % 100);
+		this.dateTimeString = String.valueOf(dateInteger/10000) + "-" + month + "-" + day + "T00:00:00Z";
+	}
+	
 	public int getTotalPositiveCases() {
 		return totalPositiveCases;
 	}
@@ -83,10 +92,10 @@ public class UnitedStatesData implements CanonicalData {
 		return dateTimeString;
 	}
 
-	public void setDateTimeString(String dateTimeChecked) {
-		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeChecked.substring(0,4)),
-				Integer.parseInt(dateTimeChecked.substring(5,7)), Integer.parseInt(dateTimeChecked.substring(8,10)));
-		this.dateTimeString = dateTimeChecked;
+	public void setDateTimeString(String dateTimeString) {
+		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
+				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
+		this.dateTimeString = dateTimeString;
 	}
 
 	public LocalDate getDateChecked() {
