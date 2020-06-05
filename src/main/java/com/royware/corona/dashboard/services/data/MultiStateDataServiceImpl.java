@@ -29,7 +29,7 @@ public class MultiStateDataServiceImpl implements ExternalDataService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String multiRegionState) {
-		String url = DataUrls.STATE_DATA_URL_START.getName() + multiRegionState.toUpperCase() + DataUrls.STATE_DATA_URL_END.getName();
+		String url = DataUrls.STATE_DATA_URL_START.getName() + multiRegionState.toLowerCase() + DataUrls.STATE_DATA_URL_END.getName();
 		log.info("***** MULTI_REGION: ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + url + " FOR " + multiRegionState);
 		UnitedStatesData[] stateDataArray = restTemplate.getForObject(url, UnitedStatesData[].class);
 		List<UnitedStatesData> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));
