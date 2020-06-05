@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.beans;
+package com.royware.corona.dashboard.config;
 
 import java.util.Arrays;
 import java.util.concurrent.Executor;
