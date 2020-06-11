@@ -29,7 +29,7 @@ public class SingleStateDataServiceImpl implements ExternalDataService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateAbbreviation) {
-		String url = DataUrls.STATE_DATA_URL_START.getName() + stateAbbreviation.toUpperCase() + DataUrls.STATE_DATA_URL_END.getName();
+		String url = DataUrls.STATE_DATA_URL_START.getName() + stateAbbreviation.toLowerCase() + DataUrls.STATE_DATA_URL_END.getName();
 		log.info("***** ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + url + " FOR " + stateAbbreviation);
 		UnitedStatesData[] stateDataArray = restTemplate.getForObject(url, UnitedStatesData[].class);
 		List<UnitedStatesData> stateDataList = new ArrayList<>(Arrays.asList(stateDataArray));

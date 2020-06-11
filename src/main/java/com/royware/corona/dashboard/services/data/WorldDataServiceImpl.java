@@ -6,35 +6,41 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.data.DataUrls;
-import com.royware.corona.dashboard.interfaces.data.CacheActions;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.model.data.WorldData;
 import com.royware.corona.dashboard.model.data.WorldRecords;
 
-@Component("world")
 public class WorldDataServiceImpl implements ExternalDataService, WorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
 		
+	private ConcurrentMapCache cacheManager;
 	private static final Logger log = LoggerFactory.getLogger(WorldDataServiceImpl.class);
 
+	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
 	@Override
-	@Cacheable(value = CacheActions.CACHE_NAME)
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
-		log.info("Calling getDataFromWorldSource (should return data from cache).");
-		return getDataFromWorldSource(cacheKey);
+		cacheManager = CacheManagerProvider.getManager();
+		List<WorldData> worldData = (List<WorldData>)cacheManager.get(cacheKey).get();
+		if(worldData == null) {
+			log.info("Getting the world data from its source, NOT the cache.");
+			worldData = getDataFromWorldSource();
+			cacheManager.put(cacheKey, worldData);
+		}
+		log.info("Returning the cached version of the world data.");
+		return worldData;
 	}
 
+	//This only gets called when the cache is initialized and when it is evicted/refreshed
 	@Override
-	public List<WorldData> getDataFromWorldSource(String cacheKey) {
+	public List<WorldData> getDataFromWorldSource() {
 		WorldRecords worldData = null;
 		int tries = 0;
 		do {	

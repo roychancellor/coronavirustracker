@@ -1,14 +1,10 @@
-package com.royware.corona.dashboard.beans;
+package com.royware.corona.dashboard.config;
 
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,17 +19,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.interfaces.data.CacheActions;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
 
 @Configuration
 @PropertySource({"classpath:application-${ENVIRONMENT}.properties"})
-@EnableCaching
 @EnableScheduling
 @EnableAsync
 @ComponentScan(basePackages = "com.royware.corona.dashboard")
-public class ApplicationBeans {
+public class ApplicationConfig {
 	@Bean("worldDataService")
 	@Qualifier("world")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -50,14 +44,6 @@ public class ApplicationBeans {
 		restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 		return restTemplate;
 	}
-	
-	@Bean
-    public CacheManager cacheManager() {
-        // configure and return an implementation of Spring's CacheManager SPI
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache(CacheActions.CACHE_NAME)));
-        return cacheManager;
-    }
 	
     @Bean
     public TaskScheduler taskScheduler() {
