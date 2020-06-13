@@ -110,7 +110,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigCasesByTime.setxGridDashType("dot");
 		chartConfigCasesByTime.setxAxisMin(0);
 		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
-		chartConfigCasesByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		chartConfigCasesByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfigCasesByTime.setyAxisMin(0);
 		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
 		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
@@ -135,7 +135,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfChangeOfCases.setxGridDashType("dot");
 		chartConfigRateOfChangeOfCases.setxAxisMin(0);
 		maxX = (int) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("x");
-		chartConfigRateOfChangeOfCases.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		chartConfigRateOfChangeOfCases.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfigRateOfChangeOfCases.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfCasesByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
@@ -164,7 +164,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigAccelerationOfCases.setxGridDashType("dot");
 		chartConfigAccelerationOfCases.setxAxisMin(0);
 		maxX = (int) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("x");
-		chartConfigAccelerationOfCases.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		chartConfigAccelerationOfCases.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		int minY = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
 		int minYMovAvg = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(1));
 		minY = (minY < minYMovAvg) ? minY : minYMovAvg;
@@ -231,7 +231,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigDeathsByTime.setxGridDashType("dot");
 		chartConfigDeathsByTime.setxAxisMin(0);
 		maxX = (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("x");
-		chartConfigDeathsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		chartConfigDeathsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfigDeathsByTime.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataDeathsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
@@ -256,7 +256,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfChangeOfDeaths.setxAxisGridlinesDisplay("dot");
 		chartConfigRateOfChangeOfDeaths.setxAxisMin(0);
 		maxX = (int) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("x");
-		chartConfigRateOfChangeOfDeaths.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		chartConfigRateOfChangeOfDeaths.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfigRateOfChangeOfDeaths.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfDeathsByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
@@ -285,7 +285,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigAccelerationOfDeaths.setxGridDashType("dot");
 		chartConfigAccelerationOfDeaths.setxAxisMin(0);
 		maxX = (int) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("x");
-		chartConfigAccelerationOfDeaths.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int) Math.log10(maxX)));
+		chartConfigAccelerationOfDeaths.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		minY = getMinValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
 		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
