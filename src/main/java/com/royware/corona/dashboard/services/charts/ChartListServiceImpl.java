@@ -20,6 +20,7 @@ public class ChartListServiceImpl implements ChartListService {
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyCases = new HashMap<>();
+	private Map<Integer, Double> dailyTests = new HashMap<>();
 	private Map<Integer, Double> dailyDeaths = new HashMap<>();
 	private Map<Integer, Double> dailyPctChgDeaths = new LinkedHashMap<>();
 	private Map<Integer, Double> dailyChgDeaths = new LinkedHashMap<>();
@@ -62,6 +63,45 @@ public class ChartListServiceImpl implements ChartListService {
 		scatterChartDataLists.add(makeMovingAverageList(dailyCases, MOVING_AVERAGE_SIZE, regionCaseList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
+
+		return scatterChartDataLists;
+	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyTestsTotalTestsVersusTimeList(List<T> regionCaseList) {
+		log.info("***** MAKING TOTAL AND DAILY TESTS VERSUS TIME *****");
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		List<Map<Object, Object>> dataList = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		int dayIndex = 0;
+		for(CanonicalData cc : regionCaseList) {
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", cc.getTotalPositiveCases() + cc.getTotalNegativeCases());
+			xyPair.put("dateChecked", cc.getDateChecked().toString());
+			dataList.add(xyPair);
+			dayIndex++;
+		}
+		scatterChartDataLists.add(dataList);
+
+		//Makes a list of daily tests for plotting on the secondary axis of the time chart
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
+		dayIndex = 1;
+		while(dayIndex < regionCaseList.size()) {
+			totalYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases() + regionCaseList.get(dayIndex - 1).getTotalNegativeCases();
+			totalToday = regionCaseList.get(dayIndex).getTotalPositiveCases() + regionCaseList.get(dayIndex).getTotalNegativeCases();
+			dailyChange = totalToday - totalYesterday;
+			dailyChange = dailyChange > 0 ? dailyChange : 0;
+			dailyTests.put(dayIndex, dailyChange * 1.0);
+			dayIndex++;
+		}
+		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
+		scatterChartDataLists.add(makeMovingAverageList(dailyTests, MOVING_AVERAGE_SIZE, regionCaseList.size()));
+		
+		log.info("***** DONE MAKING TOTAL AND DAILY TESTS VERSUS TIME *****");
 
 		return scatterChartDataLists;
 	}
@@ -139,7 +179,7 @@ public class ChartListServiceImpl implements ChartListService {
 	}
 	
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCaseswithExponentialLineList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCasesWithExponentialLineList(List<T> regionCaseList) {
 		log.info("***** MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

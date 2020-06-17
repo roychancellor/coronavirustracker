@@ -127,6 +127,10 @@
 				<td><div id="chartContainer41" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer42" style="height: 250px; width: 100%"></div></td>
 			</tr>
+			<tr>
+				<td><div id="chartContainer51" style="height: 250px; width: 100%"></div></td>
+				<td><div id="chartContainer52" style="height: 250px; width: 100%"></div></td>
+			</tr>
 		</table>
 		</div>
 	</div>
@@ -137,31 +141,34 @@
 	
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
-		const NUM_CHARTS = 8;
+		const NUM_CHARTS = 9;
 		const CASES_TIME_HISTORY_INDEX = 0;
 		const DEATHS_TIME_HISTORY_INDEX = 4;
+		const TESTS_TIME_HISTORY_INDEX = 8;
 		
 		//Constants that define the row-column of the chart position on the dashboard
-		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
-		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
 		const TIME_SERIES_CASES = "11";
-		const TIME_SERIES_DEATHS = "31";
 		const TIME_SERIES_RATE_OF_CASES = "12";
 		const TIME_SERIES_ACCEL_OF_CASES = "21";
+		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
+		const TIME_SERIES_DEATHS = "31";
 		const TIME_SERIES_RATE_OF_DEATHS = "32";
 		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
+		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
+		const TIME_SERIES_TESTS = "51";
 	 		
 		//Maps the index of the chart data to the row-column constant
 		//for referencing the chartContainer div tags above
 		var mapIndexToContainerRowCol = new Map();
-		mapIndexToContainerRowCol.set(0, TIME_SERIES_CASES);
+		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX, TIME_SERIES_CASES);
 		mapIndexToContainerRowCol.set(1, TIME_SERIES_RATE_OF_CASES);
 		mapIndexToContainerRowCol.set(2, TIME_SERIES_ACCEL_OF_CASES);
 		mapIndexToContainerRowCol.set(3, CHANGE_IN_CASES_VS_TOTAL_CASES);
-		mapIndexToContainerRowCol.set(4, TIME_SERIES_DEATHS);
+		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX, TIME_SERIES_DEATHS);
 		mapIndexToContainerRowCol.set(5, TIME_SERIES_RATE_OF_DEATHS);
 		mapIndexToContainerRowCol.set(6, TIME_SERIES_ACCEL_OF_DEATHS);
 		mapIndexToContainerRowCol.set(7, CHANGE_IN_DEATHS_VS_TOTAL_DEATHS);
+		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX, TIME_SERIES_TESTS);
 		
 		//MAIN ACTIONS
 		var containers = [];
@@ -171,8 +178,8 @@
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
  		for(var i = 0; i < NUM_CHARTS; i++) {
- 			if(i == CASES_TIME_HISTORY_INDEX || i == DEATHS_TIME_HISTORY_INDEX) {
- 				addLoadEvent(makeChartCasesOrDeathsByTime(containers[i], configObjects[i], chartArray[i]));
+ 			if(i == CASES_TIME_HISTORY_INDEX || i == DEATHS_TIME_HISTORY_INDEX || i == TESTS_TIME_HISTORY_INDEX) {
+ 				addLoadEvent(makeChartQuantityByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
  			}
@@ -222,15 +229,18 @@
 	 			var axis2TitleValue = "";
 	 			var pointColorStr = "blue";
 	 			var lineColorStr = "red";
-	 			if(c == CASES_TIME_HISTORY_INDEX) {
+	 			if(c < DEATHS_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Cases";
-	 			} else if(c == DEATHS_TIME_HISTORY_INDEX) {
+		 			var pointColorStr = "blue";
+		 			var lineColorStr = "red";
+	 			} else if(c < TESTS_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Deaths";
-	 			}
-	 			
-	 			if(c >= DEATHS_TIME_HISTORY_INDEX) {
 	 				pointColorStr = "purple";
 	 				lineColorStr = "green";
+	 			} else {
+	 				axis2TitleValue = "Daily Tests";
+	 				pointColorStr = "orange";
+	 				lineColorStr = "black";
 	 			}
 	 			
  				configObjects[c] = {
@@ -328,7 +338,7 @@
 		}
 		
  		//Function that makes the time series charts for cases and deaths
-		function makeChartCasesOrDeathsByTime(chartContainerString, config, dataPointsArr) {
+		function makeChartQuantityByTime(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
 				exportEnabled: true,
@@ -431,7 +441,7 @@
 	 				+ "</strong>";
  			} else {      	
 	        	for(var i = 0; i < e.entries.length; i++) {
-	        		if(positionRowCol == TIME_SERIES_CASES || positionRowCol == TIME_SERIES_DEATHS) {
+	        		if(positionRowCol == TIME_SERIES_CASES || positionRowCol == TIME_SERIES_DEATHS || positionRowCol == TIME_SERIES_TESTS) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")

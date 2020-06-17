@@ -33,7 +33,13 @@ public class ChartServiceDaoImpl implements ChartServiceDao {
 	@Override
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getChangeInTotalCasesVersusCaseswithExponentialLineList(
 			List<T> regionCaseList) {
-		return chartListService.makeChangeInTotalCasesVersusCaseswithExponentialLineList(regionCaseList);
+		return chartListService.makeChangeInTotalCasesVersusCasesWithExponentialLineList(regionCaseList);
+	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyTestsTotalTestsVersusTimeList(
+			List<T> regionCaseList) {
+		return chartListService.makeDailyTestsTotalTestsVersusTimeList(regionCaseList);
 	}
 
 	@Override
