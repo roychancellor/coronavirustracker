@@ -1,5 +1,6 @@
 package com.royware.corona.dashboard.services.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
 		cacheManager = CacheManagerProvider.getManager();
 		List<WorldData> worldData = (List<WorldData>)cacheManager.get(cacheKey).get();
-		if(worldData == null) {
-			log.info("Getting the world data from its source, NOT the cache.");
+		if(worldData == null || worldData.isEmpty()) {
+			log.info("Getting the world data from its source, then putting it into the cache.");
 			worldData = getDataFromWorldSource();
 			cacheManager.put(cacheKey, worldData);
 		}
@@ -49,6 +50,7 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL.getName(), WorldRecords.class);				
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA *****");
 			} catch (RestClientException e) {
+				log.error("RestClientException is: " + e.getMessage());
 				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
 				tries++;
 				worldData = null;
@@ -56,6 +58,9 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 		} while (tries <= 3 && worldData == null);
 		
 		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA *****");
+		if(worldData == null) {
+			return new ArrayList<WorldData>();
+		}
 		return Arrays.asList(worldData.getRecords());
 	}	
 }

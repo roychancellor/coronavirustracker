@@ -127,10 +127,12 @@
 				<td><div id="chartContainer41" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer42" style="height: 250px; width: 100%"></div></td>
 			</tr>
+			<chart:if test = "${(type == 'us' or type == 'state')}">
 			<tr>
 				<td><div id="chartContainer51" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer52" style="height: 250px; width: 100%"></div></td>
 			</tr>
+			</chart:if>			
 		</table>
 		</div>
 	</div>
@@ -141,7 +143,8 @@
 	
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
-		const NUM_CHARTS = 9;
+		var regionType = "${regionType}";
+		const NUM_CHARTS = regionType == 'world' ? 8 : 10;
 		const CASES_TIME_HISTORY_INDEX = 0;
 		const DEATHS_TIME_HISTORY_INDEX = 4;
 		const TESTS_TIME_HISTORY_INDEX = 8;
@@ -156,6 +159,7 @@
 		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
 		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
 		const TIME_SERIES_TESTS = "51";
+		const TIME_SERIES_RATIO_CASES_TO_TESTS = "52";
 	 		
 		//Maps the index of the chart data to the row-column constant
 		//for referencing the chartContainer div tags above
@@ -169,6 +173,7 @@
 		mapIndexToContainerRowCol.set(6, TIME_SERIES_ACCEL_OF_DEATHS);
 		mapIndexToContainerRowCol.set(7, CHANGE_IN_DEATHS_VS_TOTAL_DEATHS);
 		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX, TIME_SERIES_TESTS);
+		mapIndexToContainerRowCol.set(9, TIME_SERIES_RATIO_CASES_TO_TESTS);
 		
 		//MAIN ACTIONS
 		var containers = [];
@@ -178,7 +183,9 @@
 		makeChartDataFromJavaLists();
 		makeChartConfigs(); 		
  		for(var i = 0; i < NUM_CHARTS; i++) {
- 			if(i == CASES_TIME_HISTORY_INDEX || i == DEATHS_TIME_HISTORY_INDEX || i == TESTS_TIME_HISTORY_INDEX) {
+ 			if(i == CASES_TIME_HISTORY_INDEX ||
+ 			   i == DEATHS_TIME_HISTORY_INDEX ||
+ 			   i == TESTS_TIME_HISTORY_INDEX) {
  				addLoadEvent(makeChartQuantityByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
@@ -450,7 +457,8 @@
 	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES
 	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_CASES
 	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS
-	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS) {
+	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS
+	        				|| positionRowCol == TIME_SERIES_RATIO_CASES_TO_TESTS) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 	        				+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#.##") + "%"

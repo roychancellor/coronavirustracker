@@ -25,6 +25,6 @@ public class ApplicationStartup {
 	public void contextRefreshedEvent() {
 		log.info("Application has successfully started in environment: {}", env.getProperty("ENVIRONMENT"));
 		log.info("About to initialize the cache with cacheActions object of class: {}", cacheActions.getClass().getSimpleName());
-		cacheActions.populateCache(CacheKeys.CACHE_KEY_WORLD.getName());
+		cacheActions.populateCacheFromSource(CacheKeys.CACHE_KEY_WORLD.getName());
 	}
 }

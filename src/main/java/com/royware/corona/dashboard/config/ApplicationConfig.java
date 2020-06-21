@@ -12,6 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -37,7 +38,7 @@ public class ApplicationConfig {
 	
 	@Bean
 	public RestTemplate makeRestTemplate() {
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
 		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		mappingJackson2HttpMessageConverter.setSupportedMediaTypes(
 				Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.TEXT_PLAIN));
@@ -53,5 +54,18 @@ public class ApplicationConfig {
 	@Bean
     public Executor taskExecutor() {
         return new SimpleAsyncTaskExecutor();
-    }	
+    }
+	
+	//Override timeouts in request factory
+	private HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory() 
+	{
+	    HttpComponentsClientHttpRequestFactory clientHttpRequestFactory
+	                      = new HttpComponentsClientHttpRequestFactory();
+	    //Connect timeout
+	    clientHttpRequestFactory.setConnectTimeout(5000);
+	     
+	    //Read timeout
+	    clientHttpRequestFactory.setReadTimeout(10000);
+	    return clientHttpRequestFactory;
+	}
 }

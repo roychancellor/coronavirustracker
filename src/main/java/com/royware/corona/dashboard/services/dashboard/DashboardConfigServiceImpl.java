@@ -65,6 +65,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 		log.info("Finished making the data list...");
 		
+		//Check for a null or empty data list. This is VERY important!!!
+		if(dataList == null || dataList.isEmpty()) {
+			return false;
+		}
+		
 		log.info("About to call makeAllDashboardCharts with region = " + fullRegionString);
 		map.addAttribute("allDashboardCharts", dashboardChartService.makeAllDashboardCharts(dataList, fullRegionString, regionPopulation, dashStats));
 		log.info("Done calling makeAllDashboardCharts");
@@ -102,16 +107,4 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			throw(e);
 		}
 	}	
-//	
-//	private void makeByUsTotalsRowOfDashboard(ModelMap map, int regionPopulation) {
-//		map.put("regionType", "state");
-//		List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
-//		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
-//		map.addAttribute("totaluscases", totalUsCases);
-//		map.addAttribute("casesregion_totaluscases", dashStats.getCasesTotal() * 100.0 / totalUsCases);
-//		int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
-//		map.addAttribute("totalusdeaths", totalUsDeaths);
-//		map.addAttribute("deathsregion_totalusdeaths", dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
-//		map.addAttribute("regionpop_uspop", regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
-//	}	
 }

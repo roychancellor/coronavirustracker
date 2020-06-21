@@ -33,7 +33,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	@Override
 	public <T extends CanonicalData> List<Dashboard> makeAllDashboardCharts(
 			List<T> dataList, String region, Integer regionPopulation, DashboardStatistics dashStats) {
+		
 		List<Dashboard> dashboardList = new ArrayList<>();
+		boolean isNotWorld = true;
+		if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
+			isNotWorld = false;
+		}
 		
 		////////// CHART DATA LISTS - CASES //////////
 		log.info("Making all the chart data lists for CASES");
@@ -58,9 +63,15 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
 
 		////////// CHART DATA LISTS - TESTS /////////
-		log.info("Making all the chart data lists for DEATHS");
-		List<List<Map<Object, Object>>> chartDataTestsByTime = chartService
-				.getDailyTestsTotalTestsVersusTime(dataList);
+		List<List<Map<Object, Object>>> chartDataTestsByTime = null;
+		List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime = null;
+		if(isNotWorld) {
+			log.info("Making all the chart data lists for TESTS");
+			chartDataTestsByTime = chartService
+					.getDailyTestsTotalTestsVersusTime(dataList);
+			chartDataRatioOfCasesToTestsByTime = chartService
+					.getDailyRatioCasesToTestsWithMovingAverage(dataList);
+		}
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - ORIGINAL");
@@ -344,30 +355,63 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfDeathsVersusDeaths.setDataSeries2Name("Pure exponential (k = 0.3)");
 		
 		////////// CHART CONFIGURATION - TESTS ///////////
-		log.info("Configuring all the charts for CASES...");
-		DashboardChartConfig chartConfigTestsByTime = new DashboardChartConfig("Time History of Tests " + region,
-				"Days Since Tests > 0", "Total Tests", "scatter");
-		chartConfigTestsByTime.setyAxisNumberSuffix("");
-		chartConfigTestsByTime.setxAxisPosition("bottom");
-		chartConfigTestsByTime.setxAxisLogarithmic("false");
-		chartConfigTestsByTime.setyAxisPosition("left");
-		chartConfigTestsByTime.setyAxisLogarithmic("false");
-		chartConfigTestsByTime.setShowLegend("true");
-		chartConfigTestsByTime.setDataPointSize(1);
-		chartConfigTestsByTime.setxGridDashType("dot");
-		chartConfigTestsByTime.setxAxisMin(0);
-		maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
-		chartConfigTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfigTestsByTime.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		chartConfigTestsByTime.setyAxisMax(maxY / factor * factor + factor);
-		chartConfigTestsByTime.setyAxisInterval(factor);
-
-		chartConfigTestsByTime.setLegendHorizonalAlign("left");
-		chartConfigTestsByTime.setLegendVerticalAlign("top");
-		chartConfigTestsByTime.setDataSeries1Name("Total Tests");
-		chartConfigTestsByTime.setDataSeries2Name("4-day Moving Average of New Tests");
+		DashboardChartConfig chartConfigTestsByTime = null;
+		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime = null;
+		if(isNotWorld) {
+			log.info("Configuring all the charts for TESTS...");
+			chartConfigTestsByTime = new DashboardChartConfig("Time History of Tests " + region,
+					"Days Since Tests > 0", "Total Tests", "scatter");
+			chartConfigTestsByTime.setyAxisNumberSuffix("");
+			chartConfigTestsByTime.setxAxisPosition("bottom");
+			chartConfigTestsByTime.setxAxisLogarithmic("false");
+			chartConfigTestsByTime.setyAxisPosition("left");
+			chartConfigTestsByTime.setyAxisLogarithmic("false");
+			chartConfigTestsByTime.setShowLegend("true");
+			chartConfigTestsByTime.setDataPointSize(1);
+			chartConfigTestsByTime.setxGridDashType("dot");
+			chartConfigTestsByTime.setxAxisMin(0);
+			maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
+			chartConfigTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+			chartConfigTestsByTime.setyAxisMin(0);
+			maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
+			factor = (int) Math.pow(10, (int) Math.log10(maxY));
+			chartConfigTestsByTime.setyAxisMax(maxY / factor * factor + factor);
+			chartConfigTestsByTime.setyAxisInterval(factor);
+	
+			chartConfigTestsByTime.setLegendHorizonalAlign("left");
+			chartConfigTestsByTime.setLegendVerticalAlign("top");
+			chartConfigTestsByTime.setDataSeries1Name("Total Tests");
+			chartConfigTestsByTime.setDataSeries2Name("4-day Moving Average of New Tests");
+			
+			chartConfigRatioOfCasesToTestsByTime = new DashboardChartConfig(
+					"Ratio of Positives to Tests in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
+					"scatter");
+			chartConfigRatioOfCasesToTestsByTime.setyAxisNumberSuffix("%");
+			chartConfigRatioOfCasesToTestsByTime.setxAxisPosition("bottom");
+			chartConfigRatioOfCasesToTestsByTime.setxAxisLogarithmic("false");
+			chartConfigRatioOfCasesToTestsByTime.setyAxisPosition("left");
+			chartConfigRatioOfCasesToTestsByTime.setyAxisLogarithmic("false");
+			chartConfigRatioOfCasesToTestsByTime.setShowLegend("true");
+			chartConfigRatioOfCasesToTestsByTime.setDataPointSize(1);
+			chartConfigRatioOfCasesToTestsByTime.setxGridDashType("dot");
+			chartConfigRatioOfCasesToTestsByTime.setxAxisMin(0);
+			maxX = (int) chartDataRatioOfCasesToTestsByTime.get(0).get(chartDataRatioOfCasesToTestsByTime.get(0).size() - 1).get("x");
+			chartConfigRatioOfCasesToTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+			chartConfigRatioOfCasesToTestsByTime.setyAxisMin(0);
+			maxY = getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
+			maxY = maxY >= 100 ? 99 : maxY;
+			factor = (int) Math.pow(10, (int) Math.log10(maxY));
+			if (factor == 0) {
+				factor = 10;
+			}
+			chartConfigRatioOfCasesToTestsByTime.setyAxisMax(maxY / factor * factor + factor);
+			chartConfigRatioOfCasesToTestsByTime.setyAxisInterval(factor);
+	
+			chartConfigRatioOfCasesToTestsByTime.setLegendHorizonalAlign("right");
+			chartConfigRatioOfCasesToTestsByTime.setLegendVerticalAlign("top");
+			chartConfigRatioOfCasesToTestsByTime.setDataSeries1Name("% Positive per Test");
+			chartConfigRatioOfCasesToTestsByTime.setDataSeries2Name("4-day Moving Average");
+		}
 		
 		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
 		log.info("Writing all the configurations to the dashboardList...");
@@ -375,11 +419,16 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfCasesByTime), chartConfigRateOfChangeOfCases));
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfCasesByTime), chartConfigAccelerationOfCases));
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfCasesByCases), chartConfigRateOfCasesVersusCases));
+		
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataDeathsByTime), chartConfigDeathsByTime));
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfDeathsByTime), chartConfigRateOfChangeOfDeaths));
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfDeathsByTime), chartConfigAccelerationOfDeaths));
 		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfDeathsByDeaths), chartConfigRateOfDeathsVersusDeaths));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataTestsByTime), chartConfigTestsByTime));
+		
+		if(isNotWorld) {
+			dashboardList.add(new Dashboard(new DashboardChartData(chartDataTestsByTime), chartConfigTestsByTime));
+			dashboardList.add(new Dashboard(new DashboardChartData(chartDataRatioOfCasesToTestsByTime), chartConfigRatioOfCasesToTestsByTime));
+		}
 
 		return dashboardList;
 	}

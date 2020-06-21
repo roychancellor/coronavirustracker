@@ -1,6 +1,8 @@
 package com.royware.corona.dashboard.services.data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.CacheActions;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
+import com.royware.corona.dashboard.model.data.WorldData;
 
 @Component
 public class CacheActionsImpl implements CacheActions {
@@ -19,14 +22,29 @@ public class CacheActionsImpl implements CacheActions {
 	@Autowired
 	private WorldDataServiceCaller worldDataServiceCaller;
 	
+	List<WorldData> newCacheData = new ArrayList<>();
+	
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
 	public void cacheEvictAndRepopulate() {
 		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
+		
+		log.info("Getting the world data from its source...if unavailable, will NOT evict the cache.");
+		newCacheData = getNewCacheDataIfAvailable();
+		if(newCacheData.isEmpty()) {
+			log.info("The world data source is NOT available. Returning to operation with previous version of cache.");
+			return;
+		}
+		
 		evictCache();
 		log.info("DONE EVICTING: " + LocalDateTime.now());		
-		populateCache(CacheKeys.CACHE_KEY_WORLD.getName());
+		
+		populateCacheFromExistingData(CacheKeys.CACHE_KEY_WORLD.getName());
 		log.info("DONE REPOPULATING: " + LocalDateTime.now());
+	}
+	
+	private List<WorldData> getNewCacheDataIfAvailable() {
+		return worldDataServiceCaller.getDataFromWorldSource();
 	}
 	
 	//The following two methods used to be annotated with @CacheEvict and @CachePut, but they didn't seem to be working properly
@@ -40,8 +58,15 @@ public class CacheActionsImpl implements CacheActions {
 	}	
 
 	@Override
-	public void populateCache(String cacheKey) {
-		log.info("In the populateCache method: " + LocalDateTime.now());
-		CacheManagerProvider.getManager().put(cacheKey, worldDataServiceCaller.getDataFromWorldSource());
+	public void populateCacheFromExistingData(String cacheKey) {
+		log.info("In the populateCacheFromExistingData method: " + LocalDateTime.now());
+		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
+	}
+
+	@Override
+	public void populateCacheFromSource(String cacheKey) {
+		log.info("In the populateCacheFromSource method: " + LocalDateTime.now());
+		log.info("Getting the world data from its source...");
+		CacheManagerProvider.getManager().put(cacheKey, getNewCacheDataIfAvailable());
 	}
 }
