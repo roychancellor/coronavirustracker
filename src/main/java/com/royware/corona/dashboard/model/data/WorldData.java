@@ -15,7 +15,7 @@ public class WorldData implements CanonicalData {
 	@JsonProperty("cases") private int dailyNewCases;
 	@JsonProperty("deaths") private int dailyNewDeaths;
 	@JsonProperty("countryterritoryCode") private String regionString;
-	@JsonProperty("popData2018") private long population2018;
+	@JsonProperty("popData2018") private long population;
 	
 	@JsonIgnore private int totalPositiveCases;
 	@JsonIgnore private int totalNegativeCases;
@@ -29,26 +29,68 @@ public class WorldData implements CanonicalData {
 	public LocalDate getDateChecked() {
 		return LocalDate.of(year, month, day);
 	}
+	public void setDateChecked(int year, int month, int day) {
+		this.dateChecked = LocalDate.of(year, month, day);
+	}
 		
+	public int getYear() {
+		return year;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public int getDay() {
+		return day;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
 	public String getStringDate() {
 		return stringDate;
+	}
+	public void setStringDate(String stringDate) {
+		this.stringDate = stringDate;
 	}
 
 	public int getDailyNewCases() {
 		return dailyNewCases;
 	}
+	public void setDailyNewCases(int dailyNewCases) {
+		this.dailyNewCases = dailyNewCases;
+	}
 
 	public int getDailyNewDeaths() {
 		return dailyNewDeaths;
+	}
+	public void setDailyNewDeaths(int dailyNewDeaths) {
+		this.dailyNewDeaths = dailyNewDeaths;
 	}
 
 	@Override
 	public String getRegionString() {
 		return regionString;
 	}
+	public void setRegionString(String regionString) {
+		this.regionString = regionString;
+	}
 
-	public long getPopulation2018() {
-		return population2018;
+	public long getPopulation() {
+		return population;
+	}
+	public void setPopulation(long population) {
+		this.population = population;
 	}
 
 	@Override
@@ -96,7 +138,7 @@ public class WorldData implements CanonicalData {
 	@Override
 	public String toString() {
 		return "WorldCases [dateDDMMYYYY=" + stringDate + ", dailyNewCases=" + dailyNewCases + ", dailyNewDeaths="
-				+ dailyNewDeaths + ", countryAbbrev=" + regionString + ", population2018=" + population2018 + "]";
+				+ dailyNewDeaths + ", countryAbbrev=" + regionString + ", population2018=" + population + "]";
 	}
 
 	@Override
@@ -105,7 +147,7 @@ public class WorldData implements CanonicalData {
 		int result = 1;
 		result = prime * result + dailyNewCases;
 		result = prime * result + dailyNewDeaths;
-		result = prime * result + (int) (population2018 ^ (population2018 >>> 32));
+		result = prime * result + (int) (population ^ (population >>> 32));
 		result = prime * result + ((regionString == null) ? 0 : regionString.hashCode());
 		result = prime * result + ((stringDate == null) ? 0 : stringDate.hashCode());
 		result = prime * result + totalDeaths;
@@ -127,7 +169,7 @@ public class WorldData implements CanonicalData {
 			return false;
 		if (dailyNewDeaths != other.dailyNewDeaths)
 			return false;
-		if (population2018 != other.population2018)
+		if (population != other.population)
 			return false;
 		if (regionString == null) {
 			if (other.regionString != null)
