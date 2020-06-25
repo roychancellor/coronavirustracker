@@ -8,5 +8,6 @@ public interface CacheActions {
 	
 	public void cacheEvictAndRepopulate();
 	public void evictCache();
-	public void populateCache(String cacheKey);
+	public void populateCacheFromExistingData(String cacheKey);
+	public void populateCacheFromSource(String cacheKey);
 }

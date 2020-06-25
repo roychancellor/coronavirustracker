@@ -46,6 +46,12 @@
 	   <artifactId>hibernate-validator</artifactId>
 	   <version>5.4.3.Final</version>
 	</dependency>
+	
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	    <version>4.5.12</version>
+	</dependency>	
         
     <!--  THIS MUST BE COMMENTED OUT FOR JUNIT TESTING BUT UNCOMMENTED FOR RUNTIME -->
     <dependency>

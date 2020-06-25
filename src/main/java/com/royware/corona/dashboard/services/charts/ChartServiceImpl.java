@@ -61,4 +61,15 @@ public class ChartServiceImpl implements ChartService {
 			List<T> regionCaseList) {
 		return serviceDao.getChangeInTotalDeathsVersusDeathsWithExponentialLineList(regionCaseList);
 	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyTestsTotalTestsVersusTime(
+			List<T> regionCaseList) {
+		return serviceDao.getDailyTestsTotalTestsVersusTimeList(regionCaseList);
+	}
+	 
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyRatioCasesToTestsWithMovingAverage(List<T> regionCaseList) {
+		return serviceDao.getDailyRatioCasesToTestsWithMovingAverageList(regionCaseList);
+	}
 }
