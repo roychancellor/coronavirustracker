@@ -6,14 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.charts.ChartListService;
+import com.royware.corona.dashboard.interfaces.charts.ChartServiceListCreator;
 import com.royware.corona.dashboard.interfaces.charts.ChartServiceDao;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 
 @Service
 public class ChartServiceDaoImpl implements ChartServiceDao {
 	@Autowired
-	ChartListService chartListService;
+	ChartServiceListCreator chartListService;
 	
 	@Override
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getTotalCasesVersusTimeWithExponentialFitList(List<T> regionCaseList) {
