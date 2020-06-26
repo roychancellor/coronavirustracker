@@ -10,12 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.charts.ChartListService;
+import com.royware.corona.dashboard.interfaces.charts.ChartServiceListCreator;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
  
 @Service
-public class ChartListServiceImpl implements ChartListService {
-	private static final Logger log = LoggerFactory.getLogger(ChartListServiceImpl.class);
+public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
+	private static final Logger log = LoggerFactory.getLogger(ChartServiceListCreatorImpl.class);
 	private static final int MOVING_AVERAGE_SIZE = 4;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();

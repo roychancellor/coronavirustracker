@@ -1,5 +1,5 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
-package com.royware.corona.dashboard;
+package com.royware.corona.dashboard.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 
 /**
@@ -37,7 +37,7 @@ public class DashboardController {
 	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
 		map.addAttribute("region", region);
 
-		for(Regions regionEnum : Regions.values()) {
+		for(RegionsData regionEnum : RegionsData.values()) {
 			map.addAttribute(regionEnum.name(), regionEnum.name());
 		}
 
@@ -55,7 +55,6 @@ public class DashboardController {
 		log.info("Making dashboard for region: " + region);
 
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
-//			return "redirect:corona";
 			return "connect-error-popup";
 		}
 		return JspPageNames.DASHBOARD_PAGE.toString();

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WorldRecordsOurWorldInData {
+public class WorldDataSourceOurWorldInData {
 	@JsonProperty("date") private String dateStringYYYY_MM_DD;
 	@JsonProperty("total_cases") private long totalCases;
 	@JsonProperty("new_cases") private long newCases;
@@ -12,7 +12,7 @@ public class WorldRecordsOurWorldInData {
 	@JsonProperty("new_deaths") private long newDeaths;
 	@JsonProperty("population") private long population;
 
-	public WorldRecordsOurWorldInData() {
+	public WorldDataSourceOurWorldInData() {
 		super();
 	}
 
@@ -92,7 +92,7 @@ public class WorldRecordsOurWorldInData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		WorldRecordsOurWorldInData other = (WorldRecordsOurWorldInData) obj;
+		WorldDataSourceOurWorldInData other = (WorldDataSourceOurWorldInData) obj;
 		if (dateStringYYYY_MM_DD == null) {
 			if (other.dateStringYYYY_MM_DD != null)
 				return false;

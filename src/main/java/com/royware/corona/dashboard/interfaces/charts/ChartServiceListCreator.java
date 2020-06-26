@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 
 @Service
-public interface ChartListService {
+public interface ChartServiceListCreator {
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAndTotalCasesVersusTimeList(List<T> caseList);
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> caseList);
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> caseList);

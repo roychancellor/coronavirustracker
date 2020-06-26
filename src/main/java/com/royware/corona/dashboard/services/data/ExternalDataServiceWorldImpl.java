@@ -24,10 +24,10 @@ import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.model.data.WorldData;
-import com.royware.corona.dashboard.model.data.WorldRecordsEuroCDC;
-import com.royware.corona.dashboard.model.data.WorldRecordsOurWorldInData;
+import com.royware.corona.dashboard.model.data.WorldDataSourceEuroCDC;
+import com.royware.corona.dashboard.model.data.WorldDataSourceOurWorldInData;
 
-public class WorldDataServiceImpl implements ExternalDataService, WorldDataServiceCaller {
+public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -35,7 +35,7 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 	private Environment env;
 		
 	private ConcurrentMapCache cacheManager;
-	private static final Logger log = LoggerFactory.getLogger(WorldDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 
 	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
@@ -70,12 +70,12 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 	}
 	
 	private List<WorldData> getDataFromEuroCDC() {
-		WorldRecordsEuroCDC worldData = null;
+		WorldDataSourceEuroCDC worldData = null;
 		
 		int tries = 0;
 		do {	
 			try {
-				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL_EUROCDC.getName(), WorldRecordsEuroCDC.class);
+				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL_EUROCDC.getName(), WorldDataSourceEuroCDC.class);
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM EURO CDC *****");
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
@@ -93,15 +93,15 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 	}
 	
 	private List<WorldData> getDataFromOurWorldInData() {
-		Map<String, List<WorldRecordsOurWorldInData>> worldData;
+		Map<String, List<WorldDataSourceOurWorldInData>> worldData;
 		ObjectMapper mapper = new ObjectMapper();
 		
 		int tries = 0;
 		do {
 			try {
 				URL jsonUrl = new URL(DataUrls.WORLD_DATA_URL_OWID.getName());
-				TypeReference<LinkedHashMap<String, List<WorldRecordsOurWorldInData>>> tr = new TypeReference<LinkedHashMap<String, List<WorldRecordsOurWorldInData>>>() {
-				};
+				TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>> tr =
+						new TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>>() {/*do nothing*/};
 				worldData = mapper.readValue(jsonUrl, tr);
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM OUR WORLD IN DATA *****");
 			} catch (JsonParseException e) {
@@ -132,19 +132,19 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 		return worldDataListFromMap(worldData);
 	}
 	
-	private List<WorldData> worldDataListFromMap(Map<String, List<WorldRecordsOurWorldInData>> worldDataMap) {
+	private List<WorldData> worldDataListFromMap(Map<String, List<WorldDataSourceOurWorldInData>> worldDataMap) {
 		List<WorldData> worldDataList = new ArrayList<>();
 		
 		for(String countryKey : worldDataMap.keySet()) {
-			for(WorldRecordsOurWorldInData wr : worldDataMap.get(countryKey)) {
-				worldDataList.add(worldDataFromWorldRecord(wr, countryKey));
+			for(WorldDataSourceOurWorldInData wr : worldDataMap.get(countryKey)) {
+				worldDataList.add(worldDataFromWorldDataSourceOwid(wr, countryKey));
 			}
 		}
 		
 		return worldDataList;
 	}
 	
-	private WorldData worldDataFromWorldRecord(WorldRecordsOurWorldInData wr, String countryKey) {
+	private WorldData worldDataFromWorldDataSourceOwid(WorldDataSourceOurWorldInData wr, String countryKey) {
 		WorldData wd = new WorldData();
 		wd.setTotalDeaths((int)wr.getTotalDeaths());
 		wd.setTotalPositiveCases((int)wr.getTotalCases());

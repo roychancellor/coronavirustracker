@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
@@ -59,9 +59,9 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			regionPopulation = dashboardMultiRegionService.getMultiRegionPopulation(regionsOnlyCsvString);
 			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(regionsOnlyCsvString, dataService);
 		} else {
-			fullRegionString = Regions.valueOf(rawRegionString).getRegionData().getFullName();
-			regionPopulation = Regions.valueOf(rawRegionString).getRegionData().getPopulation();
-			dataList = Regions.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
+			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
+			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
+			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
 		}
 		log.info("Finished making the data list...");
 		

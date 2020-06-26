@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
@@ -42,39 +42,109 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		
 		////////// CHART DATA LISTS - CASES //////////
 		log.info("Making all the chart data lists for CASES");
-		List<List<Map<Object, Object>>> chartDataCasesByTime = chartService
-				.getTotalCasesVersusTimeWithExponentialFit(dataList);
-		List<List<Map<Object, Object>>> chartDataRateOfCasesByTime = chartService
-				.getDailyRateOfChangeOfCasesWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime = chartService
-				.getDailyAccelerationOfCasesWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService
-				.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
+		List<List<Map<Object, Object>>> chartDataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(dataList);
+		List<List<Map<Object, Object>>> chartDataRateOfCasesByTime = chartService.getDailyRateOfChangeOfCasesWithMovingAverage(dataList);
+		List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime = chartService.getDailyAccelerationOfCasesWithMovingAverage(dataList);
+		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
 		
 		////////// CHART DATA LISTS - DEATHS /////////
 		log.info("Making all the chart data lists for DEATHS");
-		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartService
-				.getTotalDeathsVersusTimeWithExponentialFit(dataList);
-		List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime = chartService
-				.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime = chartService
-				.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService
-				.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
+		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartService.getTotalDeathsVersusTimeWithExponentialFit(dataList);
+		List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
+		List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime = chartService.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
+		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
 
 		////////// CHART DATA LISTS - TESTS /////////
 		List<List<Map<Object, Object>>> chartDataTestsByTime = null;
 		List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime = null;
 		if(isNotWorld) {
 			log.info("Making all the chart data lists for TESTS");
-			chartDataTestsByTime = chartService
-					.getDailyTestsTotalTestsVersusTime(dataList);
-			chartDataRatioOfCasesToTestsByTime = chartService
-					.getDailyRatioCasesToTestsWithMovingAverage(dataList);
+			chartDataTestsByTime = chartService.getDailyTestsTotalTestsVersusTime(dataList);
+			chartDataRatioOfCasesToTestsByTime = chartService.getDailyRatioCasesToTestsWithMovingAverage(dataList);
 		}
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - ORIGINAL");
+		makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataRateOfCasesByTime,
+				chartDataAccelOfCasesByTime, chartDataDeathsByTime, chartDataRateOfDeathsByTime,
+				chartDataAccelOfDeathsByTime);
+		
+		if(isNotWorld) {
+			log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY TESTING");
+			makeDashboardStatsForUSRegionsByTesting(dataList, dashStats);
+		}
+		
+		////////// CHART CONFIGURATION - CASES ///////////
+		log.info("Configuring all the charts for CASES...");
+		DashboardChartConfig chartConfigCasesByTime = chartConfigCasesByTime(region, chartDataCasesByTime);
+		DashboardChartConfig chartConfigRateOfChangeOfCases = chartConfigRateOfChangeOfCases(region, chartDataRateOfCasesByTime);
+		DashboardChartConfig chartConfigAccelerationOfCases = chartConfigAccelerationOfCases(region, chartDataAccelOfCasesByTime);
+		DashboardChartConfig chartConfigRateOfCasesVersusCases = chartConfigRateOfCasesVersusCases(region, chartDataChangeOfCasesByCases);
+		
+		////////// CHART CONFIGURATION - DEATHS ///////////
+		log.info("Configuring all the charts for DEATHS...");
+		DashboardChartConfig chartConfigDeathsByTime = chartConfigDeathsByTime(region, chartDataDeathsByTime);
+		DashboardChartConfig chartConfigRateOfChangeOfDeaths = chartConfigRateOfChangeOfDeaths(region, chartDataRateOfDeathsByTime);
+		DashboardChartConfig chartConfigAccelerationOfDeaths = chartConfigAccelerationOfDeaths(region, chartDataAccelOfDeathsByTime);
+		DashboardChartConfig chartConfigRateOfDeathsVersusDeaths = chartConfigRateOfDeathsVersusDeaths(region, chartDataChangeOfDeathsByDeaths);
+		
+		////////// CHART CONFIGURATION - TESTS ///////////
+		DashboardChartConfig chartConfigTestsByTime = null;
+		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime = null;
+		if(isNotWorld) {
+			log.info("Configuring all the charts for TESTS...");
+			chartConfigTestsByTime = chartConfigTestsByTime(region, chartDataTestsByTime);
+			chartConfigRatioOfCasesToTestsByTime = chartConfigRatioOfCasesToTestsByTime(region, chartDataRatioOfCasesToTestsByTime);
+		}
+		
+		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
+		log.info("Writing all the configurations to the dashboardList...");
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataCasesByTime), chartConfigCasesByTime));
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfCasesByTime), chartConfigRateOfChangeOfCases));
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfCasesByTime), chartConfigAccelerationOfCases));
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfCasesByCases), chartConfigRateOfCasesVersusCases));
+		
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataDeathsByTime), chartConfigDeathsByTime));
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfDeathsByTime), chartConfigRateOfChangeOfDeaths));
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfDeathsByTime), chartConfigAccelerationOfDeaths));
+		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfDeathsByDeaths), chartConfigRateOfDeathsVersusDeaths));
+		
+		if(isNotWorld) {
+			dashboardList.add(new Dashboard(new DashboardChartData(chartDataTestsByTime), chartConfigTestsByTime));
+			dashboardList.add(new Dashboard(new DashboardChartData(chartDataRatioOfCasesToTestsByTime), chartConfigRatioOfCasesToTestsByTime));
+		}
+
+		return dashboardList;
+	}
+
+	@Override
+	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats) {
+		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
+		log.info("Getting U.S. data for populating By U.S. Totals row of dashboard...");
+		List<UnitedStatesData> usaData = RegionsData.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(RegionsData.USA.name()));
+		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
+		log.info("Making totalUsCases");
+		dashStats.setTotalUsCases(totalUsCases);
+		log.info("Making proportionOfRegionCasesToUsCases");
+		dashStats.setProportionOfRegionCasesToUsCases(dashStats.getCasesTotal() * 100.0 / totalUsCases);
+		int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
+		log.info("Making totalUsDeaths");
+		dashStats.setTotalUsDeaths(totalUsDeaths);
+		log.info("Making proportionOfRegionDeathsToUsCases");
+		dashStats.setProportionOfRegionDeathsToUsDeaths(dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
+		log.info("Making proportionOfRegionPopToUsPop");
+		dashStats.setProportionOfRegionPopToUsPop(regionPopulation * 100.0 / RegionsData.USA.getRegionData().getPopulation());
+	}
+
+	@Override
+	public void makeDashboardStatsForRegion(DashboardStatistics dashStats,
+			List<List<Map<Object, Object>>> chartDataCasesByTime,
+			List<List<Map<Object, Object>>> chartDataRateOfCasesByTime,
+			List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime,
+			List<List<Map<Object, Object>>> chartDataDeathsByTime,
+			List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime,
+			List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime) {
+		
 		dashStats.setCasesTotal((int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setCasesToday((int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("y")
 				- (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 2).get("y"));
@@ -89,10 +159,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
 				(double) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
-		
-		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY TESTING");
+	}
+
+	@Override
+	public <T extends CanonicalData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats) {
 		log.info("Getting the region population from the Regions enum");
-		int usaPop = Regions.USA.getRegionData().getPopulation();
+		int usaPop = RegionsData.USA.getRegionData().getPopulation();
 		log.info("Making total tests conducted");
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
@@ -111,9 +183,10 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Making ProportionOfDeathsOfExtrapolatedCases");
 		dashStats.setProportionOfDeathsOfExtrapolatedCases(dataList.get(dataList.size() - 1).getTotalDeaths()
 				* 100.0 / (dashStats.getProportionOfPositiveTests() * usaPop));
-		
-		////////// CHART CONFIGURATION - CASES ///////////
-		log.info("Configuring all the charts for CASES...");
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
 		DashboardChartConfig chartConfigCasesByTime = new DashboardChartConfig("Time History of Cases " + region,
 				"Days Since Cases > 0", "Total Cases", "scatter");
 		chartConfigCasesByTime.setyAxisNumberSuffix("");
@@ -137,7 +210,14 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigCasesByTime.setLegendVerticalAlign("top");
 		chartConfigCasesByTime.setDataSeries1Name("Total Cases");
 		chartConfigCasesByTime.setDataSeries2Name("4-day Moving Average of New Cases");
-		
+		return chartConfigCasesByTime;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfChangeOfCases(String region, List<List<Map<Object, Object>>> chartDataRateOfCasesByTime) {
+		int maxX;
+		int maxY;
+		int factor;
 		DashboardChartConfig chartConfigRateOfChangeOfCases = new DashboardChartConfig(
 				"Rate of Change of Cases in " + region, "Days Since Cases > 0", "Percent Change in New Cases",
 				"scatter");
@@ -166,7 +246,14 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfChangeOfCases.setLegendVerticalAlign("top");
 		chartConfigRateOfChangeOfCases.setDataSeries1Name("% Change in Cases");
 		chartConfigRateOfChangeOfCases.setDataSeries2Name("4-day Moving Average");
-		
+		return chartConfigRateOfChangeOfCases;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigAccelerationOfCases(String region, List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime) {
+		int maxX;
+		int maxY;
+		int factor;
 		DashboardChartConfig chartConfigAccelerationOfCases = new DashboardChartConfig(
 				"Acceleration of Cases in " + region, "Days Since Cases > 0", "Percent Change in the Rate of New Cases",
 				"scatter");
@@ -203,7 +290,11 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigAccelerationOfCases.setLegendVerticalAlign("top");
 		chartConfigAccelerationOfCases.setDataSeries1Name("Acceleration of Cases");
 		chartConfigAccelerationOfCases.setDataSeries2Name("4-day Moving Average");
-		
+		return chartConfigAccelerationOfCases;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfCasesVersusCases(String region, List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases) {
 		DashboardChartConfig chartConfigRateOfCasesVersusCases = new DashboardChartConfig(
 				"Detecting Inflection of Cases in " + region, "Total Cases", "Daily Change in Total Cases", "scatter");
 		chartConfigRateOfCasesVersusCases.setyAxisNumberSuffix("");
@@ -232,9 +323,14 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfCasesVersusCases.setLegendVerticalAlign("top");
 		chartConfigRateOfCasesVersusCases.setDataSeries1Name("Daily change in cases");
 		chartConfigRateOfCasesVersusCases.setDataSeries2Name("Pure exponential (k = 0.3)");
-		
-		////////// CHART CONFIGURATION - DEATHS ///////////
-		log.info("Configuring all the charts for DEATHS...");
+		return chartConfigRateOfCasesVersusCases;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigDeathsByTime(String region, List<List<Map<Object, Object>>> chartDataDeathsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
 		DashboardChartConfig chartConfigDeathsByTime = new DashboardChartConfig("Time History of Deaths in " + region,
 				"Days Since Deaths > 0", "Total Deaths", "scatter");
 		chartConfigDeathsByTime.setyAxisNumberSuffix("");
@@ -258,7 +354,14 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigDeathsByTime.setLegendVerticalAlign("top");
 		chartConfigDeathsByTime.setDataSeries1Name("Total Deaths");
 		chartConfigDeathsByTime.setDataSeries2Name("4-day Moving Average of New Deaths");
-		
+		return chartConfigDeathsByTime;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfChangeOfDeaths(String region, List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
 		DashboardChartConfig chartConfigRateOfChangeOfDeaths = new DashboardChartConfig(
 				"Rate of Change of Deaths in " + region, "Days Since Deaths > 0", "Percent Change in New Deaths",
 				"scatter");
@@ -287,7 +390,15 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfChangeOfDeaths.setLegendVerticalAlign("top");
 		chartConfigRateOfChangeOfDeaths.setDataSeries1Name("% change in deaths");
 		chartConfigRateOfChangeOfDeaths.setDataSeries2Name("4-day Moving Average");
-		
+		return chartConfigRateOfChangeOfDeaths;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigAccelerationOfDeaths(String region, List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		int minY;
 		DashboardChartConfig chartConfigAccelerationOfDeaths = new DashboardChartConfig(
 				"Acceleration of Deaths in " + region, "Days Since Deaths > 0", "Percent Change in the Rate of New Deaths",
 				"scatter");
@@ -322,7 +433,14 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigAccelerationOfDeaths.setLegendVerticalAlign("top");
 		chartConfigAccelerationOfDeaths.setDataSeries1Name("Acceleration of Deaths");
 		chartConfigAccelerationOfDeaths.setDataSeries2Name("4-day Moving Average");
-		
+		return chartConfigAccelerationOfDeaths;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfDeathsVersusDeaths(String region, List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths) {
+		int cases;
+		int exp;
+		Double minValue;
 		DashboardChartConfig chartConfigRateOfDeathsVersusDeaths = new DashboardChartConfig(
 				"Detecting Inflection of Deaths in " + region, "Total Deaths", "Daily Change in Total Deaths",
 				"scatter");
@@ -353,105 +471,79 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfDeathsVersusDeaths.setLegendVerticalAlign("top");
 		chartConfigRateOfDeathsVersusDeaths.setDataSeries1Name("Daily change in deaths");
 		chartConfigRateOfDeathsVersusDeaths.setDataSeries2Name("Pure exponential (k = 0.3)");
-		
-		////////// CHART CONFIGURATION - TESTS ///////////
-		DashboardChartConfig chartConfigTestsByTime = null;
-		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime = null;
-		if(isNotWorld) {
-			log.info("Configuring all the charts for TESTS...");
-			chartConfigTestsByTime = new DashboardChartConfig("Time History of Tests " + region,
-					"Days Since Tests > 0", "Total Tests", "scatter");
-			chartConfigTestsByTime.setyAxisNumberSuffix("");
-			chartConfigTestsByTime.setxAxisPosition("bottom");
-			chartConfigTestsByTime.setxAxisLogarithmic("false");
-			chartConfigTestsByTime.setyAxisPosition("left");
-			chartConfigTestsByTime.setyAxisLogarithmic("false");
-			chartConfigTestsByTime.setShowLegend("true");
-			chartConfigTestsByTime.setDataPointSize(1);
-			chartConfigTestsByTime.setxGridDashType("dot");
-			chartConfigTestsByTime.setxAxisMin(0);
-			maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
-			chartConfigTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-			chartConfigTestsByTime.setyAxisMin(0);
-			maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
-			factor = (int) Math.pow(10, (int) Math.log10(maxY));
-			chartConfigTestsByTime.setyAxisMax(maxY / factor * factor + factor);
-			chartConfigTestsByTime.setyAxisInterval(factor);
-	
-			chartConfigTestsByTime.setLegendHorizonalAlign("left");
-			chartConfigTestsByTime.setLegendVerticalAlign("top");
-			chartConfigTestsByTime.setDataSeries1Name("Total Tests");
-			chartConfigTestsByTime.setDataSeries2Name("4-day Moving Average of New Tests");
-			
-			chartConfigRatioOfCasesToTestsByTime = new DashboardChartConfig(
-					"Ratio of Positives to Tests in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
-					"scatter");
-			chartConfigRatioOfCasesToTestsByTime.setyAxisNumberSuffix("%");
-			chartConfigRatioOfCasesToTestsByTime.setxAxisPosition("bottom");
-			chartConfigRatioOfCasesToTestsByTime.setxAxisLogarithmic("false");
-			chartConfigRatioOfCasesToTestsByTime.setyAxisPosition("left");
-			chartConfigRatioOfCasesToTestsByTime.setyAxisLogarithmic("false");
-			chartConfigRatioOfCasesToTestsByTime.setShowLegend("true");
-			chartConfigRatioOfCasesToTestsByTime.setDataPointSize(1);
-			chartConfigRatioOfCasesToTestsByTime.setxGridDashType("dot");
-			chartConfigRatioOfCasesToTestsByTime.setxAxisMin(0);
-			maxX = (int) chartDataRatioOfCasesToTestsByTime.get(0).get(chartDataRatioOfCasesToTestsByTime.get(0).size() - 1).get("x");
-			chartConfigRatioOfCasesToTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-			chartConfigRatioOfCasesToTestsByTime.setyAxisMin(0);
-			maxY = getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
-			maxY = maxY >= 100 ? 99 : maxY;
-			factor = (int) Math.pow(10, (int) Math.log10(maxY));
-			if (factor == 0) {
-				factor = 10;
-			}
-			chartConfigRatioOfCasesToTestsByTime.setyAxisMax(maxY / factor * factor + factor);
-			chartConfigRatioOfCasesToTestsByTime.setyAxisInterval(factor);
-	
-			chartConfigRatioOfCasesToTestsByTime.setLegendHorizonalAlign("right");
-			chartConfigRatioOfCasesToTestsByTime.setLegendVerticalAlign("top");
-			chartConfigRatioOfCasesToTestsByTime.setDataSeries1Name("% Positive per Test");
-			chartConfigRatioOfCasesToTestsByTime.setDataSeries2Name("4-day Moving Average");
-		}
-		
-		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
-		log.info("Writing all the configurations to the dashboardList...");
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataCasesByTime), chartConfigCasesByTime));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfCasesByTime), chartConfigRateOfChangeOfCases));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfCasesByTime), chartConfigAccelerationOfCases));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfCasesByCases), chartConfigRateOfCasesVersusCases));
-		
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataDeathsByTime), chartConfigDeathsByTime));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfDeathsByTime), chartConfigRateOfChangeOfDeaths));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfDeathsByTime), chartConfigAccelerationOfDeaths));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfDeathsByDeaths), chartConfigRateOfDeathsVersusDeaths));
-		
-		if(isNotWorld) {
-			dashboardList.add(new Dashboard(new DashboardChartData(chartDataTestsByTime), chartConfigTestsByTime));
-			dashboardList.add(new Dashboard(new DashboardChartData(chartDataRatioOfCasesToTestsByTime), chartConfigRatioOfCasesToTestsByTime));
-		}
-
-		return dashboardList;
+		return chartConfigRateOfDeathsVersusDeaths;
 	}
 
 	@Override
-	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats) {
-		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
-		log.info("Getting U.S. data for populating By U.S. Totals row of dashboard...");
-		List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
-		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
-		log.info("Making totalUsCases");
-		dashStats.setTotalUsCases(totalUsCases);
-		log.info("Making proportionOfRegionCasesToUsCases");
-		dashStats.setProportionOfRegionCasesToUsCases(dashStats.getCasesTotal() * 100.0 / totalUsCases);
-		int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
-		log.info("Making totalUsDeaths");
-		dashStats.setTotalUsDeaths(totalUsDeaths);
-		log.info("Making proportionOfRegionDeathsToUsCases");
-		dashStats.setProportionOfRegionDeathsToUsDeaths(dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
-		log.info("Making proportionOfRegionPopToUsPop");
-		dashStats.setProportionOfRegionPopToUsPop(regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
+	public DashboardChartConfig chartConfigRatioOfCasesToTestsByTime(String region, List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime;
+		chartConfigRatioOfCasesToTestsByTime = new DashboardChartConfig(
+				"Ratio of Positives to Tests in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
+				"scatter");
+		chartConfigRatioOfCasesToTestsByTime.setyAxisNumberSuffix("%");
+		chartConfigRatioOfCasesToTestsByTime.setxAxisPosition("bottom");
+		chartConfigRatioOfCasesToTestsByTime.setxAxisLogarithmic("false");
+		chartConfigRatioOfCasesToTestsByTime.setyAxisPosition("left");
+		chartConfigRatioOfCasesToTestsByTime.setyAxisLogarithmic("false");
+		chartConfigRatioOfCasesToTestsByTime.setShowLegend("true");
+		chartConfigRatioOfCasesToTestsByTime.setDataPointSize(1);
+		chartConfigRatioOfCasesToTestsByTime.setxGridDashType("dot");
+		chartConfigRatioOfCasesToTestsByTime.setxAxisMin(0);
+		maxX = (int) chartDataRatioOfCasesToTestsByTime.get(0).get(chartDataRatioOfCasesToTestsByTime.get(0).size() - 1).get("x");
+		chartConfigRatioOfCasesToTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfigRatioOfCasesToTestsByTime.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
+		maxY = maxY >= 100 ? 99 : maxY;
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfigRatioOfCasesToTestsByTime.setyAxisMax(maxY / factor * factor + factor);
+		chartConfigRatioOfCasesToTestsByTime.setyAxisInterval(factor);
+
+		chartConfigRatioOfCasesToTestsByTime.setLegendHorizonalAlign("right");
+		chartConfigRatioOfCasesToTestsByTime.setLegendVerticalAlign("top");
+		chartConfigRatioOfCasesToTestsByTime.setDataSeries1Name("% Positive per Test");
+		chartConfigRatioOfCasesToTestsByTime.setDataSeries2Name("4-day Moving Average");
+		return chartConfigRatioOfCasesToTestsByTime;
 	}
 
+	@Override
+	public DashboardChartConfig chartConfigTestsByTime(String region, List<List<Map<Object, Object>>> chartDataTestsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfigTestsByTime;
+		chartConfigTestsByTime = new DashboardChartConfig("Time History of Tests " + region,
+				"Days Since Tests > 0", "Total Tests", "scatter");
+		chartConfigTestsByTime.setyAxisNumberSuffix("");
+		chartConfigTestsByTime.setxAxisPosition("bottom");
+		chartConfigTestsByTime.setxAxisLogarithmic("false");
+		chartConfigTestsByTime.setyAxisPosition("left");
+		chartConfigTestsByTime.setyAxisLogarithmic("false");
+		chartConfigTestsByTime.setShowLegend("true");
+		chartConfigTestsByTime.setDataPointSize(1);
+		chartConfigTestsByTime.setxGridDashType("dot");
+		chartConfigTestsByTime.setxAxisMin(0);
+		maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
+		chartConfigTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfigTestsByTime.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		chartConfigTestsByTime.setyAxisMax(maxY / factor * factor + factor);
+		chartConfigTestsByTime.setyAxisInterval(factor);
+
+		chartConfigTestsByTime.setLegendHorizonalAlign("left");
+		chartConfigTestsByTime.setLegendVerticalAlign("top");
+		chartConfigTestsByTime.setDataSeries1Name("Total Tests");
+		chartConfigTestsByTime.setDataSeries2Name("4-day Moving Average of New Tests");
+		return chartConfigTestsByTime;
+	}
+
+	//////// HELPER METHODS /////////
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
 		Double min = Double.valueOf(dataList.get(0).get("y").toString());
 
