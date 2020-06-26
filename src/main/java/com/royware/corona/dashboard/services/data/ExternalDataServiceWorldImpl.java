@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,6 +28,7 @@ import com.royware.corona.dashboard.model.data.WorldData;
 import com.royware.corona.dashboard.model.data.WorldDataSourceEuroCDC;
 import com.royware.corona.dashboard.model.data.WorldDataSourceOurWorldInData;
 
+@Component
 public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
