@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
@@ -92,7 +92,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY TESTING");
 		log.info("Getting the region population from the Regions enum");
-		int usaPop = Regions.USA.getRegionData().getPopulation();
+		int usaPop = RegionsData.USA.getRegionData().getPopulation();
 		log.info("Making total tests conducted");
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
@@ -437,7 +437,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats) {
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
 		log.info("Getting U.S. data for populating By U.S. Totals row of dashboard...");
-		List<UnitedStatesData> usaData = Regions.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(Regions.USA.name()));
+		List<UnitedStatesData> usaData = RegionsData.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(RegionsData.USA.name()));
 		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
 		log.info("Making totalUsCases");
 		dashStats.setTotalUsCases(totalUsCases);
@@ -449,7 +449,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Making proportionOfRegionDeathsToUsCases");
 		dashStats.setProportionOfRegionDeathsToUsDeaths(dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
 		log.info("Making proportionOfRegionPopToUsPop");
-		dashStats.setProportionOfRegionPopToUsPop(regionPopulation * 100.0 / Regions.USA.getRegionData().getPopulation());
+		dashStats.setProportionOfRegionPopToUsPop(regionPopulation * 100.0 / RegionsData.USA.getRegionData().getPopulation());
 	}
 
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {

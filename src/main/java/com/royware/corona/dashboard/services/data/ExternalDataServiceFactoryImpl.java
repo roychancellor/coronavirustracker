@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 
@@ -39,10 +39,10 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 		ExternalDataService dataService;
 		
 		log.info("getExternalDataService trying to make dataService for " + regionOfService);
-		if(regionOfService.equalsIgnoreCase(Regions.USA.name())) {
-			log.info("Making dataService for " + Regions.USA.name());
+		if(regionOfService.equalsIgnoreCase(RegionsData.USA.name())) {
+			log.info("Making dataService for " + RegionsData.USA.name());
 			dataService = usDataService;
-		} else if(regionOfService.equalsIgnoreCase(Regions.USA_NO_NY.name())) {
+		} else if(regionOfService.equalsIgnoreCase(RegionsData.USA_NO_NY.name())) {
 			dataService = usExcludingStateDataService;
 		} else if(regionOfService.length() == 2) {
 			dataService = singleStateDataService;

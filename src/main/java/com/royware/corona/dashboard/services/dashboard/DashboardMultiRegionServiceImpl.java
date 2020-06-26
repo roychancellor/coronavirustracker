@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.regions.GeographicalRegions;
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.UsGeoRegions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.data.UnitedStatesData;
@@ -39,7 +39,7 @@ public class DashboardMultiRegionServiceImpl implements DashboardMultiRegionServ
 				if(regions[i].length() == 2) {
 					sb.append(regions[i]);
 				} else {
-					GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regions[i]);
+					UsGeoRegions regionEnum = UsGeoRegions.valueOfLabel(regions[i]);
 					sb.append(regionEnum.getStatesInRegion(regionEnum.getLabel()));
 				}
 				if(i < regions.length - 1) {
@@ -52,7 +52,7 @@ public class DashboardMultiRegionServiceImpl implements DashboardMultiRegionServ
 			if(regionsOnly.length() == 2) {
 				return regionsOnly;
 			}
-			GeographicalRegions regionEnum = GeographicalRegions.valueOfLabel(regionsOnly);
+			UsGeoRegions regionEnum = UsGeoRegions.valueOfLabel(regionsOnly);
 			if(regionEnum == null) {
 				return null;
 			}
@@ -66,7 +66,7 @@ public class DashboardMultiRegionServiceImpl implements DashboardMultiRegionServ
 		//Split the full region name into individual states, then iterate through the states and sum their populations
 		int sumPop = 0;
 		for(String state : arrayOfStates) {
-			sumPop += Regions.valueOf(state).getRegionData().getPopulation();
+			sumPop += RegionsData.valueOf(state).getRegionData().getPopulation();
 		}
 		return sumPop;
 	}

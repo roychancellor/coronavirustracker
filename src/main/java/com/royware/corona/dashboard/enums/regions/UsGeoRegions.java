@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.enums.regions;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum GeographicalRegions {
+public enum UsGeoRegions {
 	FAR_WEST("Far West"),
 	SOUTHWEST("Southwest"),
 	ROCKY_MOUNTAIN("Rocky Mountain"),
@@ -28,7 +28,7 @@ public enum GeographicalRegions {
 		REGION_TO_STATES.put(NEW_ENGLAND.getLabel(), "ME,NH,VT,MA,CT,RI");
 	}
 	
-	private GeographicalRegions(String label) {
+	private UsGeoRegions(String label) {
 		this.label = label;
 	}
 	
@@ -36,8 +36,8 @@ public enum GeographicalRegions {
 		return this.label;
 	}
 	
-	public static GeographicalRegions valueOfLabel(String label) {
-		for(GeographicalRegions e : values()) {
+	public static UsGeoRegions valueOfLabel(String label) {
+		for(UsGeoRegions e : values()) {
 			if(label.equalsIgnoreCase(e.label)) {
 				return e;
 			}

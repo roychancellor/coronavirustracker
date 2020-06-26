@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
-import com.royware.corona.dashboard.enums.regions.Regions;
+import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 
 /**
@@ -37,7 +37,7 @@ public class DashboardController {
 	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
 		map.addAttribute("region", region);
 
-		for(Regions regionEnum : Regions.values()) {
+		for(RegionsData regionEnum : RegionsData.values()) {
 			map.addAttribute(regionEnum.name(), regionEnum.name());
 		}
 
