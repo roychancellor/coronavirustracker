@@ -55,7 +55,6 @@ public class DashboardController {
 		log.info("Making dashboard for region: " + region);
 
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
-//			return "redirect:corona";
 			return "connect-error-popup";
 		}
 		return JspPageNames.DASHBOARD_PAGE.toString();
