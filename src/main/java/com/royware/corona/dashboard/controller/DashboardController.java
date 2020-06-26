@@ -1,5 +1,5 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
-package com.royware.corona.dashboard;
+package com.royware.corona.dashboard.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
