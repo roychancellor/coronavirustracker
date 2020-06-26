@@ -27,7 +27,7 @@ import com.royware.corona.dashboard.model.data.WorldData;
 import com.royware.corona.dashboard.model.data.WorldDataSourceEuroCDC;
 import com.royware.corona.dashboard.model.data.WorldDataSourceOurWorldInData;
 
-public class WorldDataServiceImpl implements ExternalDataService, WorldDataServiceCaller {
+public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -35,7 +35,7 @@ public class WorldDataServiceImpl implements ExternalDataService, WorldDataServi
 	private Environment env;
 		
 	private ConcurrentMapCache cacheManager;
-	private static final Logger log = LoggerFactory.getLogger(WorldDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 
 	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")

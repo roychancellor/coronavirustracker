@@ -20,11 +20,11 @@ import com.royware.corona.dashboard.model.data.UnitedStatesData;
  * Provides service methods for getting dashboard data from external sources
  */
 @Component("singleState")
-public class SingleStateDataServiceImpl implements ExternalDataService {
+public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(SingleStateDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleStateImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override

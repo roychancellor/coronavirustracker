@@ -23,7 +23,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.services.data.WorldDataServiceImpl;
+import com.royware.corona.dashboard.services.data.ExternalDataServiceWorldImpl;
 
 @Configuration
 @PropertySource({"classpath:application-${ENVIRONMENT}.properties"})
@@ -35,7 +35,7 @@ public class ApplicationConfig {
 	@Qualifier("world")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public ExternalDataService worldDataService() {
-		return new WorldDataServiceImpl();
+		return new ExternalDataServiceWorldImpl();
 	}
 	
 	@Bean

@@ -17,7 +17,7 @@ import com.royware.corona.dashboard.model.data.WorldData;
 
 @Component
 public class CacheActionsImpl implements CacheActions {
-	private static final Logger log = LoggerFactory.getLogger(WorldDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 	
 	@Autowired
 	private WorldDataServiceCaller worldDataServiceCaller;

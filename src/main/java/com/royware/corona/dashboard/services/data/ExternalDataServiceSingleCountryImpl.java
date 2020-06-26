@@ -21,14 +21,14 @@ import com.royware.corona.dashboard.model.data.WorldData;
  */
 
 @Component("singleCountry")
-public class SingleCountryDataServiceImpl implements ExternalDataService {
+public class ExternalDataServiceSingleCountryImpl implements ExternalDataService {
 	@Autowired
 	@Qualifier(value = "world")
 	private ExternalDataService worldDataService;
 	
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
-	private static final Logger log = LoggerFactory.getLogger(SingleCountryDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleCountryImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override

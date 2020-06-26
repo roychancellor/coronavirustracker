@@ -17,11 +17,11 @@ import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
 @Component("us")
-public class UsDataServiceImpl implements ExternalDataService {
+public class ExternalDataServiceUSAImpl implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(UsDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAImpl.class);
 
 	/**
 	 * Gets all US data and returns it as an array of objects
