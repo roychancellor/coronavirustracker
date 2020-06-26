@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WorldRecordsEuroCDC {
+public class WorldDataSourceEuroCDC {
 	@JsonProperty("records") private WorldData[] records;
 
-	public WorldRecordsEuroCDC() {
+	public WorldDataSourceEuroCDC() {
 		super();
 	}
 
@@ -42,7 +42,7 @@ public class WorldRecordsEuroCDC {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		WorldRecordsEuroCDC other = (WorldRecordsEuroCDC) obj;
+		WorldDataSourceEuroCDC other = (WorldDataSourceEuroCDC) obj;
 		if (!Arrays.equals(records, other.records))
 			return false;
 		return true;
