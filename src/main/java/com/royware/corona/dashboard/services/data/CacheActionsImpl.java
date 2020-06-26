@@ -1,7 +1,6 @@
 package com.royware.corona.dashboard.services.data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,15 +21,13 @@ public class CacheActionsImpl implements CacheActions {
 	@Autowired
 	private WorldDataServiceCaller worldDataServiceCaller;
 	
-	List<WorldData> newCacheData = new ArrayList<>();
-	
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
 	public void cacheEvictAndRepopulate() {
 		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
 		
 		log.info("Getting the world data from its source...if unavailable, will NOT evict the cache.");
-		newCacheData = getNewCacheDataIfAvailable();
+		List<WorldData> newCacheData = getNewCacheDataIfAvailable();
 		if(newCacheData.isEmpty()) {
 			log.info("The world data source is NOT available. Returning to operation with previous version of cache.");
 			return;
@@ -39,7 +36,7 @@ public class CacheActionsImpl implements CacheActions {
 		evictCache();
 		log.info("DONE EVICTING: " + LocalDateTime.now());		
 		
-		populateCacheFromExistingData(CacheKeys.CACHE_KEY_WORLD.getName());
+		populateCacheFromExistingData(CacheKeys.CACHE_KEY_WORLD.getName(), newCacheData);
 		log.info("DONE REPOPULATING: " + LocalDateTime.now());
 	}
 	
@@ -58,7 +55,7 @@ public class CacheActionsImpl implements CacheActions {
 	}	
 
 	@Override
-	public void populateCacheFromExistingData(String cacheKey) {
+	public void populateCacheFromExistingData(String cacheKey, List<WorldData> newCacheData) {
 		log.info("In the populateCacheFromExistingData method: " + LocalDateTime.now());
 		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
 	}
