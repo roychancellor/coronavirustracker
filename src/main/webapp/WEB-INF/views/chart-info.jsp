@@ -103,20 +103,22 @@
 				</div>
 				</td>
 			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer51" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-51.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
+				cases time history, except for tests conducted. The application computes this as the sum of positive and negative cases.
+				The time scale is the same as cases and deaths.</p>
+				</div>
+				</td>
+				<td class="col-md-2"><div id="chartContainer52" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-52.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the ratio of positive
+				test results to total tests conducted (i.e. positives / total * 100%) over time.</p>
+				</div>
+				</td>
+			</tr>
 		</table>
 		</div>
 	</div>
-<%-- 	<div class="container">
-		<%@ include file="common/header-common.jspf" %>
-		<section>
-			<h1>Chart Information</h1>
-			<h3>Explain the charts here...</h3>
-			<p>
-			<p><a class="btn btn-success" onClick="history.back()">Return to Dashboard</a></p>
-			<!-- href="${pageContext.request.contextPath}/dashboard" -->
-		</section>
-		<%@ include file="common/footer-common.jspf" %>
-	</div> --%>
 	<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 </body>
