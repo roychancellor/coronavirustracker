@@ -100,8 +100,8 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		do {
 			try {
 				URL jsonUrl = new URL(DataUrls.WORLD_DATA_URL_OWID.getName());
-				TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>> tr = new TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>>() {
-				};
+				TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>> tr =
+						new TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>>() {/*do nothing*/};
 				worldData = mapper.readValue(jsonUrl, tr);
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM OUR WORLD IN DATA *****");
 			} catch (JsonParseException e) {
@@ -137,14 +137,14 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		
 		for(String countryKey : worldDataMap.keySet()) {
 			for(WorldDataSourceOurWorldInData wr : worldDataMap.get(countryKey)) {
-				worldDataList.add(worldDataFromWorldRecord(wr, countryKey));
+				worldDataList.add(worldDataFromWorldDataSourceOwid(wr, countryKey));
 			}
 		}
 		
 		return worldDataList;
 	}
 	
-	private WorldData worldDataFromWorldRecord(WorldDataSourceOurWorldInData wr, String countryKey) {
+	private WorldData worldDataFromWorldDataSourceOwid(WorldDataSourceOurWorldInData wr, String countryKey) {
 		WorldData wd = new WorldData();
 		wd.setTotalDeaths((int)wr.getTotalDeaths());
 		wd.setTotalPositiveCases((int)wr.getTotalCases());
