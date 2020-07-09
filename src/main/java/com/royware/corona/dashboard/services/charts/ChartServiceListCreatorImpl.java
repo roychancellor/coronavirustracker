@@ -451,6 +451,17 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		return scatterChartDataLists;
 	}
 
+	////////////// HOSPITALIZATIONS ///////////////
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyHospitalizedNowWithMovingAverageList(List<T> regionCaseList) {
+		return null;
+	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyHospitalizedTotalWithMovingAverageList(List<T> regionCaseList) {
+		return null;
+	}
+
 	//////////// HELPER METHODS /////////////
 	private <T extends CanonicalData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
