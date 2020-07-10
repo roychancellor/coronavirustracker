@@ -36,4 +36,7 @@ public interface DashboardChartService {
 	
 	public DashboardChartConfig chartConfigRatioOfCasesToTestsByTime(String region, List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime);
 	public DashboardChartConfig chartConfigTestsByTime(String region, List<List<Map<Object, Object>>> chartDataTestsByTime);
+	
+	public DashboardChartConfig chartConfigCurrentHospitalizationsByTime(String region, List<List<Map<Object, Object>>> chartDataCurrentHospitalizationsByTime);
+	public DashboardChartConfig chartConfigCumulativeHospitalizationsByTime(String region, List<List<Map<Object, Object>>> chartDataCumulativeHospitalizationsByTime);
 }
