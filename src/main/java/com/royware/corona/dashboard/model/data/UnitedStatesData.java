@@ -7,11 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.UsHospitalData;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UnitedStatesData implements CanonicalData {
+public class UnitedStatesData implements CanonicalData, UsHospitalData {
 	@JsonProperty("date") private int dateInteger;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
