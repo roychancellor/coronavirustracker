@@ -116,6 +116,21 @@
 				</div>
 				</td>
 			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer61" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-61.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
+				cases time history, except for current hospitalizations. Note that not all states report current hospitalizations.
+				The time scale is the same as cases, deaths, and tests.</p>
+				</div>
+				</td>
+				<td class="col-md-2"><div id="chartContainer62" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-62.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
+				cases time history, except for cumulative hospitalizations. Note that not all states report cumulative hospitalizations. Also note
+				that the daily new hospitalizations will not always be the same as the daily new as calculated by the current hospitalizations data.
+				The time scale is the same as cases, deaths, and tests.</p>
+				</div>
+				</td>
+			</tr>
 		</table>
 		</div>
 	</div>

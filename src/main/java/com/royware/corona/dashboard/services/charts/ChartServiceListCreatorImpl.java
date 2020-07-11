@@ -501,7 +501,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 
 	@Override
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyHospitalizedTotalWithMovingAverageList(List<T> regionDataList) {
-		log.info("***** MAKING CUMULATIVE AND DAILY NEW HOSPITALIZATIONS (FROM CULULATIVE) VERSUS TIME *****");
+		log.info("***** MAKING CUMULATIVE AND DAILY NEW HOSPITALIZATIONS (FROM CUMULATIVE) VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
