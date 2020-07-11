@@ -65,7 +65,7 @@ public class DashboardController {
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
 			return "connect-error-popup";
 		}
-		//Set the dashboardCharts for use in /download endpoint
+		//Make the dashboard chart data available to the /download endpoint
 		this.dashboardCharts = (List<DashboardChart>)map.get("allDashboardCharts");
 		return JspPageNames.DASHBOARD_PAGE.toString();
 	}
