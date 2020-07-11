@@ -7,19 +7,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.UsHospitalData;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UnitedStatesData implements CanonicalData {
+public class UnitedStatesData implements CanonicalData, UsHospitalData {
 	@JsonProperty("date") private int dateInteger;
-//	@JsonProperty("dateChecked") private String dateTimeString;
 	@JsonProperty("positive") private int totalPositiveCases;
 	@JsonProperty("negative") private int totalNegativeCases;
 	@JsonProperty("posNeg") private int totalPositivePlusNegative;
 	@JsonProperty("death") private int totalDeaths;
 	@JsonProperty("pending") private int pendingTests;
 	@JsonProperty("state") private String regionString;
+	@JsonProperty("hospitalizedCurrently") private int hospitalizedCurrently;
+	@JsonProperty("hospitalizedCumulative") private int hospitalizedCumulative;
 	
 	@JsonIgnore private LocalDate dateChecked;
 	@JsonIgnore private String dateTimeString;
@@ -105,6 +107,22 @@ public class UnitedStatesData implements CanonicalData {
 	public void setDateChecked(LocalDate dateChecked) {
 		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
 				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
+	}
+
+	public int getHospitalizedCurrently() {
+		return hospitalizedCurrently;
+	}
+
+	public void setHospitalizedCurrently(int hospitalizedCurrently) {
+		this.hospitalizedCurrently = hospitalizedCurrently;
+	}
+
+	public int getHospitalizedCumulative() {
+		return hospitalizedCumulative;
+	}
+
+	public void setHospitalizedCumulative(int hospitalizedCumulative) {
+		this.hospitalizedCumulative = hospitalizedCumulative;
 	}
 
 	@Override

@@ -21,6 +21,8 @@ public class WorldData implements CanonicalData {
 	@JsonIgnore private int totalNegativeCases;
 	@JsonIgnore private int totalDeaths;
 	@JsonIgnore private LocalDate dateChecked;
+	@JsonIgnore private int hospitalizedCurrently;
+	@JsonIgnore private int hospitalizedCumulative;
 	
 	public WorldData() {
 		super();
@@ -133,6 +135,22 @@ public class WorldData implements CanonicalData {
 	@JsonIgnore
 	public void setTotalDeaths(int totalDeaths) {
 		this.totalDeaths = totalDeaths;
+	}
+
+	public int getHospitalizedCurrently() {
+		return hospitalizedCurrently;
+	}
+
+	public void setHospitalizedCurrently(int hospitalizedCurrently) {
+		this.hospitalizedCurrently = hospitalizedCurrently;
+	}
+
+	public int getHospitalizedCumulative() {
+		return hospitalizedCumulative;
+	}
+
+	public void setHospitalizedCumulative(int hospitalizedCumulative) {
+		this.hospitalizedCumulative = hospitalizedCumulative;
 	}
 
 	@Override

@@ -25,20 +25,23 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private Map<Integer, Double> dailyChgDeaths = new LinkedHashMap<>();
 	private Map<Integer, Double> dailyTests = new HashMap<>();
 	private Map<Integer, Double> dailyRatioOfTests = new HashMap<>();
+	private Map<Integer, Double> dailyHospitalizations = new HashMap<>();
+	private Map<Integer, Double> cumulHospitalizations = new HashMap<>();
 	
 	//CASES WILL ALWAYS START WITH INDEX = 0 --> DAY = 0
 	//DEATHS WILL HAVE A VARIABLE-INDEX --> DAY = 0 (DEATHS LAG CASES AND VARIES AMONG REGIONS)
 	//TESTS WILL ALWAYS START WITH INDEX = 0 --> DAY = 0
+	//HOSPITALIZATIONS WILL HAVE A VARIABLE-INDEX --> DAY = 0 (DATA NOT ALWAYS AVAILABLE AMONG REGIONS)
 	
 	////////// CASES ///////////
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAndTotalCasesVersusTimeList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAndTotalCasesVersusTimeList(List<T> regionDataList) {
 		log.info("***** MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		int dayIndex = 0;
-		for(CanonicalData cc : regionCaseList) {
+		for(CanonicalData cc : regionDataList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", cc.getTotalPositiveCases());
@@ -53,16 +56,16 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		int totalToday = 0;
 		int dailyChange = 0;
 		dayIndex = 1;
-		while(dayIndex < regionCaseList.size()) {
-			totalYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases();
-			totalToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
+		while(dayIndex < regionDataList.size()) {
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 			dailyCases.put(dayIndex, dailyChange * 1.0);
 			dayIndex++;
 		}
 		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
-		scatterChartDataLists.add(makeMovingAverageList(dailyCases, MOVING_AVERAGE_SIZE, regionCaseList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
 
@@ -70,7 +73,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	}
 
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfCasesWithMovingAverageList(List<T> regionDataList) {
 		log.info("***** MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -81,9 +84,9 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		double percentChange = 0;
 		this.dailyPctChgCases.clear();
 		int startIndexForRateOfChangeOfCases = 1; //day 1 in list
-		for(int dayIndex = startIndexForRateOfChangeOfCases; dayIndex < regionCaseList.size(); dayIndex++) {
-			valueYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases();
-			valueToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
+		for(int dayIndex = startIndexForRateOfChangeOfCases; dayIndex < regionDataList.size(); dayIndex++) {
+			valueYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+			valueToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			percentChange = (valueToday - valueYesterday) * 100.0 / valueYesterday;
 			
 			dailyPctChgCases.put(dayIndex, percentChange);
@@ -91,13 +94,13 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", percentChange);
-			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgCases, MOVING_AVERAGE_SIZE, regionCaseList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
 
 		log.info("***** DONE MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME *****");
 
@@ -105,7 +108,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	}
 
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyAccelerationOfCasesWithMovingAverageList(List<T> regionDataList) {
 		log.info("***** MAKING ACCELERATION OF DAILY CASES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -117,10 +120,10 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		double valueDayBeforeYesterday;
 		double accelerationOfCases = 0;
 		int startIndexForAccelerationOfCases = 2;  //day 2 in list
-		for(int dayIndex = startIndexForAccelerationOfCases; dayIndex < regionCaseList.size(); dayIndex++) {
-			valueDayBeforeYesterday = regionCaseList.get(dayIndex - 2).getTotalPositiveCases();
-			valueYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases();
-			valueToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
+		for(int dayIndex = startIndexForAccelerationOfCases; dayIndex < regionDataList.size(); dayIndex++) {
+			valueDayBeforeYesterday = regionDataList.get(dayIndex - 2).getTotalPositiveCases();
+			valueYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+			valueToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			accelerationOfCases = ((valueToday - valueYesterday) - (valueYesterday - valueDayBeforeYesterday)) * 100.0 / (valueToday - valueYesterday);
 			
 			dailyAccelCases.put(dayIndex, accelerationOfCases);
@@ -128,13 +131,13 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", accelerationOfCases);
-			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyAccelCases, MOVING_AVERAGE_SIZE + 1, regionCaseList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyAccelCases, MOVING_AVERAGE_SIZE + 1, regionDataList.size()));
 
 		log.info("***** DONE MAKING ACCELERATION OF DAILY CASES VERSUS TIME *****");
 
@@ -142,7 +145,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	}
 	
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCasesWithExponentialLineList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeChangeInTotalCasesVersusCasesWithExponentialLineList(List<T> regionDataList) {
 		log.info("***** MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -151,12 +154,12 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		int valueToday;
 		int valueYesterday;
 		double changeInCases = 0;
-		double maxChangeInCases = regionCaseList.get(0).getTotalPositiveCases();
+		double maxChangeInCases = regionDataList.get(0).getTotalPositiveCases();
 		dailyChgCases.clear();
 		int startIndexForDailyChangeOfCases = 1; //day 1 in list
-		for(int dayIndex = startIndexForDailyChangeOfCases; dayIndex < regionCaseList.size(); dayIndex++) {
-			valueYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases();
-			valueToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
+		for(int dayIndex = startIndexForDailyChangeOfCases; dayIndex < regionDataList.size(); dayIndex++) {
+			valueYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+			valueToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			changeInCases = valueToday - valueYesterday;
 			
 			dailyChgCases.put(dayIndex, changeInCases);
@@ -168,18 +171,18 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPair = new HashMap<>();
 			xyPair.put("x", (valueToday + valueYesterday) / 2);  //use average of yesterday and today as the current case number
 			xyPair.put("y", changeInCases);
-			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
 
 		//make the EXPONENTIAL (will show as straight line on log-log graph)
 		double k = 0.30998; //need to compute this for each dataset using regression on a subset of the data (early days)
-		int minCases = regionCaseList.get(0).getTotalPositiveCases();
+		int minCases = regionDataList.get(0).getTotalPositiveCases();
 		if(minCases <= 0) {
 			minCases = 1;
 		}
-		int maxCases = regionCaseList.get(regionCaseList.size() - 1).getTotalPositiveCases();
+		int maxCases = regionDataList.get(regionDataList.size() - 1).getTotalPositiveCases();
 		if(maxCases <= 0) {
 			maxCases = 10;
 		}
@@ -363,14 +366,14 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 
 	////////////// TESTS ///////////////
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyTestsTotalTestsVersusTimeList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyTestsTotalTestsVersusTimeList(List<T> regionDataList) {
 		log.info("***** MAKING TOTAL AND DAILY TESTS VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		int dayIndex = 0;
-		for(CanonicalData cc : regionCaseList) {
+		for(CanonicalData cc : regionDataList) {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", cc.getTotalPositiveCases() + cc.getTotalNegativeCases());
@@ -385,16 +388,16 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		int totalToday = 0;
 		int dailyChange = 0;
 		dayIndex = 1;
-		while(dayIndex < regionCaseList.size()) {
-			totalYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases() + regionCaseList.get(dayIndex - 1).getTotalNegativeCases();
-			totalToday = regionCaseList.get(dayIndex).getTotalPositiveCases() + regionCaseList.get(dayIndex).getTotalNegativeCases();
+		while(dayIndex < regionDataList.size()) {
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases() + regionDataList.get(dayIndex - 1).getTotalNegativeCases();
+			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases() + regionDataList.get(dayIndex).getTotalNegativeCases();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 			dailyTests.put(dayIndex, dailyChange * 1.0);
 			dayIndex++;
 		}
 		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
-		scatterChartDataLists.add(makeMovingAverageList(dailyTests, MOVING_AVERAGE_SIZE, regionCaseList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyTests, MOVING_AVERAGE_SIZE, regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY TESTS VERSUS TIME *****");
 
@@ -402,7 +405,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	}
 
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRatioCasesToTestsWithMovingAverageList(List<T> regionCaseList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyRatioCasesToTestsWithMovingAverageList(List<T> regionDataList) {
 		log.info("***** MAKING RATIO OF CASES TO TESTS VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -417,16 +420,16 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		double ratio = 0.0;
 		int newCases = 0;
 		int newTests = 0;
-		for(int dayIndex = startIndexForRatioOfCasesToTests; dayIndex < regionCaseList.size(); dayIndex++) {
-			testsToday = regionCaseList.get(dayIndex).getTotalPositiveCases() + regionCaseList.get(dayIndex).getTotalNegativeCases();
-			testsYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases() + regionCaseList.get(dayIndex - 1).getTotalNegativeCases();
+		for(int dayIndex = startIndexForRatioOfCasesToTests; dayIndex < regionDataList.size(); dayIndex++) {
+			testsToday = regionDataList.get(dayIndex).getTotalPositiveCases() + regionDataList.get(dayIndex).getTotalNegativeCases();
+			testsYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases() + regionDataList.get(dayIndex - 1).getTotalNegativeCases();
 			newTests = testsToday - testsYesterday;
 			if(newTests == 0) {
 				dailyRatioOfTests.put(dayIndex, 0.0);
 				continue;
 			}
-			valueYesterday = regionCaseList.get(dayIndex - 1).getTotalPositiveCases();
-			valueToday = regionCaseList.get(dayIndex).getTotalPositiveCases();
+			valueYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+			valueToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			newCases = valueToday - valueYesterday;
 			ratio = newCases * 100.0 / newTests;
 			dailyRatioOfTests.put(dayIndex, ratio);
@@ -438,15 +441,104 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", ratio);
-			xyPair.put("dateChecked", regionCaseList.get(dayIndex).getDateChecked().toString());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyRatioOfTests, MOVING_AVERAGE_SIZE, regionCaseList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyRatioOfTests, MOVING_AVERAGE_SIZE, regionDataList.size()));
 
 		log.info("***** DONE MAKING RATIO OF CASES TO TESTS VERSUS TIME *****");
+
+		return scatterChartDataLists;
+	}
+
+	////////////// HOSPITALIZATIONS ///////////////
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyHospitalizedNowWithMovingAverageList(List<T> regionDataList) {
+		log.info("***** MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS VERSUS TIME *****");
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		List<Map<Object, Object>> dataList = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		//Find the first object having a current hospitalizations > 0 for two consecutive days
+		log.info("Making time history of CURRENT hospitalizations");
+		int startDayIndex = findFirstDayIndexWithPositiveCurrentHospitalizations(regionDataList);
+		int dayIndex = startDayIndex;
+		while(dayIndex < regionDataList.size()) {
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", regionDataList.get(dayIndex).getHospitalizedCurrently());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
+			dataList.add(xyPair);
+			dayIndex++;
+		}
+		scatterChartDataLists.add(dataList);
+
+		//Makes a list of daily new hospitalizations for plotting on the secondary axis of the time chart
+		log.info("Making time history of DAILY NEW hospitalizations");
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
+		dayIndex = startDayIndex + 1;
+		while(dayIndex < regionDataList.size()) {
+			totalYesterday = regionDataList.get(dayIndex - 1).getHospitalizedCurrently();
+			totalToday = regionDataList.get(dayIndex).getHospitalizedCurrently();
+			dailyChange = totalToday - totalYesterday;
+			dailyChange = dailyChange > 0 ? dailyChange : 0;
+			dailyHospitalizations.put(dayIndex, dailyChange * 1.0);
+			dayIndex++;
+		}
+		//make the MOVING AVERAGE of daily new hospitalizations to smooth out some of the noise
+		log.info("Making moving average of DAILY NEW hospitalizations");
+		scatterChartDataLists.add(makeMovingAverageList(dailyHospitalizations, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
+		
+		log.info("***** DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS VERSUS TIME *****");
+
+		return scatterChartDataLists;
+	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyHospitalizedTotalWithMovingAverageList(List<T> regionDataList) {
+		log.info("***** MAKING CUMULATIVE AND DAILY NEW HOSPITALIZATIONS (FROM CUMULATIVE) VERSUS TIME *****");
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		List<Map<Object, Object>> dataList = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		//Find the first object having a cumulative hospitalizations > 0 for two consecutive days
+		log.info("Making time history of CUMULATIVE hospitalizations");
+		int startDayIndex = findFirstDayIndexWithPositiveCumulativeHospitalizations(regionDataList);
+		int dayIndex = startDayIndex;
+		while(dayIndex < regionDataList.size()) {
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", regionDataList.get(dayIndex).getHospitalizedCumulative());
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
+			dataList.add(xyPair);
+			dayIndex++;
+		}
+		scatterChartDataLists.add(dataList);
+
+		//Makes a list of daily new hospitalizations for plotting on the secondary axis of the time chart
+		log.info("Making time history of DAILY NEW hospitalizations (from Cumulative)");
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
+		dayIndex = startDayIndex + 1;
+		while(dayIndex < regionDataList.size()) {
+			totalYesterday = regionDataList.get(dayIndex - 1).getHospitalizedCumulative();
+			totalToday = regionDataList.get(dayIndex).getHospitalizedCumulative();
+			dailyChange = totalToday - totalYesterday;
+			dailyChange = dailyChange > 0 ? dailyChange : 0;
+			cumulHospitalizations.put(dayIndex, dailyChange * 1.0);
+			dayIndex++;
+		}
+		//make the MOVING AVERAGE of daily new hospitalizations to smooth out some of the noise
+		log.info("Making moving average of DAILY NEW hospitalizations");
+		scatterChartDataLists.add(makeMovingAverageList(cumulHospitalizations, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
+		
+		log.info("***** DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS (FROM CULULATIVE) VERSUS TIME *****");
 
 		return scatterChartDataLists;
 	}
@@ -454,9 +546,31 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	//////////// HELPER METHODS /////////////
 	private <T extends CanonicalData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
-			if(regionDataList.get(dayIndex).getTotalDeaths() > 0 /*&& regionDataList.get(dayIndex - 1).getTotalDeaths() >= 0*/) {
+			if(regionDataList.get(dayIndex).getTotalDeaths() > 0) {
 				log.info("first day index with positive deaths: " + dayIndex
 						+ " with " + regionDataList.get(dayIndex).getTotalDeaths() + " deaths");
+				return dayIndex;
+			}
+		}
+		return 0;
+	}
+	
+	private <T extends CanonicalData> int findFirstDayIndexWithPositiveCurrentHospitalizations(List<T> regionDataList) {
+		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
+			if(regionDataList.get(dayIndex).getHospitalizedCurrently() > 0) {
+				log.info("first day index with positive current hospitalizations: " + dayIndex
+						+ " with " + regionDataList.get(dayIndex).getHospitalizedCurrently() + " hospitalizations");
+				return dayIndex;
+			}
+		}
+		return 0;
+	}
+	
+	private <T extends CanonicalData> int findFirstDayIndexWithPositiveCumulativeHospitalizations(List<T> regionDataList) {
+		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
+			if(regionDataList.get(dayIndex).getHospitalizedCumulative() > 0) {
+				log.info("first day index with positive cumulative hospitalizations: " + dayIndex
+						+ " with " + regionDataList.get(dayIndex).getHospitalizedCumulative() + " hospitalizations");
 				return dayIndex;
 			}
 		}

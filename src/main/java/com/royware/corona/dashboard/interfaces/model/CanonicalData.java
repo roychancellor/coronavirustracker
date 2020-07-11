@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface CanonicalData {
+public interface CanonicalData extends UsHospitalData {
 	public int getDateInteger();
 	public LocalDate getDateChecked();
 	public int getTotalPositiveCases();
