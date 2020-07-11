@@ -1,6 +1,8 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 package com.royware.corona.dashboard.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.services.dashboard.DownloadChartData;
 
 /**
@@ -30,6 +33,7 @@ public class DashboardController {
 	private DashboardConfigService dashboardConfigService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private List<DashboardChart> dashboardCharts;
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -53,6 +57,7 @@ public class DashboardController {
 	 * @param map the ModelMap
 	 * @return the jsp file name (dashboard)
 	 */
+	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		log.info("Making dashboard for region: " + region);
@@ -60,12 +65,14 @@ public class DashboardController {
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
 			return "connect-error-popup";
 		}
+		//Set the dashboardCharts for use in /download endpoint
+		this.dashboardCharts = (List<DashboardChart>)map.get("allDashboardCharts");
 		return JspPageNames.DASHBOARD_PAGE.toString();
 	}
 
-	@PostMapping(value = "/download-data")
-	public void downloadChartData(@ModelAttribute("region") String region, ModelMap map, HttpServletResponse response) {
-		DownloadChartData.downloadChartData(region, map, response);
+	@PostMapping(value = "/download")
+	public void downloadChartData(HttpServletResponse response) {
+		DownloadChartData.downloadChartData(this.dashboardCharts, response);
 	}
 	
 	/**

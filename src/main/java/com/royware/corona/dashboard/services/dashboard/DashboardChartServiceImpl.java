@@ -15,7 +15,7 @@ import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
-import com.royware.corona.dashboard.model.dashboard.Dashboard;
+import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
@@ -32,10 +32,10 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	private static final Logger log = LoggerFactory.getLogger(DashboardChartServiceImpl.class);
 	
 	@Override
-	public <T extends CanonicalData> List<Dashboard> makeAllDashboardCharts(
+	public <T extends CanonicalData> List<DashboardChart> makeAllDashboardCharts(
 			List<T> dataList, String region, Integer regionPopulation, DashboardStatistics dashStats) {
 		
-		List<Dashboard> dashboardList = new ArrayList<>();
+		List<DashboardChart> dashboardList = new ArrayList<>();
 		boolean isNotWorld = true;
 		if(region.length() == 3 && !region.equalsIgnoreCase("USA")) {
 			isNotWorld = false;
@@ -119,108 +119,120 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
 		log.info("Writing all the configurations to the dashboardList...");
 		///// CASES /////
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataCasesByTime)
 					.withCsvHeader(ChartCsvHeaders.CASES_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigCasesByTime)
+				.setRegion(region)
 				.build());
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataRateOfCasesByTime)
 					.withCsvHeader(ChartCsvHeaders.CASES_RATE.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfChangeOfCases)
+				.setRegion(region)
 				.build());
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataAccelOfCasesByTime)
 					.withCsvHeader(ChartCsvHeaders.CASES_ACCEL.getName())
 					.build())
 				.setChartConfig(chartConfigAccelerationOfCases)
+				.setRegion(region)
 				.build());
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataChangeOfCasesByCases)
 					.withCsvHeader(ChartCsvHeaders.CASES_CHG_BY_CASES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfCasesVersusCases)
+				.setRegion(region)
 				.build());
 
 		///// DEATHS /////
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataDeathsByTime)
 					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigDeathsByTime)
+				.setRegion(region)
 				.build());
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataRateOfDeathsByTime)
 					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfChangeOfDeaths)
+				.setRegion(region)
 				.build());
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataAccelOfDeathsByTime)
 					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigAccelerationOfDeaths)
+				.setRegion(region)
 				.build());
-		dashboardList.add(new Dashboard.Builder()
-				.setChartLists(
+		dashboardList.add(new DashboardChart.Builder()
+				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
 					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
+				.setRegion(region)
 				.build());
 		
 		if(isNotWorld) {
 			///// TESTS /////
-			dashboardList.add(new Dashboard.Builder()
-					.setChartLists(
+			dashboardList.add(new DashboardChart.Builder()
+					.setChartData(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataTestsByTime)
 						.withCsvHeader(ChartCsvHeaders.TESTS_TIME_SERIES.getName())
 						.build())
 					.setChartConfig(chartConfigTestsByTime)
+					.setRegion(region)
 					.build());
-			dashboardList.add(new Dashboard.Builder()
-					.setChartLists(
+			dashboardList.add(new DashboardChart.Builder()
+					.setChartData(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataRatioOfCasesToTestsByTime)
 						.withCsvHeader(ChartCsvHeaders.TESTS_RATIO.getName())
 						.build())
 					.setChartConfig(chartConfigRatioOfCasesToTestsByTime)
+					.setRegion(region)
 					.build());
 
 			///// HOSPITALIZATIONS /////
-			dashboardList.add(new Dashboard.Builder()
-					.setChartLists(
+			dashboardList.add(new DashboardChart.Builder()
+					.setChartData(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataCurrentHospitalizationsByTime)
 						.withCsvHeader(ChartCsvHeaders.HOSP_CURRENT.getName())
 						.build())
 					.setChartConfig(chartConfigCurrentHospitalizationsByTime)
+					.setRegion(region)
 					.build());
-			dashboardList.add(new Dashboard.Builder()
-					.setChartLists(
+			dashboardList.add(new DashboardChart.Builder()
+					.setChartData(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataCumulativeHospitalizationsByTime)
 						.withCsvHeader(ChartCsvHeaders.HOSP_CUMULATIVE.getName())
 						.build())
 					.setChartConfig(chartConfigCumulativeHospitalizationsByTime)
+					.setRegion(region)
 					.build());
 		}
 

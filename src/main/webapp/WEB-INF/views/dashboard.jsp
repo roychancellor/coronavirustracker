@@ -39,8 +39,8 @@
 		<div>
 		<table class="table table-bordered">
 			<tr style="line-height:12px;">
-				<region:form id="download-form" modelAttribute="region" action="${pageContext.request.contextPath}/download-data" method="POST">
-					<td><button class="btn btn-md btn-primary" name="region" value="${fullregion}" type="submit">Download Chart Data</button></td>
+				<region:form id="download-form" modelAttribute="allDashboardCharts" action="${pageContext.request.contextPath}/download" method="POST">
+					<td><button class="btn btn-md btn-primary" name="allDashboardCharts" value="${allDashboardCharts}" type="submit">Download Chart Data</button></td>
 				</region:form>
 				<td style="color:#0000FF;font-size:2em;font-weight:bold;">Cases</td>
 				<td style="color:#770077;font-size:2em;font-weight:bold;">Deaths</td>
@@ -221,7 +221,7 @@
 			
 			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
 				var dataPointsArr = [[], []];
-				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
+				<chart:forEach items="${dataset.chartData.chartLists}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");
