@@ -1,6 +1,8 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 package com.royware.corona.dashboard.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.services.dashboard.DownloadChartData;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
@@ -60,6 +63,11 @@ public class DashboardController {
 		return JspPageNames.DASHBOARD_PAGE.toString();
 	}
 
+	@PostMapping(value = "/download-data")
+	public void downloadChartData(@ModelAttribute("region") String region, ModelMap map, HttpServletResponse response) {
+		DownloadChartData.downloadChartData(region, map, response);
+	}
+	
 	/**
 	 * HTTP GET request handler for /about to direct to the about-dashboard jsp
 	 * @param map the current ModelMap
