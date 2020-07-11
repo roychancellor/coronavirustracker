@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.royware.corona.dashboard.enums.charts.ChartCsvHeaders;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
@@ -122,7 +123,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataCasesByTime)
-					.withCsvHeader("cases")
+					.withCsvHeader(ChartCsvHeaders.CASES_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigCasesByTime)
 				.build());
@@ -130,7 +131,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataRateOfCasesByTime)
-					.withCsvHeader("rateOfCases")
+					.withCsvHeader(ChartCsvHeaders.CASES_RATE.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfChangeOfCases)
 				.build());
@@ -138,7 +139,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataAccelOfCasesByTime)
-					.withCsvHeader("accelOfCases")
+					.withCsvHeader(ChartCsvHeaders.CASES_ACCEL.getName())
 					.build())
 				.setChartConfig(chartConfigAccelerationOfCases)
 				.build());
@@ -146,7 +147,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataChangeOfCasesByCases)
-					.withCsvHeader("chgCasesOverCases")
+					.withCsvHeader(ChartCsvHeaders.CASES_CHG_BY_CASES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfCasesVersusCases)
 				.build());
@@ -156,7 +157,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataDeathsByTime)
-					.withCsvHeader("deaths")
+					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigDeathsByTime)
 				.build());
@@ -164,7 +165,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataRateOfDeathsByTime)
-					.withCsvHeader("rateOfDeaths")
+					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfChangeOfDeaths)
 				.build());
@@ -172,7 +173,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataAccelOfDeathsByTime)
-					.withCsvHeader("accelOfDeaths")
+					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigAccelerationOfDeaths)
 				.build());
@@ -180,7 +181,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartLists(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
-					.withCsvHeader("chgDeathsOverDeaths")
+					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
 				.build());
@@ -191,7 +192,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.setChartLists(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataTestsByTime)
-						.withCsvHeader("tests")
+						.withCsvHeader(ChartCsvHeaders.TESTS_TIME_SERIES.getName())
 						.build())
 					.setChartConfig(chartConfigTestsByTime)
 					.build());
@@ -199,7 +200,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.setChartLists(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataRatioOfCasesToTestsByTime)
-						.withCsvHeader("ratioPositvesToTests")
+						.withCsvHeader(ChartCsvHeaders.TESTS_RATIO.getName())
 						.build())
 					.setChartConfig(chartConfigRatioOfCasesToTestsByTime)
 					.build());
@@ -209,7 +210,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.setChartLists(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataCurrentHospitalizationsByTime)
-						.withCsvHeader("hospCurrent")
+						.withCsvHeader(ChartCsvHeaders.HOSP_CURRENT.getName())
 						.build())
 					.setChartConfig(chartConfigCurrentHospitalizationsByTime)
 					.build());
@@ -217,7 +218,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.setChartLists(
 						new DashboardChartData.Builder()
 						.withChartDataLists(chartDataCumulativeHospitalizationsByTime)
-						.withCsvHeader("hospCumulative")
+						.withCsvHeader(ChartCsvHeaders.HOSP_CUMULATIVE.getName())
 						.build())
 					.setChartConfig(chartConfigCumulativeHospitalizationsByTime)
 					.build());
