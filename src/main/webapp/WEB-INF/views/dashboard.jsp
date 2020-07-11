@@ -148,11 +148,12 @@
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
 		var regionType = "${regionType}";
-		const NUM_CHARTS = regionType == 'world' ? 8 : 10;
+		const NUM_CHARTS = regionType == 'world' ? 8 : 12;
 		const CASES_TIME_HISTORY_INDEX = 0;
 		const DEATHS_TIME_HISTORY_INDEX = 4;
 		const TESTS_TIME_HISTORY_INDEX = 8;
-		const HOSP_TIME_HISTORY_INDEX = 10;
+		const HOSPCUR_TIME_HISTORY_INDEX = 10;
+		const HOSPCUM_TIME_HISTORY_INDEX = 11;
 		
 		//Constants that define the row-column of the chart position on the dashboard
 		const TIME_SERIES_CASES = "11";
@@ -184,8 +185,8 @@
 		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX, TIME_SERIES_TESTS);
 		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATIO_CASES_TO_TESTS);
 		
-		mapIndexToContainerRowCol.set(HOSP_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUR);
-		mapIndexToContainerRowCol.set(HOSP_TIME_HISTORY_INDEX + 1, TIME_SERIES_HOSP_CUMUL);
+		mapIndexToContainerRowCol.set(HOSPCUR_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUR);
+		mapIndexToContainerRowCol.set(HOSPCUM_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUMUL);
 		
 		//MAIN ACTIONS
 		var containers = [];
@@ -198,7 +199,8 @@
  			if(i == CASES_TIME_HISTORY_INDEX ||
  			   i == DEATHS_TIME_HISTORY_INDEX ||
  			   i == TESTS_TIME_HISTORY_INDEX ||
- 			   i == HOSP_TIME_HISTORY_INDEX) {
+ 			   i == HOSPCUR_TIME_HISTORY_INDEX ||
+ 			   i == HOSPCUM_TIME_HISTORY_INDEX) {
  				addLoadEvent(makeChartQuantityByTime(containers[i], configObjects[i], chartArray[i]));
  			} else {
  				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
@@ -257,11 +259,11 @@
 	 				axis2TitleValue = "Daily Deaths";
 	 				pointColorStr = "purple";
 	 				lineColorStr = "green";
-	 			} else if(c < HOSP_TIME_HISTORY_INDEX) {
+	 			} else if(c < HOSPCUR_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Tests";
 	 				pointColorStr = "orange";
 	 				lineColorStr = "black";
-	 			}  else {
+	 			} else {
 	 				axis2TitleValue = "Daily Hospitalizations";
 	 				pointColorStr = "green";
 	 				lineColorStr = "red";
@@ -470,7 +472,8 @@
 	        		if(positionRowCol == TIME_SERIES_CASES
 	        				|| positionRowCol == TIME_SERIES_DEATHS
 	        				|| positionRowCol == TIME_SERIES_TESTS
-	        				|| positionRowCol == TIME_SERIES_HOSP) {
+	        				|| positionRowCol == TIME_SERIES_HOSP_CUR
+	        				|| positionRowCol == TIME_SERIES_HOSP_CUMUL) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")

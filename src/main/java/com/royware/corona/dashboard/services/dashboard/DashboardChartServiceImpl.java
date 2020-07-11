@@ -225,6 +225,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setyAxisMin(0);
 		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
 		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
 		chartConfig.setyAxisMax(maxY / factor * factor + factor);
 		chartConfig.setyAxisInterval(factor);
 
@@ -369,6 +372,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigDeathsByTime.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataDeathsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
 		chartConfigDeathsByTime.setyAxisMax(maxY / factor * factor + factor);
 		chartConfigDeathsByTime.setyAxisInterval(factor);
 
@@ -555,6 +561,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigTestsByTime.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
 		chartConfigTestsByTime.setyAxisMax(maxY / factor * factor + factor);
 		chartConfigTestsByTime.setyAxisInterval(factor);
 
@@ -587,6 +596,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataCurrentHospitalizationsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
 		chartConfig.setyAxisMax(maxY / factor * factor + factor);
 		chartConfig.setyAxisInterval(factor);
 
@@ -619,6 +631,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setyAxisMin(0);
 		maxY = getMaxValueFromListOfXYMaps(chartDataCumulativeHospitalizationsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
 		chartConfig.setyAxisMax(maxY / factor * factor + factor);
 		chartConfig.setyAxisInterval(factor);
 
