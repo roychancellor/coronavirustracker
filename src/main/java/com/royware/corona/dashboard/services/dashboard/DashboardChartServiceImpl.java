@@ -117,23 +117,110 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		
 		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
 		log.info("Writing all the configurations to the dashboardList...");
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataCasesByTime), chartConfigCasesByTime));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfCasesByTime), chartConfigRateOfChangeOfCases));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfCasesByTime), chartConfigAccelerationOfCases));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfCasesByCases), chartConfigRateOfCasesVersusCases));
-		
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataDeathsByTime), chartConfigDeathsByTime));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataRateOfDeathsByTime), chartConfigRateOfChangeOfDeaths));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataAccelOfDeathsByTime), chartConfigAccelerationOfDeaths));
-		dashboardList.add(new Dashboard(new DashboardChartData(chartDataChangeOfDeathsByDeaths), chartConfigRateOfDeathsVersusDeaths));
+		///// CASES /////
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataCasesByTime)
+					.withCsvHeader("cases")
+					.build())
+				.setChartConfig(chartConfigCasesByTime)
+				.build());
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataRateOfCasesByTime)
+					.withCsvHeader("rateOfCases")
+					.build())
+				.setChartConfig(chartConfigRateOfChangeOfCases)
+				.build());
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataAccelOfCasesByTime)
+					.withCsvHeader("accelOfCases")
+					.build())
+				.setChartConfig(chartConfigAccelerationOfCases)
+				.build());
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataChangeOfCasesByCases)
+					.withCsvHeader("chgCasesOverCases")
+					.build())
+				.setChartConfig(chartConfigRateOfCasesVersusCases)
+				.build());
+
+		///// DEATHS /////
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataDeathsByTime)
+					.withCsvHeader("deaths")
+					.build())
+				.setChartConfig(chartConfigDeathsByTime)
+				.build());
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataRateOfDeathsByTime)
+					.withCsvHeader("rateOfDeaths")
+					.build())
+				.setChartConfig(chartConfigRateOfChangeOfDeaths)
+				.build());
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataAccelOfDeathsByTime)
+					.withCsvHeader("accelOfDeaths")
+					.build())
+				.setChartConfig(chartConfigAccelerationOfDeaths)
+				.build());
+		dashboardList.add(new Dashboard.Builder()
+				.setChartLists(
+					new DashboardChartData.Builder()
+					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
+					.withCsvHeader("chgDeathsOverDeaths")
+					.build())
+				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
+				.build());
 		
 		if(isNotWorld) {
 			///// TESTS /////
-			dashboardList.add(new Dashboard(new DashboardChartData(chartDataTestsByTime), chartConfigTestsByTime));
-			dashboardList.add(new Dashboard(new DashboardChartData(chartDataRatioOfCasesToTestsByTime), chartConfigRatioOfCasesToTestsByTime));
+			dashboardList.add(new Dashboard.Builder()
+					.setChartLists(
+						new DashboardChartData.Builder()
+						.withChartDataLists(chartDataTestsByTime)
+						.withCsvHeader("tests")
+						.build())
+					.setChartConfig(chartConfigTestsByTime)
+					.build());
+			dashboardList.add(new Dashboard.Builder()
+					.setChartLists(
+						new DashboardChartData.Builder()
+						.withChartDataLists(chartDataRatioOfCasesToTestsByTime)
+						.withCsvHeader("ratioPositvesToTests")
+						.build())
+					.setChartConfig(chartConfigRatioOfCasesToTestsByTime)
+					.build());
+
 			///// HOSPITALIZATIONS /////
-			dashboardList.add(new Dashboard(new DashboardChartData(chartDataCurrentHospitalizationsByTime), chartConfigCurrentHospitalizationsByTime));
-			dashboardList.add(new Dashboard(new DashboardChartData(chartDataCumulativeHospitalizationsByTime), chartConfigCumulativeHospitalizationsByTime));
+			dashboardList.add(new Dashboard.Builder()
+					.setChartLists(
+						new DashboardChartData.Builder()
+						.withChartDataLists(chartDataCurrentHospitalizationsByTime)
+						.withCsvHeader("hospCurrent")
+						.build())
+					.setChartConfig(chartConfigCurrentHospitalizationsByTime)
+					.build());
+			dashboardList.add(new Dashboard.Builder()
+					.setChartLists(
+						new DashboardChartData.Builder()
+						.withChartDataLists(chartDataCumulativeHospitalizationsByTime)
+						.withCsvHeader("hospCumulative")
+						.build())
+					.setChartConfig(chartConfigCumulativeHospitalizationsByTime)
+					.build());
 		}
 
 		return dashboardList;
