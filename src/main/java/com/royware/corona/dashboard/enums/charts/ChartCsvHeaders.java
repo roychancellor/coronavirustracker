@@ -2,12 +2,12 @@ package com.royware.corona.dashboard.enums.charts;
 
 public enum ChartCsvHeaders {
 	CASES_TIME_SERIES("totalCases"),
-	CASES_RATE("rateOfCases"),
-	CASES_ACCEL("accelCases"),
+	CASES_RATE("rateOfCases%"),
+	CASES_ACCEL("accelCases%"),
 	CASES_CHG_BY_CASES("chgCasesOverCases"),
 	DEATHS_TIME_SERIES("totalDeaths"),
-	DEATHS_RATE("rateOfDeaths"),
-	DEATHS_ACCEL("accelDeaths"),
+	DEATHS_RATE("rateOfDeaths%"),
+	DEATHS_ACCEL("accelDeaths%"),
 	DEATHS_CHG_BY_CASES("chgDeathsOverDeaths"),
 	TESTS_TIME_SERIES("totalTests"),
 	TESTS_RATIO("ratioPositivesToTests"),
