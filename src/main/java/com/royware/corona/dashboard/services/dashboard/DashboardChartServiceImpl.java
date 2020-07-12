@@ -170,7 +170,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataRateOfDeathsByTime)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
+					.withCsvHeader(ChartCsvHeaders.DEATHS_RATE.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfChangeOfDeaths)
 				.setRegion(region)
@@ -179,7 +179,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataAccelOfDeathsByTime)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
+					.withCsvHeader(ChartCsvHeaders.DEATHS_ACCEL.getName())
 					.build())
 				.setChartConfig(chartConfigAccelerationOfDeaths)
 				.setRegion(region)
@@ -188,7 +188,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartData(
 					new DashboardChartData.Builder()
 					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_TIME_SERIES.getName())
+					.withCsvHeader(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
 				.setRegion(region)
