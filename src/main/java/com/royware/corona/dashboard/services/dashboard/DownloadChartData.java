@@ -13,16 +13,17 @@ import org.slf4j.LoggerFactory;
 import com.royware.corona.dashboard.enums.charts.ChartCsvHeaders;
 import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 
-import javafx.scene.chart.XYChart.Series;
-
 public class DownloadChartData {
 	private static final Logger log = LoggerFactory.getLogger(DownloadChartData.class);
+	private static final String COMMA = ",";
+	private static final String CRLF = "\n";
 	
 	public static void downloadChartData(List<DashboardChart> dashboardCharts, HttpServletResponse response) {
 		
 		//Build the file name (region + current time in milliseconds + .csv)
 		StringBuilder sb = new StringBuilder();
 		sb.append(dashboardCharts.get(0).getRegion());
+		sb.append("_");
 		sb.append(System.currentTimeMillis());
 		sb.append(".csv");
 		String filename = sb.toString();
@@ -33,9 +34,11 @@ public class DownloadChartData {
 		response.setHeader("Content-disposition", "attachment;filename=" + filename);
 		
 		//Make the header row
+		log.info("Writing the header row...");
 		List<String> rows = new ArrayList<>();
 		rows.add(makeCsvHeaderRow(dashboardCharts));
 		//Make the data rows
+		log.info("Writing the data rows...");
 		rows.addAll(makeCsvDataRows(dashboardCharts));
  
 		//Write the data to a CSV file
@@ -45,6 +48,7 @@ public class DownloadChartData {
 			}
 			//Flush the output stream which will cause the data to be written out to the file
 			response.getOutputStream().flush();
+			log.info("DONE downloading the data file: " + filename);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +58,7 @@ public class DownloadChartData {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("dayIndex,");
+		sb.append("dateChecked,");
 		for(int i = 0; i < dashboardCharts.size(); i++) {
 			if(dashboardCharts.get(i).getChartData().getCsvHeader().equals(ChartCsvHeaders.CASES_CHG_BY_CASES.getName())
 					|| dashboardCharts.get(i).getChartData().getCsvHeader().equals(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())) {
@@ -63,9 +68,9 @@ public class DownloadChartData {
 			if(i == dashboardCharts.size() - 1) {
 				break; //so there is no comma on the end
 			}
-			sb.append(",");
+			sb.append(COMMA);
 		}
-		sb.append("\n");
+		sb.append(CRLF);
 		return sb.toString();
 	}
 
@@ -79,21 +84,31 @@ public class DownloadChartData {
 		for(int dayIndex = 0; dayIndex < dayIndexMax; dayIndex++) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(dayIndex);
-			sb.append(",");
+			sb.append(COMMA);
+			//Get the data checked from the cases time series, which is the first list in the first chart
+			sb.append(dashboardCharts.get(0).getChartData().getChartLists().get(0).get(dayIndex).get("dateChecked"));
+			sb.append(COMMA);
+			//Iterate through all of the dashboard charts and get the data for the primary (first -> index 0) chart list
 			for(DashboardChart chart : dashboardCharts) {
 				List<Map<Object, Object>> dataList = chart.getChartData().getChartLists().get(0);
+				//Determine the index offset of the current chart list from the cases list
 				indexOffset = dayIndexMax - (dataList.size() - 1);
+				//Don't include the log-log DQ / Q chart data
 				if(chart.getChartData().getCsvHeader().equals(ChartCsvHeaders.CASES_CHG_BY_CASES.getName())
 						|| chart.getChartData().getCsvHeader().equals(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())) {
 					continue;
 				}
 				if(dayIndex - indexOffset >= 0 && (int)dataList.get(dayIndex - indexOffset).get("x") == dayIndex) {
-					sb.append(dataList.get(dayIndex - indexOffset).get("y"));
+					//Check for NaN or +/-Infinity; if found, just write a comma
+					Double value = Double.valueOf(dataList.get(dayIndex - indexOffset).get("y").toString());
+					if(!(value.isNaN() || value.isInfinite())) {
+						sb.append(dataList.get(dayIndex - indexOffset).get("y"));
+					}
 				}
-				sb.append(",");
+				sb.append(COMMA);
 			}
 			dataRows.add(sb.toString());
-			dataRows.add("\n");
+			dataRows.add(CRLF);
 		}
 		
 		return dataRows;
