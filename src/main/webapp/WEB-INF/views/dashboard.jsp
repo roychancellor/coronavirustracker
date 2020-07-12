@@ -39,8 +39,8 @@
 		<div>
 		<table class="table table-bordered">
 			<tr style="line-height:12px;">
-				<region:form id="download-form" action="${pageContext.request.contextPath}/download" method="POST">
-					<td><button class="btn btn-md btn-primary" type="submit">Download Chart Data</button></td>
+				<region:form id="download-form" modelAttribute="regionType" action="${pageContext.request.contextPath}/download" method="POST">
+					<td><button class="btn btn-md btn-primary" name="regionType" value=${regionType} type="submit">Download Chart Data</button></td>
 				</region:form>
 				<td style="color:#0000FF;font-size:2em;font-weight:bold;">Cases</td>
 				<td style="color:#770077;font-size:2em;font-weight:bold;">Deaths</td>

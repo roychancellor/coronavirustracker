@@ -18,7 +18,7 @@ public class DownloadChartData {
 	private static final String COMMA = ",";
 	private static final String CRLF = "\n";
 	
-	public static void downloadChartData(List<DashboardChart> dashboardCharts, HttpServletResponse response) {
+	public static void downloadChartData(String regionType, List<DashboardChart> dashboardCharts, HttpServletResponse response) {
 		
 		//Build the file name (region + current time in milliseconds + .csv)
 		StringBuilder sb = new StringBuilder();
@@ -36,10 +36,10 @@ public class DownloadChartData {
 		//Make the header row
 		log.info("Writing the header row...");
 		List<String> rows = new ArrayList<>();
-		rows.add(makeCsvHeaderRow(dashboardCharts));
+		rows.add(makeCsvHeaderRow(regionType, dashboardCharts));
 		//Make the data rows
 		log.info("Writing the data rows...");
-		rows.addAll(makeCsvDataRows(dashboardCharts));
+		rows.addAll(makeCsvDataRows(regionType, dashboardCharts));
  
 		//Write the data to a CSV file
 		try {
@@ -54,31 +54,38 @@ public class DownloadChartData {
 		}
 	}
 
-	private static String makeCsvHeaderRow(List<DashboardChart> dashboardCharts) {
+	private static String makeCsvHeaderRow(String regionType, List<DashboardChart> dashboardCharts) {
 		StringBuilder sb = new StringBuilder();
+		int worldDataOffset = regionType.equals("world") ? 4 : 0;
 		
 		sb.append("dayIndex,");
 		sb.append("dateChecked,");
-		for(int i = 0; i < dashboardCharts.size(); i++) {
+		for(int i = 0; i < dashboardCharts.size() - worldDataOffset; i++) {
 			if(dashboardCharts.get(i).getChartData().getCsvHeader().equals(ChartCsvHeaders.CASES_CHG_BY_CASES.getName())
 					|| dashboardCharts.get(i).getChartData().getCsvHeader().equals(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())) {
 				continue;
 			}
 			sb.append(dashboardCharts.get(i).getChartData().getCsvHeader());
-			if(i == dashboardCharts.size() - 1) {
-				break; //so there is no comma on the end
-			}
 			sb.append(COMMA);
 		}
+		sb.deleteCharAt(sb.length() - 1);  //so there is no trailing comma
+		log.info("The header row is: " + sb.toString());
 		sb.append(CRLF);
 		return sb.toString();
 	}
 
-	private static List<String> makeCsvDataRows(List<DashboardChart> dashboardCharts) {
+	private static List<String> makeCsvDataRows(String regionType, List<DashboardChart> dashboardCharts) {
 		List<String> dataRows = new ArrayList<String>();
 		
 		//Get the maximum x value from the cases time history list
 		int dayIndexMax = dashboardCharts.get(0).getChartData().getChartLists().get(0).size() - 1;
+		
+		//If the region type is world, delete the last four dashboard charts from the list, as these data are not real for world regions
+		if(regionType.equals("world")) {
+			for(int i = 0; i < 4; i++) {
+				dashboardCharts.remove(dashboardCharts.size() - 1);
+			}
+		}
 
 		int indexOffset = 0;
 		for(int dayIndex = 0; dayIndex < dayIndexMax; dayIndex++) {
@@ -108,6 +115,7 @@ public class DownloadChartData {
 				sb.append(COMMA);
 			}
 			sb.deleteCharAt(sb.length() - 1); //delete the trailing comma
+			log.info("The data row is: " + sb.toString());
 			dataRows.add(sb.toString());
 			dataRows.add(CRLF);
 		}

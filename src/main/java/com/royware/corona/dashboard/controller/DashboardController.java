@@ -71,8 +71,9 @@ public class DashboardController {
 	}
 
 	@PostMapping(value = "/download")
-	public void downloadChartData(HttpServletResponse response) {
-		DownloadChartData.downloadChartData(this.dashboardCharts, response);
+	public void downloadChartData(@ModelAttribute("regionType") String regionType, HttpServletResponse response) {
+		log.info("Downloading dashboard chart data for: " + this.dashboardCharts.get(0).getRegion() + " with regionType '" + regionType + "'");		
+		DownloadChartData.downloadChartData(regionType, this.dashboardCharts, response);
 	}
 	
 	/**
