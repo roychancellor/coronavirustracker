@@ -6,7 +6,8 @@ public enum JspPageNames {
 	MATH_PAGE("math"),
 	COMMENTARY_PAGE("commentary"),
 	DASHBOARD_PAGE("dashboard"),
-	CHART_INFO_PAGE("chart-info");
+	CHART_INFO_PAGE("chart-info"),
+	DOWNLOAD_PAGE("download-data");
 	
 	public final String pageName;
 	

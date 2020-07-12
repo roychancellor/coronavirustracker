@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="region" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="chart" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -38,7 +39,9 @@
 		<div>
 		<table class="table table-bordered">
 			<tr style="line-height:12px;">
-				<td></td>
+				<region:form id="download-form" modelAttribute="regionType" action="${pageContext.request.contextPath}/download" method="POST">
+					<td><button class="btn btn-md btn-primary" name="regionType" value=${regionType} type="submit">Download Chart Data</button></td>
+				</region:form>
 				<td style="color:#0000FF;font-size:2em;font-weight:bold;">Cases</td>
 				<td style="color:#770077;font-size:2em;font-weight:bold;">Deaths</td>
 			</tr>
@@ -218,7 +221,7 @@
 			
 			<chart:forEach items="${allDashboardCharts}" var="dataset" varStatus="c">
 				var dataPointsArr = [[], []];
-				<chart:forEach items="${dataset.chartLists.chartLists}" var="dataPoints" varStatus="loop">	
+				<chart:forEach items="${dataset.chartData.chartLists}" var="dataPoints" varStatus="loop">	
 					<chart:forEach items="${dataPoints}" var="dataPoint">
 						xValue = parseFloat("${dataPoint.x}");
 						yValue = parseFloat("${dataPoint.y}");

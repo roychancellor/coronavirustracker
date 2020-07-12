@@ -1,6 +1,10 @@
 //MAKE SURE THE POM IS NOT IN TEST MODE (SEE POM FOR DETAILS)
 package com.royware.corona.dashboard.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.model.dashboard.DashboardChart;
+import com.royware.corona.dashboard.services.dashboard.DownloadChartData;
 
 /**
  * The MAIN CONTROLLER for the dashboard application
@@ -27,6 +33,7 @@ public class DashboardController {
 	private DashboardConfigService dashboardConfigService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+	private List<DashboardChart> dashboardCharts;
 	
 	/**
 	 * HTTP GET request handler for /corona to direct to the home page jsp
@@ -50,6 +57,7 @@ public class DashboardController {
 	 * @param map the ModelMap
 	 * @return the jsp file name (dashboard)
 	 */
+	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/dashboard")
 	public String makeRegionDashboard(@ModelAttribute("region") String region, ModelMap map) {		
 		log.info("Making dashboard for region: " + region);
@@ -57,9 +65,17 @@ public class DashboardController {
 		if(!dashboardConfigService.populateDashboardModelMap(region, map)) {
 			return "connect-error-popup";
 		}
+		//Make the dashboard chart data available to the /download endpoint
+		this.dashboardCharts = (List<DashboardChart>)map.get("allDashboardCharts");
 		return JspPageNames.DASHBOARD_PAGE.toString();
 	}
 
+	@PostMapping(value = "/download")
+	public void downloadChartData(@ModelAttribute("regionType") String regionType, HttpServletResponse response) {
+		log.info("Downloading dashboard chart data for: " + this.dashboardCharts.get(0).getRegion() + " with regionType '" + regionType + "'");		
+		DownloadChartData.downloadChartData(regionType, this.dashboardCharts, response);
+	}
+	
 	/**
 	 * HTTP GET request handler for /about to direct to the about-dashboard jsp
 	 * @param map the current ModelMap
