@@ -107,6 +107,7 @@ public class DownloadChartData {
 				}
 				sb.append(COMMA);
 			}
+			sb.deleteCharAt(sb.length() - 1); //delete the trailing comma
 			dataRows.add(sb.toString());
 			dataRows.add(CRLF);
 		}
