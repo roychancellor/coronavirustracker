@@ -3,8 +3,10 @@ package com.royware.corona.dashboard.services.charts;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +19,11 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private static final Logger log = LoggerFactory.getLogger(ChartServiceListCreatorImpl.class);
 	private static final int MOVING_AVERAGE_SIZE = 4;
+	private static final int CURRENT_POSITIVES_QUEUE_SIZE = 14;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
-	private Map<Integer, Double> dailyCases = new HashMap<>();
+	private Map<Integer, Double> dailyNewCases = new HashMap<>();
+	private Map<Integer, Double> dailyCurrentTotalCases = new HashMap<>();
 	private Map<Integer, Double> dailyDeaths = new HashMap<>();
 	private Map<Integer, Double> dailyPctChgDeaths = new LinkedHashMap<>();
 	private Map<Integer, Double> dailyChgDeaths = new LinkedHashMap<>();
@@ -61,11 +65,11 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
-			dailyCases.put(dayIndex, dailyChange * 1.0);
+			dailyNewCases.put(dayIndex, dailyChange * 1.0);
 			dayIndex++;
 		}
 		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
-		scatterChartDataLists.add(makeMovingAverageList(dailyCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyNewCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
 
@@ -189,6 +193,51 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		scatterChartDataLists.add(makeExponentialLineList(minCases, maxCases, k));
 
 		log.info("***** DONE MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES *****");
+
+		return scatterChartDataLists;
+	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithMovingAverageList(List<T> regionDataList) {
+		log.info("***** MAKING CURRENT TOTAL POSITIVES VERSUS TIME *****");
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		List<Map<Object, Object>> dataList = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		
+		//Makes a list of total current cases for each day on a rolling basis
+		Queue<Integer> currentPositives = new LinkedList<>();		
+		int dayIndex = 0;
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
+		int rollingSum = 0;
+		while(dayIndex < regionDataList.size()) {
+			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases();
+			if(dayIndex < CURRENT_POSITIVES_QUEUE_SIZE) {
+				currentPositives.add(totalToday);
+				rollingSum = totalToday;
+			} else {
+				totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+				dailyChange = totalToday - totalYesterday;
+				dailyChange = dailyChange > 0 ? dailyChange : 0;
+				rollingSum += dailyChange - currentPositives.remove();
+				currentPositives.add(rollingSum);
+				dailyCurrentTotalCases.put(dayIndex, rollingSum * 1.0);
+			}
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", rollingSum);
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
+			dataList.add(xyPair);
+			dayIndex++;
+		}
+		scatterChartDataLists.add(dataList);
+		
+		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
+		scatterChartDataLists.add(makeMovingAverageList(dailyCurrentTotalCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
+		
+		log.info("***** DONE MAKING CURRENT TOTAL POSITIVES VERSUS TIME *****");
 
 		return scatterChartDataLists;
 	}
@@ -541,13 +590,6 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		log.info("***** DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS (FROM CULULATIVE) VERSUS TIME *****");
 
 		return scatterChartDataLists;
-	}
-
-	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithMovingAverageList(
-			List<T> regionDataList) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	//////////// HELPER METHODS /////////////
