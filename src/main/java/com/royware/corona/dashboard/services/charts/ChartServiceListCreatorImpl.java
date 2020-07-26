@@ -543,6 +543,13 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		return scatterChartDataLists;
 	}
 
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithMovingAverageList(
+			List<T> regionDataList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	//////////// HELPER METHODS /////////////
 	private <T extends CanonicalData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {

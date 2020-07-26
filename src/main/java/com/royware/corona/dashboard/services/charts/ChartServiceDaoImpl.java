@@ -78,4 +78,9 @@ public class ChartServiceDaoImpl implements ChartServiceDao {
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyHospitalizedTotalWithMovingAverageList(List<T> regionCaseList) {
 		return chartListService.makeDailyHospitalizedTotalWithMovingAverageList(regionCaseList);
 	}
+
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getCurrentTotalPositivesWithMovingAverageList(List<T> regionDataList) {
+		return chartListService.makeCurrentTotalPositivesWithMovingAverageList(regionDataList);
+	}
 }

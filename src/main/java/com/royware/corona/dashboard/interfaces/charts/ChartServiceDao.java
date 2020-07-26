@@ -21,4 +21,5 @@ public interface ChartServiceDao {
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyRatioCasesToTestsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyHospitalizedNowWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyHospitalizedTotalWithMovingAverageList(List<T> regionDataList);
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getCurrentTotalPositivesWithMovingAverageList(List<T> regionDataList);
 }
