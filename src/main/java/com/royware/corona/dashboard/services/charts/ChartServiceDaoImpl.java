@@ -80,7 +80,8 @@ public class ChartServiceDaoImpl implements ChartServiceDao {
 	}
 
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> getCurrentTotalPositivesWithPercentOfPopulationList(List<T> regionDataList) {
-		return chartListService.makeCurrentTotalPositivesWithPercentOfPopulationList(regionDataList);
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getCurrentTotalPositivesWithPercentOfPopulationList(List<T> regionDataList,
+			Integer regionPopulation) {
+		return chartListService.makeCurrentTotalPositivesWithPercentOfPopulationList(regionDataList, regionPopulation);
 	}
 }

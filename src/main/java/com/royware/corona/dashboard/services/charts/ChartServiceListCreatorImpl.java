@@ -197,7 +197,8 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	}
 
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithPercentOfPopulationList(List<T> regionDataList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithPercentOfPopulationList(List<T> regionDataList,
+			Integer regionPopulation) {
 		log.info("***** MAKING CURRENT TOTAL POSITIVES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
@@ -236,7 +237,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			
 			xyPairSec = new HashMap<>();
 			xyPairSec.put("x", dayIndex);
-			xyPairSec.put("y", rollingSum * 1000000.0 / 1000000.0);
+			xyPairSec.put("y", rollingSum * 1000000.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
 			dayIndex++;
 		}
