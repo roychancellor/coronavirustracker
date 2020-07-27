@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartCsvHeaders;
+import com.royware.corona.dashboard.enums.charts.ChartScalingConstants;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
@@ -485,7 +486,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int digits = minValue > 0 ? (int) Math.log10((Double) chartDataChangeOfCasesByCases.get(0).get(0).get("y")) : 1;
 		chartConfigRateOfCasesVersusCases.setyAxisMin((int) Math.pow(10, digits));
 		chartConfigRateOfCasesVersusCases.setyAxisMax((int) Math.pow(10,
-				1 + (int) Math.log10((double) getMaxValueFromListOfXYMaps(chartDataChangeOfCasesByCases.get(1)))));
+				1 + (int) Math.log10((double) chartDataChangeOfCasesByCases.get(1).get(1).get("y"))));
 
 		chartConfigRateOfCasesVersusCases.setLegendHorizonalAlign("left");
 		chartConfigRateOfCasesVersusCases.setLegendVerticalAlign("top");
@@ -634,7 +635,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		minValue = Double.valueOf(getMinValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(0)));
 		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
 		chartConfigRateOfDeathsVersusDeaths.setyAxisMin((int) Math.pow(10, exp));
-		double maxValue = (double) getMaxValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(1));
+		double maxValue = (double) chartDataChangeOfDeathsByDeaths.get(1).get(1).get("y");
 		maxValue = maxValue > 0 ? maxValue : 1;
 		chartConfigRateOfDeathsVersusDeaths.setyAxisMax((int) Math.pow(10, 1 + (int) Math.log10(maxValue)));
 
@@ -789,10 +790,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 	////// HELPER METHODS /////////
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		Double min = Double.valueOf(dataList.get(0).get("y").toString());
+		Double min = Double.valueOf(dataList.get(ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()).get("y").toString());
 
 		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("y").toString()) < min) {
+			if (Double.valueOf(xy.get("x").toString()) > ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()
+					&& Double.valueOf(xy.get("y").toString()) < min) {
+				
 				min = Double.valueOf(xy.get("y").toString());
 			}
 		}
@@ -803,10 +806,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	private int getMaxValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		Double max = Double.valueOf(dataList.get(0).get("y").toString());
+		Double max = Double.valueOf(dataList.get(ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()).get("y").toString());
 
 		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("y").toString()) > max) {
+			if (Double.valueOf(xy.get("x").toString()) > ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()
+					&& Double.valueOf(xy.get("y").toString()) > max) {
+				
 				max = Double.valueOf(xy.get("y").toString());
 			}
 		}
