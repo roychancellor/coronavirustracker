@@ -19,11 +19,10 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalData;
 public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private static final Logger log = LoggerFactory.getLogger(ChartServiceListCreatorImpl.class);
 	private static final int MOVING_AVERAGE_SIZE = 4;
-	private static final int CURRENT_POSITIVES_QUEUE_SIZE = 14;
+	private static final int CURRENT_POSITIVES_QUEUE_SIZE = 10;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyNewCases = new HashMap<>();
-	private Map<Integer, Double> dailyCurrentTotalCases = new HashMap<>();
 	private Map<Integer, Double> dailyDeaths = new HashMap<>();
 	private Map<Integer, Double> dailyPctChgDeaths = new LinkedHashMap<>();
 	private Map<Integer, Double> dailyChgDeaths = new LinkedHashMap<>();
@@ -198,45 +197,52 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	}
 
 	@Override
-	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithMovingAverageList(List<T> regionDataList) {
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalPositivesWithPercentOfPopulationList(List<T> regionDataList) {
 		log.info("***** MAKING CURRENT TOTAL POSITIVES VERSUS TIME *****");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
-		List<Map<Object, Object>> dataList = new ArrayList<>();
+		Map<Object, Object> xyPairSec;
+		List<Map<Object, Object>> dataListPrimary = new ArrayList<>();
+		List<Map<Object, Object>> dataListSecondary = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		
 		//Makes a list of total current cases for each day on a rolling basis
-		Queue<Integer> currentPositives = new LinkedList<>();		
-		int dayIndex = 0;
+		Queue<Integer> dailyChangeInPositives = new LinkedList<>();
+		dailyChangeInPositives.add(regionDataList.get(0).getTotalPositiveCases());
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
 		int rollingSum = 0;
+		int dayIndex = 1;
 		while(dayIndex < regionDataList.size()) {
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
 			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases();
+			dailyChange = totalToday - totalYesterday;
+			dailyChange = dailyChange > 0 ? dailyChange : 0;
+
 			if(dayIndex < CURRENT_POSITIVES_QUEUE_SIZE) {
-				currentPositives.add(totalToday);
 				rollingSum = totalToday;
 			} else {
-				totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
-				dailyChange = totalToday - totalYesterday;
-				dailyChange = dailyChange > 0 ? dailyChange : 0;
-				rollingSum += dailyChange - currentPositives.remove();
-				currentPositives.add(rollingSum);
-				dailyCurrentTotalCases.put(dayIndex, rollingSum * 1.0);
+				rollingSum += dailyChange - dailyChangeInPositives.peek();
+				dailyChangeInPositives.remove();
 			}
+			dailyChangeInPositives.add(dailyChange);
+			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", rollingSum);
 			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
-			dataList.add(xyPair);
+			dataListPrimary.add(xyPair);
+			
+			xyPairSec = new HashMap<>();
+			xyPairSec.put("x", dayIndex);
+			xyPairSec.put("y", rollingSum * 1000000.0 / 1000000.0);
+			dataListSecondary.add(xyPairSec);
 			dayIndex++;
 		}
-		scatterChartDataLists.add(dataList);
-		
-		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
-		scatterChartDataLists.add(makeMovingAverageList(dailyCurrentTotalCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
-		
+		scatterChartDataLists.add(dataListPrimary);
+		scatterChartDataLists.add(dataListSecondary);
+				
 		log.info("***** DONE MAKING CURRENT TOTAL POSITIVES VERSUS TIME *****");
 
 		return scatterChartDataLists;
