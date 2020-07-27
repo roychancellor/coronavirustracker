@@ -5,6 +5,7 @@ public enum ChartCsvHeaders {
 	CASES_RATE("rateOfCases%"),
 	CASES_ACCEL("accelCases%"),
 	CASES_CHG_BY_CASES("chgCasesOverCases"),
+	CASES_TOTAL_CURRENT("totalCurrentCases"),
 	DEATHS_TIME_SERIES("totalDeaths"),
 	DEATHS_RATE("rateOfDeaths%"),
 	DEATHS_ACCEL("accelDeaths%"),

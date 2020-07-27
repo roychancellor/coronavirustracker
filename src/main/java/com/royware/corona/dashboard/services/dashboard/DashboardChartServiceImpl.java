@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartCsvHeaders;
+import com.royware.corona.dashboard.enums.charts.ChartScalingConstants;
+import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
@@ -47,6 +49,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		List<List<Map<Object, Object>>> chartDataRateOfCasesByTime = chartService.getDailyRateOfChangeOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime = chartService.getDailyAccelerationOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
+		List<List<Map<Object, Object>>> chartDataTotalCurrentCases = chartService.getCurrentTotalPositivesWithPercentOfPopulation(dataList, regionPopulation);
 		
 		////////// CHART DATA LISTS - DEATHS /////////
 		log.info("Making all the chart data lists for DEATHS");
@@ -88,8 +91,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Configuring all the charts for CASES...");
 		DashboardChartConfig chartConfigCasesByTime = chartConfigCasesByTime(region, chartDataCasesByTime);
 		DashboardChartConfig chartConfigRateOfChangeOfCases = chartConfigRateOfChangeOfCases(region, chartDataRateOfCasesByTime);
-		DashboardChartConfig chartConfigAccelerationOfCases = chartConfigAccelerationOfCases(region, chartDataAccelOfCasesByTime);
+//		DashboardChartConfig chartConfigAccelerationOfCases = chartConfigAccelerationOfCases(region, chartDataAccelOfCasesByTime);
 		DashboardChartConfig chartConfigRateOfCasesVersusCases = chartConfigRateOfCasesVersusCases(region, chartDataChangeOfCasesByCases);
+		DashboardChartConfig chartConfigTotalCurrentCases = chartConfigTotalCurrentCases(region, chartDataTotalCurrentCases);
 		
 		////////// CHART CONFIGURATION - DEATHS ///////////
 		log.info("Configuring all the charts for DEATHS...");
@@ -137,13 +141,22 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartConfig(chartConfigRateOfChangeOfCases)
 				.setRegion(region)
 				.build());
+//		dashboardList.add(new DashboardChart.Builder()
+//				.setChartData(
+//					new DashboardChartData.Builder()
+//					.withChartDataLists(chartDataAccelOfCasesByTime)
+//					.withCsvHeader(ChartCsvHeaders.CASES_ACCEL.getName())
+//					.build())
+//				.setChartConfig(chartConfigAccelerationOfCases)
+//				.setRegion(region)
+//				.build());
 		dashboardList.add(new DashboardChart.Builder()
 				.setChartData(
 					new DashboardChartData.Builder()
-					.withChartDataLists(chartDataAccelOfCasesByTime)
-					.withCsvHeader(ChartCsvHeaders.CASES_ACCEL.getName())
+					.withChartDataLists(chartDataTotalCurrentCases)
+					.withCsvHeader(ChartCsvHeaders.CASES_TOTAL_CURRENT.getName())
 					.build())
-				.setChartConfig(chartConfigAccelerationOfCases)
+				.setChartConfig(chartConfigTotalCurrentCases)
 				.setRegion(region)
 				.build());
 		dashboardList.add(new DashboardChart.Builder()
@@ -309,7 +322,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 	@Override
 	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
-		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Cases " + region,
+		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Cases in " + region,
 				"Days Since Cases > 0", "Total Cases", "scatter");
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");
@@ -334,7 +347,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
 		chartConfig.setDataSeries1Name("Total Cases");
-		chartConfig.setDataSeries2Name("4-day Moving Average of New Cases");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Cases");
 		return chartConfig;
 	}
 
@@ -370,7 +383,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setLegendHorizonalAlign("right");
 		chartConfig.setLegendVerticalAlign("top");
 		chartConfig.setDataSeries1Name("% Change in Cases");
-		chartConfig.setDataSeries2Name("4-day Moving Average");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfig;
 	}
 
@@ -414,8 +427,39 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigAccelerationOfCases.setLegendHorizonalAlign("right");
 		chartConfigAccelerationOfCases.setLegendVerticalAlign("top");
 		chartConfigAccelerationOfCases.setDataSeries1Name("Acceleration of Cases");
-		chartConfigAccelerationOfCases.setDataSeries2Name("4-day Moving Average");
+		chartConfigAccelerationOfCases.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfigAccelerationOfCases;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigTotalCurrentCases(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
+		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Current Cases in " + region,
+				"Days Since Cases > 0", "Total Current Cases", "scatter");
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
+		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		chartConfig.setDataSeries1Name("Total Current Cases (" + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue() + " day moving total)");
+		chartConfig.setDataSeries2Name("Current Cases per Million (same " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue() + " days)");
+		return chartConfig;
 	}
 
 	@Override
@@ -442,7 +486,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int digits = minValue > 0 ? (int) Math.log10((Double) chartDataChangeOfCasesByCases.get(0).get(0).get("y")) : 1;
 		chartConfigRateOfCasesVersusCases.setyAxisMin((int) Math.pow(10, digits));
 		chartConfigRateOfCasesVersusCases.setyAxisMax((int) Math.pow(10,
-				1 + (int) Math.log10((double) getMaxValueFromListOfXYMaps(chartDataChangeOfCasesByCases.get(1)))));
+				1 + (int) Math.log10((double) chartDataChangeOfCasesByCases.get(1).get(1).get("y"))));
 
 		chartConfigRateOfCasesVersusCases.setLegendHorizonalAlign("left");
 		chartConfigRateOfCasesVersusCases.setLegendVerticalAlign("top");
@@ -481,7 +525,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigDeathsByTime.setLegendHorizonalAlign("left");
 		chartConfigDeathsByTime.setLegendVerticalAlign("top");
 		chartConfigDeathsByTime.setDataSeries1Name("Total Deaths");
-		chartConfigDeathsByTime.setDataSeries2Name("4-day Moving Average of New Deaths");
+		chartConfigDeathsByTime.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Deaths");
 		return chartConfigDeathsByTime;
 	}
 
@@ -517,7 +561,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRateOfChangeOfDeaths.setLegendHorizonalAlign("right");
 		chartConfigRateOfChangeOfDeaths.setLegendVerticalAlign("top");
 		chartConfigRateOfChangeOfDeaths.setDataSeries1Name("% change in deaths");
-		chartConfigRateOfChangeOfDeaths.setDataSeries2Name("4-day Moving Average");
+		chartConfigRateOfChangeOfDeaths.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfigRateOfChangeOfDeaths;
 	}
 
@@ -560,7 +604,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigAccelerationOfDeaths.setLegendHorizonalAlign("right");
 		chartConfigAccelerationOfDeaths.setLegendVerticalAlign("top");
 		chartConfigAccelerationOfDeaths.setDataSeries1Name("Acceleration of Deaths");
-		chartConfigAccelerationOfDeaths.setDataSeries2Name("4-day Moving Average");
+		chartConfigAccelerationOfDeaths.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfigAccelerationOfDeaths;
 	}
 
@@ -591,7 +635,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		minValue = Double.valueOf(getMinValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(0)));
 		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
 		chartConfigRateOfDeathsVersusDeaths.setyAxisMin((int) Math.pow(10, exp));
-		double maxValue = (double) getMaxValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(1));
+		double maxValue = (double) chartDataChangeOfDeathsByDeaths.get(1).get(1).get("y");
 		maxValue = maxValue > 0 ? maxValue : 1;
 		chartConfigRateOfDeathsVersusDeaths.setyAxisMax((int) Math.pow(10, 1 + (int) Math.log10(maxValue)));
 
@@ -635,7 +679,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigRatioOfCasesToTestsByTime.setLegendHorizonalAlign("right");
 		chartConfigRatioOfCasesToTestsByTime.setLegendVerticalAlign("top");
 		chartConfigRatioOfCasesToTestsByTime.setDataSeries1Name("% Positive per Test");
-		chartConfigRatioOfCasesToTestsByTime.setDataSeries2Name("4-day Moving Average");
+		chartConfigRatioOfCasesToTestsByTime.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfigRatioOfCasesToTestsByTime;
 	}
 
@@ -670,7 +714,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfigTestsByTime.setLegendHorizonalAlign("left");
 		chartConfigTestsByTime.setLegendVerticalAlign("top");
 		chartConfigTestsByTime.setDataSeries1Name("Total Tests");
-		chartConfigTestsByTime.setDataSeries2Name("4-day Moving Average of New Tests");
+		chartConfigTestsByTime.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Tests");
 		return chartConfigTestsByTime;
 	}
 
@@ -705,7 +749,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
 		chartConfig.setDataSeries1Name("Current Hospitalizations");
-		chartConfig.setDataSeries2Name("4-day Moving Average of New Hospitalizations");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
 		return chartConfig;
 	}
 
@@ -740,16 +784,18 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
 		chartConfig.setDataSeries1Name("Cumulative Hospitalizations");
-		chartConfig.setDataSeries2Name("4-day Moving Average of New Hospitalizations");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
 		return chartConfig;
 	}
 
 	////// HELPER METHODS /////////
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		Double min = Double.valueOf(dataList.get(0).get("y").toString());
+		Double min = Double.valueOf(dataList.get(ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()).get("y").toString());
 
 		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("y").toString()) < min) {
+			if (Double.valueOf(xy.get("x").toString()) > ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()
+					&& Double.valueOf(xy.get("y").toString()) < min) {
+				
 				min = Double.valueOf(xy.get("y").toString());
 			}
 		}
@@ -760,10 +806,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	private int getMaxValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		Double max = Double.valueOf(dataList.get(0).get("y").toString());
+		Double max = Double.valueOf(dataList.get(ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()).get("y").toString());
 
 		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("y").toString()) > max) {
+			if (Double.valueOf(xy.get("x").toString()) > ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()
+					&& Double.valueOf(xy.get("y").toString()) > max) {
+				
 				max = Double.valueOf(xy.get("y").toString());
 			}
 		}
