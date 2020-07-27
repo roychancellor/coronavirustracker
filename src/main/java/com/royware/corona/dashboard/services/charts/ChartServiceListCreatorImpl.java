@@ -12,14 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.interfaces.charts.ChartServiceListCreator;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
  
 @Service
 public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private static final Logger log = LoggerFactory.getLogger(ChartServiceListCreatorImpl.class);
-	private static final int MOVING_AVERAGE_SIZE = 4;
-	private static final int CURRENT_POSITIVES_QUEUE_SIZE = 10;
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 	private Map<Integer, Double> dailyNewCases = new HashMap<>();
@@ -68,7 +67,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			dayIndex++;
 		}
 		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
-		scatterChartDataLists.add(makeMovingAverageList(dailyNewCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyNewCases, MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY CASES VERSUS TIME *****");
 
@@ -103,7 +102,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgCases, MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgCases, MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 
 		log.info("***** DONE MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME *****");
 
@@ -140,7 +139,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyAccelCases, MOVING_AVERAGE_SIZE + 1, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyAccelCases, MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + 1, regionDataList.size()));
 
 		log.info("***** DONE MAKING ACCELERATION OF DAILY CASES VERSUS TIME *****");
 
@@ -221,7 +220,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 
-			if(dayIndex < CURRENT_POSITIVES_QUEUE_SIZE) {
+			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue()) {
 				rollingSum = totalToday;
 			} else {
 				rollingSum += dailyChange - dailyChangeInPositives.peek();
@@ -287,7 +286,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		}
 		//make the MOVING AVERAGE of daily deaths to smooth out some of the noise
 		log.info("Making moving average of DAILY deaths");
-		scatterChartDataLists.add(makeMovingAverageList(dailyDeaths, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyDeaths, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY DEATHS VERSUS TIME *****");
 
@@ -324,7 +323,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgDeaths, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyPctChgDeaths, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 
 		log.info("***** DONE MAKING RATE OF CHANGE OF DAILY DEATHS VERSUS TIME *****");
 
@@ -362,7 +361,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyAccelDeaths, startDayIndex + MOVING_AVERAGE_SIZE + 1, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyAccelDeaths, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + 1, regionDataList.size()));
 
 		log.info("***** DONE MAKING ACCELERATION OF DAILY DEATHS VERSUS TIME *****");
 
@@ -453,7 +452,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			dayIndex++;
 		}
 		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
-		scatterChartDataLists.add(makeMovingAverageList(dailyTests, MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyTests, MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 		
 		log.info("***** DONE MAKING TOTAL AND DAILY TESTS VERSUS TIME *****");
 
@@ -503,7 +502,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		scatterChartDataLists.add(dataList);
 
 		//make the MOVING AVERAGE
-		scatterChartDataLists.add(makeMovingAverageList(dailyRatioOfTests, MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyRatioOfTests, MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 
 		log.info("***** DONE MAKING RATIO OF CASES TO TESTS VERSUS TIME *****");
 
@@ -548,7 +547,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		}
 		//make the MOVING AVERAGE of daily new hospitalizations to smooth out some of the noise
 		log.info("Making moving average of DAILY NEW hospitalizations");
-		scatterChartDataLists.add(makeMovingAverageList(dailyHospitalizations, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(dailyHospitalizations, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 		
 		log.info("***** DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS VERSUS TIME *****");
 
@@ -592,7 +591,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		}
 		//make the MOVING AVERAGE of daily new hospitalizations to smooth out some of the noise
 		log.info("Making moving average of DAILY NEW hospitalizations");
-		scatterChartDataLists.add(makeMovingAverageList(cumulHospitalizations, startDayIndex + MOVING_AVERAGE_SIZE, regionDataList.size()));
+		scatterChartDataLists.add(makeMovingAverageList(cumulHospitalizations, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
 		
 		log.info("***** DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS (FROM CULULATIVE) VERSUS TIME *****");
 
@@ -659,7 +658,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		log.info("Making the moving average...");
 		for(int dayIndex = startDayIndex; dayIndex < endDayIndex; dayIndex++) {
 			movingAverage = 0;
-			for(int d = dayIndex; d > dayIndex - MOVING_AVERAGE_SIZE; d--) {
+			for(int d = dayIndex; d > dayIndex - MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(); d--) {
 				amountToAdd = dataMap.get(d);
 				if(!(Double.isNaN(amountToAdd) || Double.isInfinite(amountToAdd) || (int)amountToAdd == 100)) {
 					movingAverage += amountToAdd;

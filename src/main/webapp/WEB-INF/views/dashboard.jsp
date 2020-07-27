@@ -153,6 +153,7 @@
 		var regionType = "${regionType}";
 		const NUM_CHARTS = regionType == 'world' ? 8 : 12;
 		const CASES_TIME_HISTORY_INDEX = 0;
+		const CASES_CURRENT_TIME_HISTORY_INDEX = 2;
 		const DEATHS_TIME_HISTORY_INDEX = 4;
 		const TESTS_TIME_HISTORY_INDEX = 8;
 		const HOSPCUR_TIME_HISTORY_INDEX = 10;
@@ -161,7 +162,7 @@
 		//Constants that define the row-column of the chart position on the dashboard
 		const TIME_SERIES_CASES = "11";
 		const TIME_SERIES_RATE_OF_CASES = "12";
-		const TIME_SERIES_ACCEL_OF_CASES = "21";
+		const TIME_SERIES_CURRENT_CASES = "21";
 		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
 		const TIME_SERIES_DEATHS = "31";
 		const TIME_SERIES_RATE_OF_DEATHS = "32";
@@ -177,7 +178,7 @@
 		var mapIndexToContainerRowCol = new Map();
 		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX, TIME_SERIES_CASES);
 		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATE_OF_CASES);
-		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 2, TIME_SERIES_ACCEL_OF_CASES);
+		mapIndexToContainerRowCol.set(CASES_CURRENT_TIME_HISTORY_INDEX, TIME_SERIES_CURRENT_CASES);
 		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 3, CHANGE_IN_CASES_VS_TOTAL_CASES);
 		
 		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX, TIME_SERIES_DEATHS);
@@ -200,6 +201,7 @@
 		makeChartConfigs(); 		
  		for(var i = 0; i < NUM_CHARTS; i++) {
  			if(i == CASES_TIME_HISTORY_INDEX ||
+ 	 		   i == CASES_CURRENT_TIME_HISTORY_INDEX ||
  			   i == DEATHS_TIME_HISTORY_INDEX ||
  			   i == TESTS_TIME_HISTORY_INDEX ||
  			   i == HOSPCUR_TIME_HISTORY_INDEX ||
@@ -254,8 +256,12 @@
 	 			var axis2TitleValue = "";
 	 			var pointColorStr = "blue";
 	 			var lineColorStr = "red";
-	 			if(c < DEATHS_TIME_HISTORY_INDEX) {
+	 			if(c < CASES_CURRENT_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Cases";
+		 			var pointColorStr = "blue";
+		 			var lineColorStr = "red";
+	 			} else if(c < DEATHS_TIME_HISTORY_INDEX) {
+	 				axis2TitleValue = "Current Cases per Million";
 		 			var pointColorStr = "blue";
 		 			var lineColorStr = "red";
 	 			} else if(c < TESTS_TIME_HISTORY_INDEX) {
@@ -473,6 +479,7 @@
  			} else {      	
 	        	for(var i = 0; i < e.entries.length; i++) {
 	        		if(positionRowCol == TIME_SERIES_CASES
+	        				|| positionRowCol == TIME_SERIES_CURRENT_CASES
 	        				|| positionRowCol == TIME_SERIES_DEATHS
 	        				|| positionRowCol == TIME_SERIES_TESTS
 	        				|| positionRowCol == TIME_SERIES_HOSP_CUR
