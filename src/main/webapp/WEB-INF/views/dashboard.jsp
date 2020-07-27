@@ -490,7 +490,6 @@
 		        			+ "</strong>";
 		        		content += "<br/>";
 	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES
-	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_CASES
 	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS
 	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS
 	        				|| positionRowCol == TIME_SERIES_RATIO_CASES_TO_TESTS) {
