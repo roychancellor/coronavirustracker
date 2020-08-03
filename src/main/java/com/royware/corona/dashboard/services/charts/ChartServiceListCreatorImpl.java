@@ -519,32 +519,38 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		//Find the first object having a current hospitalizations > 0 for two consecutive days
 		log.info("Making time history of CURRENT hospitalizations");
+		log.info("Making time history of DAILY NEW hospitalizations");
+		
+		//First day with positive hospitalizations
 		int startDayIndex = findFirstDayIndexWithPositiveCurrentHospitalizations(regionDataList);
-		int dayIndex = startDayIndex;
+		xyPair = new HashMap<>();
+		xyPair.put("x", startDayIndex);
+		xyPair.put("y", regionDataList.get(startDayIndex).getHospitalizedCurrently());
+		xyPair.put("dateChecked", regionDataList.get(startDayIndex).getDateChecked().toString());
+		dataList.add(xyPair);
+		
+		//All remaining days
+		int dayIndex = startDayIndex + 1;
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
 		while(dayIndex < regionDataList.size()) {
+			//Current hospitalizations
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
 			xyPair.put("y", regionDataList.get(dayIndex).getHospitalizedCurrently());
 			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
+			
+			//New hospitalizations
+			totalYesterday = regionDataList.get(dayIndex - 1).getHospitalizedCurrently();
+			totalToday = regionDataList.get(dayIndex).getHospitalizedCurrently();
+			dailyChange = totalToday - totalYesterday;
+			dailyHospitalizations.put(dayIndex, dailyChange * 1.0);
 			dayIndex++;
 		}
 		scatterChartDataLists.add(dataList);
 
-		//Makes a list of daily new hospitalizations for plotting on the secondary axis of the time chart
-		log.info("Making time history of DAILY NEW hospitalizations");
-		int totalYesterday = 0;
-		int totalToday = 0;
-		int dailyChange = 0;
-		dayIndex = startDayIndex + 1;
-		while(dayIndex < regionDataList.size()) {
-			totalYesterday = regionDataList.get(dayIndex - 1).getHospitalizedCurrently();
-			totalToday = regionDataList.get(dayIndex).getHospitalizedCurrently();
-			dailyChange = totalToday - totalYesterday;
-			dailyChange = dailyChange > 0 ? dailyChange : 0;
-			dailyHospitalizations.put(dayIndex, dailyChange * 1.0);
-			dayIndex++;
-		}
 		//make the MOVING AVERAGE of daily new hospitalizations to smooth out some of the noise
 		log.info("Making moving average of DAILY NEW hospitalizations");
 		scatterChartDataLists.add(makeMovingAverageList(dailyHospitalizations, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(), regionDataList.size()));
