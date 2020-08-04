@@ -790,12 +790,15 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 	////// HELPER METHODS /////////
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		Double min = Double.valueOf(dataList.get(ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()).get("y").toString());
+		int dayThreshold = ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue();
+		if(dataList.size() < dayThreshold) {
+			dayThreshold = dataList.size() / 5;
+		}
+		
+		Double min = Double.valueOf(dataList.get(dayThreshold).get("y").toString());
 
 		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("x").toString()) > ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()
-					&& Double.valueOf(xy.get("y").toString()) < min) {
-				
+			if (Double.valueOf(xy.get("x").toString()) > dayThreshold && Double.valueOf(xy.get("y").toString()) < min) {
 				min = Double.valueOf(xy.get("y").toString());
 			}
 		}
@@ -806,12 +809,15 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	private int getMaxValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		Double max = Double.valueOf(dataList.get(ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()).get("y").toString());
+		int dayThreshold = ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue();
+		if(dataList.size() < dayThreshold) {
+			dayThreshold = dataList.size() / 5;
+		}
+		
+		Double max = Double.valueOf(dataList.get(dayThreshold).get("y").toString());
 
 		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("x").toString()) > ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue()
-					&& Double.valueOf(xy.get("y").toString()) > max) {
-				
+			if (Double.valueOf(xy.get("x").toString()) > dayThreshold && Double.valueOf(xy.get("y").toString()) > max) {
 				max = Double.valueOf(xy.get("y").toString());
 			}
 		}
