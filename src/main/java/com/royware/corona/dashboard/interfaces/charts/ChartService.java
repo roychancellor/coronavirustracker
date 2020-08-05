@@ -23,4 +23,6 @@ public interface ChartService {
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getDailyHospitalizedTotalWithMovingAverage(List<T> regionDataList);
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> getCurrentTotalPositivesWithPercentOfPopulation(List<T> regionDataList,
 			Integer regionPopulation);
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> getCurrentTotalDeathsWithPercentOfPopulation(List<T> regionDataList,
+			Integer regionPopulation);
 }

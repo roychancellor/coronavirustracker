@@ -57,6 +57,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime = chartService.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
+		List<List<Map<Object, Object>>> chartDataTotalCurrentDeaths = chartService.getCurrentTotalDeathsWithPercentOfPopulation(dataList, regionPopulation);
 
 		////////// CHART DATA LISTS - TESTS /////////
 		List<List<Map<Object, Object>>> chartDataTestsByTime = null;
@@ -78,8 +79,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - ORIGINAL");
-		makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataRateOfCasesByTime,
-				chartDataAccelOfCasesByTime, chartDataDeathsByTime, chartDataRateOfDeathsByTime,
+		makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataTotalCurrentCases, chartDataRateOfCasesByTime,
+				chartDataAccelOfCasesByTime, chartDataDeathsByTime, chartDataTotalCurrentDeaths, chartDataRateOfDeathsByTime,
 				chartDataAccelOfDeathsByTime);
 		
 		if(isNotWorld) {
@@ -274,9 +275,11 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	@Override
 	public void makeDashboardStatsForRegion(DashboardStatistics dashStats,
 			List<List<Map<Object, Object>>> chartDataCasesByTime,
+			List<List<Map<Object, Object>>> chartDataCasesMovingSum,
 			List<List<Map<Object, Object>>> chartDataRateOfCasesByTime,
 			List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime,
 			List<List<Map<Object, Object>>> chartDataDeathsByTime,
+			List<List<Map<Object, Object>>> chartDataDeathsMovingSum,
 			List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime,
 			List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime) {
 		
@@ -287,6 +290,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfCasesToday(
 				(double) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("y"));
+		dashStats.setCasesMovingSum((int) chartDataCasesMovingSum.get(0).get(chartDataCasesMovingSum.get(0).size() - 1).get("y"));
 		dashStats.setDeathsTotal((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setDeathsToday((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 2).get("y"));
@@ -294,6 +298,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
 				(double) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
+		dashStats.setDeathsMovingSum((int) chartDataDeathsMovingSum.get(0).get(chartDataDeathsMovingSum.get(0).size() - 1).get("y"));
 	}
 
 	@Override
