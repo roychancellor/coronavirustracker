@@ -87,12 +87,14 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		if(fullRegionString.length() > MAX_REGION_LENGTH_TO_DISPLAY) {
 			map.addAttribute("fullregion", fullRegionString.substring(0, MAX_REGION_LENGTH_TO_DISPLAY + 1) + "...");
 		}
+		map.addAttribute("dashstats", dashStats);
 		map.addAttribute("population", regionPopulation);
 		map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / regionPopulation);
 		map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
+		map.addAttribute("currentcasespercent", dashStats.getCasesMovingSum() * 100.0 / regionPopulation);
 		map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / regionPopulation);
 		map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
-		map.addAttribute("dashstats", dashStats);
+		map.addAttribute("currentdeathspercent", dashStats.getDeathsMovingSum() * 100.0 / regionPopulation);
 		
 		return true;
 	}

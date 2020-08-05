@@ -17,9 +17,11 @@ public interface DashboardChartService {
 	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats);
 	public void makeDashboardStatsForRegion(DashboardStatistics dashStats,
 			List<List<Map<Object, Object>>> chartDataCasesByTime,
+			List<List<Map<Object, Object>>> chartDataCasesMovingSum,
 			List<List<Map<Object, Object>>> chartDataRateOfCasesByTime,
 			List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime,
 			List<List<Map<Object, Object>>> chartDataDeathsByTime,
+			List<List<Map<Object, Object>>> chartDataDeathsMovingSum,
 			List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime,
 			List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime);
 	public <T extends CanonicalData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats);

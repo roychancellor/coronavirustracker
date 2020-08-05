@@ -440,6 +440,59 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		return scatterChartDataLists;
 	}
 
+	@Override
+	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeCurrentTotalDeathsWithPercentOfPopulationList(List<T> regionDataList,
+			Integer regionPopulation) {
+		log.info("***** MAKING CURRENT TOTAL DEATHS VERSUS TIME *****");
+		//Transform the data into ChartJS-ready lists
+		Map<Object, Object> xyPair;
+		Map<Object, Object> xyPairSec;
+		List<Map<Object, Object>> dataListPrimary = new ArrayList<>();
+		List<Map<Object, Object>> dataListSecondary = new ArrayList<>();
+		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		
+		//Makes a list of total current cases for each day on a rolling basis
+		Queue<Integer> dailyChangeInDeaths = new LinkedList<>();
+		dailyChangeInDeaths.add(regionDataList.get(0).getTotalDeaths());
+		int totalYesterday = 0;
+		int totalToday = 0;
+		int dailyChange = 0;
+		int rollingSum = 0;
+		int dayIndex = 1;
+		while(dayIndex < regionDataList.size()) {
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
+			totalToday = regionDataList.get(dayIndex).getTotalDeaths();
+			dailyChange = totalToday - totalYesterday;
+			dailyChange = dailyChange > 0 ? dailyChange : 0;
+
+			if(dayIndex < MovingAverageSizes.CURRENT_DEATHS_QUEUE_SIZE.getValue()) {
+				rollingSum = totalToday;
+			} else {
+				rollingSum += dailyChange - dailyChangeInDeaths.peek();
+				dailyChangeInDeaths.remove();
+			}
+			dailyChangeInDeaths.add(dailyChange);
+			
+			xyPair = new HashMap<>();
+			xyPair.put("x", dayIndex);
+			xyPair.put("y", rollingSum);
+			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
+			dataListPrimary.add(xyPair);
+			
+			xyPairSec = new HashMap<>();
+			xyPairSec.put("x", dayIndex);
+			xyPairSec.put("y", rollingSum * 1000000.0 / regionPopulation);
+			dataListSecondary.add(xyPairSec);
+			dayIndex++;
+		}
+		scatterChartDataLists.add(dataListPrimary);
+		scatterChartDataLists.add(dataListSecondary);
+				
+		log.info("***** DONE MAKING CURRENT TOTAL DEATHS VERSUS TIME *****");
+
+		return scatterChartDataLists;
+	}
+
 	////////////// TESTS ///////////////
 	@Override
 	public <T extends CanonicalData> List<List<Map<Object, Object>>> makeDailyTestsTotalTestsVersusTimeList(List<T> regionDataList) {

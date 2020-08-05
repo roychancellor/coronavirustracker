@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 public class DashboardStatistics {
 	private int casesTotal;
 	private int casesToday;
+	private int casesMovingSum;
 	private double rateOfCasesToday;
 	private double accelOfCasesToday;
 	private int deathsTotal;
 	private int deathsToday;
+	private int deathsMovingSum;
 	private double rateOfDeathsToday;
 	private double rateOfCasesPerCasesToday;
 	private double rateOfDeathsPerDeathsToday;
@@ -45,6 +47,14 @@ public class DashboardStatistics {
 		this.casesToday = casesToday;
 	}
 
+	public int getCasesMovingSum() {
+		return casesMovingSum;
+	}
+
+	public void setCasesMovingSum(int casesMovingSum) {
+		this.casesMovingSum = casesMovingSum;
+	}
+
 	public double getRateOfCasesToday() {
 		return rateOfCasesToday;
 	}
@@ -75,6 +85,14 @@ public class DashboardStatistics {
 
 	public void setDeathsToday(int deathsToday) {
 		this.deathsToday = deathsToday;
+	}
+
+	public int getDeathsMovingSum() {
+		return deathsMovingSum;
+	}
+
+	public void setDeathsMovingSum(int deathsMovingSum) {
+		this.deathsMovingSum = deathsMovingSum;
 	}
 
 	public double getRateOfDeathsToday() {

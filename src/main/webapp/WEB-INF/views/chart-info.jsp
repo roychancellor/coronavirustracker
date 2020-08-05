@@ -31,12 +31,18 @@
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">The dashboard shows relevant statistics for
 				the current day. Some of the statistics are self-describing, but others need some explanation.</p>
 				<ul style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">
-					<li><strong style="color:#00FF00;">Region Total:</strong> gives the total number of confirmed positive cases or deaths (increase in cases or deaths from the previous day)</li>
-					<li><strong style="color:#FFA500;">Rate of Change:</strong> gives the % increase in number of cases or deaths, computed as (today - yesterday) / yesterday * 100
+					<li><strong style="color:#00FF00;">Region All-Time:</strong> The all-time cumulative number of confirmed positive cases or deaths 
+					(increase in cases or deaths from the previous day)</li>
+					<li><strong style="color:#00FF00;">Region Last 10 Days:</strong> A moving sum of confirmed positive cases or deaths over the last 10 days 
+					(percentage of the region population). <strong>This is an estimate of the current number of positive cases in the region.</strong></li>
+					<li><strong style="color:#FFA500;">Rate of Change:</strong> The % increase in number of cases or deaths, computed as 
+					(today - yesterday) / yesterday * 100
 					(change: the % change in the rate computed as (rate today - rate yesterday) / rate yesterday * 100)</li>
-					<li><strong style="color:#FF0000;">By Region Population:</strong> Total cases or deaths divided by the population * 100 (i.e. total / population * 1,000,000)</li>
-					<li><strong style="color:FFFFFF;">By Testing:</strong> Total positive cases or deaths divided by total tests * 100</li>
-					<li><strong style="color:#0000FF;">By U.S. Totals:</strong> Total region cases (or deaths) divided by total U.S. cases (or deaths) * 100 (i.e. total region cases / total U.S. cases * 100)
+					<li><strong style="color:#FF0000;">By Region Population:</strong> Total all-time cases or deaths divided by the population * 100 
+					(i.e. total / population * 1,000,000)</li>
+					<li><strong style="color:FFFFFF;">By Testing:</strong> Total all-time positive cases or deaths divided by total tests * 100</li>
+					<li><strong style="color:#0000FF;">By U.S. Totals:</strong> Total all-time region cases (or deaths) divided by total U.S. cases (or deaths) * 100 
+					(i.e. total region cases / total U.S. cases * 100)
 				</ul>
 				</div>
 				</td>
@@ -45,9 +51,9 @@
 				<td class="col-md-2">
 				<div id="chartContainer11" style="height: 380px; width: 100%"><img src="resources/images/chartinfo/Chart-11.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows a 4-day moving average of the daily
-				new cases as well as the total cases to date. The moving average smoothes out some of the daily noise and allows seeing the trend more cleanly.
+				new cases as well as the all-time total cases to date. The moving average smoothes out some of the daily noise and allows seeing the trend more cleanly.
 				Remember that total cases tells only part of the story - the size of the population matters also. The dashboard table gives per-capita
-				statistics for reference. Note that we are looking for daily new cases to drop which will make total cases flatten out.</p>
+				statistics for reference.</p>
 				</div>
 				</td>
 				<td class="col-md-2">
@@ -62,10 +68,11 @@
 			</tr>
 			<tr>
 				<td class="col-md-2"><div id="chartContainer21" style="height: 430px; width: 100%"><img src="resources/images/chartinfo/Chart-21.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the acceleration of cases, or the 
-				rate of change of the rate of change of cases in units of % per day. Keeping with the car analogy, this is a measure of how hard you
-				are pressing the gas pedal (positive acceleration) or pressing the brake (negative acceleration). For coronavirus, we want negative
-				acceleration, implying that while cases are still increasing, the rate of change is decreasing (braking --> slowing down).</p>
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows a 10-day moving sum of cases. 
+				This means that each data point is the sum of the last 10 days. Each day, that day's cases are added and the cases from 10 days prior 
+				is subtracted. Assuming the life span of a positive case is about 10 days, these data point approximate the total number of positive cases 
+				that currently exist in the region right now. The chart also gives the sum divided by the region population times one million to normalize 
+				the data.</p>
 				</div>
 				</td>
 				<td class="col-md-2"><div id="chartContainer22" style="height: 430px; width: 100%"><img src="resources/images/chartinfo/Chart-22.png">

@@ -42,11 +42,11 @@
 				<region:form id="download-form" modelAttribute="regionType" action="${pageContext.request.contextPath}/download" method="POST">
 					<td><button class="btn btn-md btn-primary" name="regionType" value=${regionType} type="submit">Download Chart Data</button></td>
 				</region:form>
-				<td style="color:#0000FF;font-size:2em;font-weight:bold;">Cases</td>
+				<td style="color:#0000FF;font-size:2em;font-weight:bold;">Positive Tests</td>
 				<td style="color:#770077;font-size:2em;font-weight:bold;">Deaths</td>
 			</tr>
 			<tr style="line-height:12px;">
-				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">Region Total:</td>
+				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">Region All-Time:</td>
 				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
 					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesTotal}" />
 					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" /> today)
@@ -54,6 +54,17 @@
 				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
 					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsTotal}" />
 					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" /> today)
+				</td>
+			</tr>
+			<tr style="line-height:12px;">
+				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">Region Last 10 Days:</td>
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSum}" />
+					(<fmt:formatNumber type = "number" pattern = "#.##" value = "${currentcasespercent}" />% of region pop)
+				</td>
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsMovingSum}" />
+					(<fmt:formatNumber type = "number" pattern = "#.###" value = "${currentdeathspercent}" />% of region pop)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
@@ -72,11 +83,11 @@
 					By Region Population:
 				</td>
 				<td style="color:#FFFFFF;">
-					<fmt:formatNumber type = "number" pattern = "#.####" value = "${casespercent}" />%
+					<fmt:formatNumber type = "number" pattern = "#.##" value = "${casespercent}" />% all-time
 					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${casespermillion}" /> per million)
 				</td>
 				<td style="color:#FFFFFF;">
-					<fmt:formatNumber type = "number" pattern = "#.#####" value = "${deathspercent}" />%
+					<fmt:formatNumber type = "number" pattern = "#.###" value = "${deathspercent}" />% all-time
 					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${deathspermillion}" /> per million)
 				</td>
 			</tr>
