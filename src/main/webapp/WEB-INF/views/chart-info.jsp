@@ -27,7 +27,7 @@
 				</div>
 				</td>
 				<td class="col-md-2">
-				<div id="dashboardExplanation" style="height: 280px; width: 100%">
+				<div id="dashboardExplanation" style="height: 350px; width: 100%">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">The dashboard shows relevant statistics for
 				the current day. Some of the statistics are self-describing, but others need some explanation.</p>
 				<ul style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">
@@ -99,25 +99,25 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer41" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-41.png">
+				<td class="col-md-2"><div id="chartContainer41" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-41.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
 				acceleration chart for cases, but for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
 				</div>
 				</td>
-				<td class="col-md-2"><div id="chartContainer42" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-42.png">
+				<td class="col-md-2"><div id="chartContainer42" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-42.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
 				the chart for detecting inflection in cases, but for deaths.</p>
 				</div>
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer51" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-51.png">
+				<td class="col-md-2"><div id="chartContainer51" style="height: 320px; width: 100%"><img src="resources/images/chartinfo/Chart-51.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
 				cases time history, except for tests conducted. The application computes this as the sum of positive and negative cases.
 				The time scale is the same as cases and deaths.</p>
 				</div>
 				</td>
-				<td class="col-md-2"><div id="chartContainer52" style="height: 350px; width: 100%"><img src="resources/images/chartinfo/Chart-52.png">
+				<td class="col-md-2"><div id="chartContainer52" style="height: 320px; width: 100%"><img src="resources/images/chartinfo/Chart-52.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the ratio of positive
 				test results to total tests conducted (i.e. positives / total * 100%) over time.</p>
 				</div>
