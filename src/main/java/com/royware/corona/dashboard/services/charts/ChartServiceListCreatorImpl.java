@@ -215,12 +215,15 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		
 		//Makes a list of total current cases for each day on a rolling basis
-		Queue<Integer> dailyChangeInPositives = new LinkedList<>();
-		dailyChangeInPositives.add(regionDataList.get(0).getTotalPositiveCases());
+		Queue<Integer> dailyChangeInPositivesPrimary = new LinkedList<>();
+		Queue<Integer> dailyChangeInPositivesSecondary = new LinkedList<>();
+		dailyChangeInPositivesPrimary.add(regionDataList.get(0).getTotalPositiveCases());
+		dailyChangeInPositivesSecondary.add(regionDataList.get(0).getTotalPositiveCases());
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
-		int rollingSum = 0;
+		int rollingSumPrimary = 0;
+		int rollingSumSecondary = 0;
 		int dayIndex = 1;
 		while(dayIndex < regionDataList.size()) {
 			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
@@ -228,23 +231,31 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 
-			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue()) {
-				rollingSum = totalToday;
+			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue()) {
+				rollingSumPrimary = totalToday;
 			} else {
-				rollingSum += dailyChange - dailyChangeInPositives.peek();
-				dailyChangeInPositives.remove();
+				rollingSumPrimary += dailyChange - dailyChangeInPositivesPrimary.peek();
+				dailyChangeInPositivesPrimary.remove();
 			}
-			dailyChangeInPositives.add(dailyChange);
+			dailyChangeInPositivesPrimary.add(dailyChange);
+			
+			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue()) {
+				rollingSumSecondary = totalToday;
+			} else {
+				rollingSumSecondary += dailyChange - dailyChangeInPositivesSecondary.peek();
+				dailyChangeInPositivesSecondary.remove();
+			}
+			dailyChangeInPositivesSecondary.add(dailyChange);
 			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", rollingSum);
+			xyPair.put("y", rollingSumPrimary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataListPrimary.add(xyPair);
 			
 			xyPairSec = new HashMap<>();
 			xyPairSec.put("x", dayIndex);
-			xyPairSec.put("y", rollingSum * 1000000.0 / regionPopulation);
+			xyPairSec.put("y", rollingSumSecondary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
 			dayIndex++;
 		}
@@ -451,37 +462,49 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		List<Map<Object, Object>> dataListSecondary = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		
-		//Makes a list of total current cases for each day on a rolling basis
-		Queue<Integer> dailyChangeInDeaths = new LinkedList<>();
-		dailyChangeInDeaths.add(regionDataList.get(0).getTotalDeaths());
+		//Makes a list of total current deaths for each day on a rolling basis
+		int startDayIndex = findFirstDayIndexWithPositiveDeaths(regionDataList);
+		Queue<Integer> dailyChangeInDeathsPrimary = new LinkedList<>();
+		Queue<Integer> dailyChangeInDeathsSecondary = new LinkedList<>();
+		dailyChangeInDeathsPrimary.add(regionDataList.get(startDayIndex).getTotalDeaths());
+		dailyChangeInDeathsSecondary.add(regionDataList.get(startDayIndex).getTotalDeaths());
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
-		int rollingSum = 0;
-		int dayIndex = 1;
+		int rollingSumPrimary = 0;
+		int rollingSumSecondary = 0;
+		int dayIndex = startDayIndex = 1;
 		while(dayIndex < regionDataList.size()) {
 			totalYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
 			totalToday = regionDataList.get(dayIndex).getTotalDeaths();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 
-			if(dayIndex < MovingAverageSizes.CURRENT_DEATHS_QUEUE_SIZE.getValue()) {
-				rollingSum = totalToday;
+			if(dayIndex < startDayIndex + MovingAverageSizes.CURRENT_DEATHS_QUEUE_SIZE_PRIMARY.getValue()) {
+				rollingSumPrimary = totalToday;
 			} else {
-				rollingSum += dailyChange - dailyChangeInDeaths.peek();
-				dailyChangeInDeaths.remove();
+				rollingSumPrimary += dailyChange - dailyChangeInDeathsPrimary.peek();
+				dailyChangeInDeathsPrimary.remove();
 			}
-			dailyChangeInDeaths.add(dailyChange);
+			dailyChangeInDeathsPrimary.add(dailyChange);
+			
+			if(dayIndex < startDayIndex + MovingAverageSizes.CURRENT_DEATHS_QUEUE_SIZE_SECONDARY.getValue()) {
+				rollingSumSecondary = totalToday;
+			} else {
+				rollingSumSecondary += dailyChange - dailyChangeInDeathsSecondary.peek();
+				dailyChangeInDeathsSecondary.remove();
+			}
+			dailyChangeInDeathsSecondary.add(dailyChange);
 			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", rollingSum);
+			xyPair.put("y", rollingSumPrimary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataListPrimary.add(xyPair);
 			
 			xyPairSec = new HashMap<>();
 			xyPairSec.put("x", dayIndex);
-			xyPairSec.put("y", rollingSum * 1000000.0 / regionPopulation);
+			xyPairSec.put("y", rollingSumSecondary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
 			dayIndex++;
 		}

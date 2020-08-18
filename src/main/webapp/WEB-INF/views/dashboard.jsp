@@ -57,14 +57,16 @@
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
-				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">Region Last 10 Days:</td>
+				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">Region Moving Total:</td>
 				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
-					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSum}" />
-					(<fmt:formatNumber type = "number" pattern = "#.##" value = "${currentcasespercent}" />% of region pop)
+					L7: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSumPrimary}" /> 
+					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${percapitabasis}" /> 
+					(L10: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSumSecondary}" />) 
 				</td>
 				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
-					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsMovingSum}" />
-					(<fmt:formatNumber type = "number" pattern = "#.###" value = "${currentdeathspercent}" />% of region pop)
+					L7: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.deathsMovingSumPrimary}" />
+					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${percapitabasis}" /> 
+					(L10: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.deathsMovingSumSecondary}" />)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
@@ -84,11 +86,13 @@
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${casespercent}" />% all-time
-					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${casespermillion}" /> per million)
+					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${casespercapita}" /> 
+					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${percapitabasis}" />)
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.###" value = "${deathspercent}" />% all-time
-					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${deathspermillion}" /> per million)
+					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${deathspercapita}" /> 
+					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${percapitabasis}" />)
 				</td>
 			</tr>
 			<chart:if test = "${(type == 'us' or type == 'state')}">

@@ -290,7 +290,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfCasesToday(
 				(double) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("y"));
-		dashStats.setCasesMovingSum((int) chartDataCasesMovingSum.get(0).get(chartDataCasesMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setCasesMovingSumPrimary((double) chartDataCasesMovingSum.get(0).get(chartDataCasesMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setCasesMovingSumSecondary((double) chartDataCasesMovingSum.get(1).get(chartDataCasesMovingSum.get(1).size() - 1).get("y"));
 		dashStats.setDeathsTotal((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setDeathsToday((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 2).get("y"));
@@ -298,7 +299,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
 				(double) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
-		dashStats.setDeathsMovingSum((int) chartDataDeathsMovingSum.get(0).get(chartDataDeathsMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setDeathsMovingSumPrimary((double) chartDataDeathsMovingSum.get(0).get(chartDataDeathsMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setDeathsMovingSumSecondary((double) chartDataDeathsMovingSum.get(1).get(chartDataDeathsMovingSum.get(1).size() - 1).get("y"));
 	}
 
 	@Override
@@ -462,8 +464,10 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Total Current Cases (" + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue() + " day moving total)");
-		chartConfig.setDataSeries2Name("Current Cases per Million (same " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue() + " days)");
+		chartConfig.setDataSeries1Name("Current Cases per " + MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				+ " (" + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " day moving total)");
+		chartConfig.setDataSeries2Name("Current Cases per " + MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				+ " (" + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " day moving total)");
 		return chartConfig;
 	}
 
