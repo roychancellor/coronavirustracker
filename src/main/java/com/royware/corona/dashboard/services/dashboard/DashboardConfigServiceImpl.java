@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
+import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
@@ -89,12 +90,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 		map.addAttribute("dashstats", dashStats);
 		map.addAttribute("population", regionPopulation);
-		map.addAttribute("casespermillion", dashStats.getCasesTotal() * 1000000.0 / regionPopulation);
+		map.addAttribute("casespercapita", dashStats.getCasesTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
-		map.addAttribute("currentcasespercent", dashStats.getCasesMovingSum() * 100.0 / regionPopulation);
-		map.addAttribute("deathspermillion", dashStats.getDeathsTotal() * 1000000.0 / regionPopulation);
+		map.addAttribute("deathspercapita", dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
-		map.addAttribute("currentdeathspercent", dashStats.getDeathsMovingSum() * 100.0 / regionPopulation);
+		map.addAttribute("percapitabasis", MovingAverageSizes.PER_CAPITA_BASIS.getValue());
 		
 		return true;
 	}

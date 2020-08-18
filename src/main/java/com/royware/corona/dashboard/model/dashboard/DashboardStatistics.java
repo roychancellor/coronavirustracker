@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 public class DashboardStatistics {
 	private int casesTotal;
 	private int casesToday;
-	private int casesMovingSum;
+	private double casesMovingSumPrimary;
+	private double casesMovingSumSecondary;
 	private double rateOfCasesToday;
 	private double accelOfCasesToday;
 	private int deathsTotal;
 	private int deathsToday;
-	private int deathsMovingSum;
+	private double deathsMovingSumPrimary;
+	private double deathsMovingSumSecondary;
 	private double rateOfDeathsToday;
 	private double rateOfCasesPerCasesToday;
 	private double rateOfDeathsPerDeathsToday;
@@ -47,12 +49,20 @@ public class DashboardStatistics {
 		this.casesToday = casesToday;
 	}
 
-	public int getCasesMovingSum() {
-		return casesMovingSum;
+	public double getCasesMovingSumPrimary() {
+		return casesMovingSumPrimary;
 	}
 
-	public void setCasesMovingSum(int casesMovingSum) {
-		this.casesMovingSum = casesMovingSum;
+	public void setCasesMovingSumPrimary(double casesMovingSumPrimary) {
+		this.casesMovingSumPrimary = casesMovingSumPrimary;
+	}
+
+	public double getCasesMovingSumSecondary() {
+		return casesMovingSumSecondary;
+	}
+
+	public void setCasesMovingSumSecondary(double casesMovingSumSecondary) {
+		this.casesMovingSumSecondary = casesMovingSumSecondary;
 	}
 
 	public double getRateOfCasesToday() {
@@ -87,12 +97,20 @@ public class DashboardStatistics {
 		this.deathsToday = deathsToday;
 	}
 
-	public int getDeathsMovingSum() {
-		return deathsMovingSum;
+	public double getDeathsMovingSumPrimary() {
+		return deathsMovingSumPrimary;
 	}
 
-	public void setDeathsMovingSum(int deathsMovingSum) {
-		this.deathsMovingSum = deathsMovingSum;
+	public void setDeathsMovingSumPrimary(double deathsMovingSumPrimary) {
+		this.deathsMovingSumPrimary = deathsMovingSumPrimary;
+	}
+
+	public double getDeathsMovingSumSecondary() {
+		return deathsMovingSumSecondary;
+	}
+
+	public void setDeathsMovingSumSecondary(double deathsMovingSumSecondary) {
+		this.deathsMovingSumSecondary = deathsMovingSumSecondary;
 	}
 
 	public double getRateOfDeathsToday() {

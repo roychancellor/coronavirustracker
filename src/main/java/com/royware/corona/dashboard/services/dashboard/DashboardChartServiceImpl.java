@@ -1,5 +1,6 @@
 package com.royware.corona.dashboard.services.dashboard;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -290,7 +291,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfCasesToday(
 				(double) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("y"));
-		dashStats.setCasesMovingSum((int) chartDataCasesMovingSum.get(0).get(chartDataCasesMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setCasesMovingSumPrimary((double) chartDataCasesMovingSum.get(0).get(chartDataCasesMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setCasesMovingSumSecondary((double) chartDataCasesMovingSum.get(1).get(chartDataCasesMovingSum.get(1).size() - 1).get("y"));
 		dashStats.setDeathsTotal((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setDeathsToday((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 2).get("y"));
@@ -298,7 +300,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				(double) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setAccelOfDeathsToday(
 				(double) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
-		dashStats.setDeathsMovingSum((int) chartDataDeathsMovingSum.get(0).get(chartDataDeathsMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setDeathsMovingSumPrimary((double) chartDataDeathsMovingSum.get(0).get(chartDataDeathsMovingSum.get(0).size() - 1).get("y"));
+		dashStats.setDeathsMovingSumSecondary((double) chartDataDeathsMovingSum.get(1).get(chartDataDeathsMovingSum.get(1).size() - 1).get("y"));
 	}
 
 	@Override
@@ -327,8 +330,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 	@Override
 	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
-		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Cases in " + region,
-				"Days Since Cases > 0", "Total Cases", "scatter");
+		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Positives in " + region,
+				"Days Since Cases > 0", "Total Positive Tests", "scatter");
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");
 		chartConfig.setxAxisLogarithmic("false");
@@ -351,8 +354,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Total Cases");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Cases");
+		chartConfig.setDataSeries1Name("Total Positives");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Positives");
 		return chartConfig;
 	}
 
@@ -362,7 +365,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int maxY;
 		int factor;
 		DashboardChartConfig chartConfig = new DashboardChartConfig(
-				"Rate of Change of Cases in " + region, "Days Since Cases > 0", "Percent Change in New Cases",
+				"Rate of Change of Positives in " + region, "Days Since Positives > 0", "Percent Change in New Positives",
 				"scatter");
 		chartConfig.setyAxisNumberSuffix("%");
 		chartConfig.setxAxisPosition("bottom");
@@ -387,7 +390,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		chartConfig.setLegendHorizonalAlign("right");
 		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("% Change in Cases");
+		chartConfig.setDataSeries1Name("% Change in Positives");
 		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfig;
 	}
@@ -398,7 +401,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int maxY;
 		int factor;
 		DashboardChartConfig chartConfigAccelerationOfCases = new DashboardChartConfig(
-				"Acceleration of Cases in " + region, "Days Since Cases > 0", "Percent Change in the Rate of New Cases",
+				"Acceleration of Positives in " + region, "Days Since Cases > 0", "Percent Change in the Rate of New Positives",
 				"scatter");
 		chartConfigAccelerationOfCases.setyAxisNumberSuffix("%");
 		chartConfigAccelerationOfCases.setxAxisPosition("bottom");
@@ -431,15 +434,18 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		chartConfigAccelerationOfCases.setLegendHorizonalAlign("right");
 		chartConfigAccelerationOfCases.setLegendVerticalAlign("top");
-		chartConfigAccelerationOfCases.setDataSeries1Name("Acceleration of Cases");
+		chartConfigAccelerationOfCases.setDataSeries1Name("Acceleration of Positives");
 		chartConfigAccelerationOfCases.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		return chartConfigAccelerationOfCases;
 	}
 
 	@Override
 	public DashboardChartConfig chartConfigTotalCurrentCases(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
-		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Current Cases in " + region,
-				"Days Since Cases > 0", "Total Current Cases", "scatter");
+		DashboardChartConfig chartConfig = new DashboardChartConfig(
+				"Time History of Current Positives in " + region,
+				"Days Since Positives > 0",
+				"Total Positives (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + ")",
+				"scatter");
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");
 		chartConfig.setxAxisLogarithmic("false");
@@ -462,15 +468,17 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Total Current Cases (" + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue() + " day moving total)");
-		chartConfig.setDataSeries2Name("Current Cases per Million (same " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE.getValue() + " days)");
+		chartConfig.setDataSeries1Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
+				+ " (last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
+		chartConfig.setDataSeries2Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
+				+ " (last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
 		return chartConfig;
 	}
 
 	@Override
 	public DashboardChartConfig chartConfigRateOfCasesVersusCases(String region, List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases) {
 		DashboardChartConfig chartConfigRateOfCasesVersusCases = new DashboardChartConfig(
-				"Detecting Inflection of Cases in " + region, "Total Cases", "Daily Change in Total Cases", "scatter");
+				"Detecting Inflection of Positives in " + region, "Total Positives", "Daily Change in Total Positives", "scatter");
 		chartConfigRateOfCasesVersusCases.setyAxisNumberSuffix("");
 		chartConfigRateOfCasesVersusCases.setxAxisPosition("bottom");
 		chartConfigRateOfCasesVersusCases.setxAxisLogarithmic("true");
@@ -495,7 +503,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 		chartConfigRateOfCasesVersusCases.setLegendHorizonalAlign("left");
 		chartConfigRateOfCasesVersusCases.setLegendVerticalAlign("top");
-		chartConfigRateOfCasesVersusCases.setDataSeries1Name("Daily change in cases");
+		chartConfigRateOfCasesVersusCases.setDataSeries1Name("Daily change in positives");
 		chartConfigRateOfCasesVersusCases.setDataSeries2Name("Pure exponential (k = 0.3)");
 		return chartConfigRateOfCasesVersusCases;
 	}
