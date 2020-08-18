@@ -117,11 +117,11 @@
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.proportionOfRegionCasesToUsCases}" />%
-					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalUsCases}" /> U.S. cases
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalUsCases}" /> U.S. total
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.proportionOfRegionDeathsToUsDeaths}" />%
-					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalUsDeaths}" /> U.S. deaths
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalUsDeaths}" /> U.S. total
 				</td>
 			</tr>
 			</chart:if>			
@@ -276,7 +276,7 @@
 		 			var pointColorStr = "blue";
 		 			var lineColorStr = "red";
 	 			} else if(c < DEATHS_TIME_HISTORY_INDEX) {
-	 				axis2TitleValue = "Current Cases per Million";
+	 				axis2TitleValue = "Total Positives (Last 10)";
 		 			var pointColorStr = "blue";
 		 			var lineColorStr = "red";
 	 			} else if(c < TESTS_TIME_HISTORY_INDEX) {

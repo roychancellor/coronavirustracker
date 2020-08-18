@@ -222,8 +222,8 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
-		int rollingSumPrimary = 0;
-		int rollingSumSecondary = 0;
+		long rollingSumPrimary = 0;
+		long rollingSumSecondary = 0;
 		int dayIndex = 1;
 		while(dayIndex < regionDataList.size()) {
 			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
@@ -257,6 +257,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPairSec.put("x", dayIndex);
 			xyPairSec.put("y", rollingSumSecondary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
+			log.info("index: " + dayIndex + ", pri: " + xyPair.get("y") + ", sec: " + xyPairSec.get("y"));
 			dayIndex++;
 		}
 		scatterChartDataLists.add(dataListPrimary);
@@ -473,7 +474,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		int dailyChange = 0;
 		int rollingSumPrimary = 0;
 		int rollingSumSecondary = 0;
-		int dayIndex = startDayIndex = 1;
+		int dayIndex = startDayIndex + 1;
 		while(dayIndex < regionDataList.size()) {
 			totalYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
 			totalToday = regionDataList.get(dayIndex).getTotalDeaths();
@@ -506,6 +507,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPairSec.put("x", dayIndex);
 			xyPairSec.put("y", rollingSumSecondary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
+//			log.info("index: " + dayIndex + ", pri: " + xyPair.get("y") + ", sec: " + xyPairSec.get("y"));
 			dayIndex++;
 		}
 		scatterChartDataLists.add(dataListPrimary);

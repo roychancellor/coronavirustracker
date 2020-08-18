@@ -92,12 +92,8 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		map.addAttribute("population", regionPopulation);
 		map.addAttribute("casespercapita", dashStats.getCasesTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
-//		map.addAttribute("currentcasespercapitaprimary", dashStats.getCasesMovingSumPrimary());
-//		map.addAttribute("currentcasespercapitasecondary", dashStats.getCasesMovingSumSecondary());
 		map.addAttribute("deathspercapita", dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
-//		map.addAttribute("currentdeathspercapitaprimary", dashStats.getDeathsMovingSumPrimary());
-//		map.addAttribute("currentdeathspercapitasecondary", dashStats.getDeathsMovingSumSecondary());
 		map.addAttribute("percapitabasis", MovingAverageSizes.PER_CAPITA_BASIS.getValue());
 		
 		return true;
