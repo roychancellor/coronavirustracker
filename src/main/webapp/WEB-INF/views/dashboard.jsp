@@ -47,49 +47,61 @@
 			</tr>
 			<tr style="line-height:12px;">
 				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">
-					All-Time:
+					All-Time Totals (Today):
 				</td>
 				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
 					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesTotal}" />
-					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" /> today)
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesToday}" />)
 				</td>
 				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
 					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsTotal}" />
-					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" /> today)
+					(+<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.deathsToday}" />)
 				</td>
 			</tr>
 			<tr style="line-height:12px;">
-				<td style="color:#00FF00;font-size:1.5em;font-weight:bold;text-align:right;">
-					Moving Totals:
-				</td>
-				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
-					L7: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSumPrimary}" /> 
-					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashmeta.perCapitaBasis}" /> 
-					(L10: <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSumSecondary}" />) 
-				</td>
-				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
-					L7: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.deathsMovingSumPrimary}" />
-					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashmeta.perCapitaBasis}" /> 
-					(L10: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.deathsMovingSumSecondary}" />)
-				</td>
-			</tr>
-			<tr style="line-height:12px;">
-				<td style="color:#FFA500;font-size:1.5em;font-weight:bold;text-align:right;">
+				<td style="color:#00FF00;text-align:right;">
 					Rate of Change:
 				</td>
-				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfCasesToday}" />% per day
 					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfCasesToday}" />%)
 				</td>
-				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.rateOfDeathsToday}" />% per day
 					(change: <fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.accelOfDeathsToday}" />%)
 				</td>
 			</tr>
+			<tr style="line-height:12px;">
+				<td style="color:#FFFFFF;font-size:1.5em;font-weight:bold;text-align:right;">
+					Per Capita Rate L7 (L10):
+				</td>
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSumPrimary}" /> 
+					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashmeta.perCapitaBasis}" /> 
+					(<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesMovingSumSecondary}" />) 
+				</td>
+				<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
+					<fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.deathsMovingSumPrimary}" />
+					per <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashmeta.perCapitaBasis}" /> 
+					(<fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.deathsMovingSumSecondary}" />)
+				</td>
+			</tr>
 			<chart:if test = "${(type == 'us' or type == 'state')}">
 			<tr style="line-height:12px;">
-				<td style="text-align:right;color:#FFFFFF;">
-					Positivity Rate (By Testing):
+				<td style="color:#FFFFFF;text-align:right;font-size:1.5em;font-weight:bold;">
+					Test Positivity Rate (L7):
+				</td>
+				<td style="color:#FFFFFF;font-size:1.5em;font-weight:bold;">
+					<fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfPositiveTestsMovingAverage}" />%
+					of <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.totalTestsConductedLastN}" /> total tests
+				</td>
+				<td style="color:#FFFFFF;">
+					----------
+				</td>
+			</tr>
+			<tr style="line-height:12px;">
+				<td style="color:#FF8000;text-align:right;">
+					Test Positivity Rate (All-Time):
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.#" value = "${dashstats.proportionOfPositiveTests}" />%
@@ -102,8 +114,8 @@
 			</tr>
 			</chart:if>
 			<tr style="line-height:12px;">
-				<td style="text-align:right;color:#FF0000;">
-					Positivity Rate (By Population):
+				<td style="color:#FF8000;text-align:right;">
+					Positivity Rate (per Capita):
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.casesPercentOfPop}" />% all-time
@@ -118,8 +130,8 @@
 			</tr>
 			<chart:if test = "${type == 'state'}">
 			<tr style="line-height:12px;">
-				<td style="text-align:right;color:#0000FF;">
-					Positivity Rate (By U.S. Totals):
+				<td style="color:#FF8000;text-align:right;">
+					Positivity Rate (per U.S. Totals):
 				</td>
 				<td style="color:#FFFFFF;">
 					<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.proportionOfRegionCasesToUsCases}" />%

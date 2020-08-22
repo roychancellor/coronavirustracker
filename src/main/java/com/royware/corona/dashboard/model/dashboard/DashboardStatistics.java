@@ -23,8 +23,10 @@ public class DashboardStatistics {
 	private double rateOfDeathsPerDeathsToday;
 	private double accelOfDeathsToday;
 	private int totalTestsConducted;
+	private int totalTestsConductedLastN;
 	private double proportionOfPopulationTested;
 	private double proportionOfPositiveTests;
+	private double proportionOfPositiveTestsMovingAverage;
 	private double proportionOfDeathsFromPositives;
 	private double proportionOfDeathsFromTested;
 	private double proportionOfDeathsOfExtrapolatedCases;
@@ -189,6 +191,14 @@ public class DashboardStatistics {
 		this.totalTestsConducted = totalTestsConducted;
 	}
 
+	public int getTotalTestsConductedLastN() {
+		return totalTestsConductedLastN;
+	}
+
+	public void setTotalTestsConductedLastN(int totalTestsConductedLastN) {
+		this.totalTestsConductedLastN = totalTestsConductedLastN;
+	}
+
 	public double getProportionOfPopulationTested() {
 		return proportionOfPopulationTested;
 	}
@@ -203,6 +213,14 @@ public class DashboardStatistics {
 
 	public void setProportionOfPositiveTests(double proportionOfPositiveTests) {
 		this.proportionOfPositiveTests = proportionOfPositiveTests;
+	}
+
+	public double getProportionOfPositiveTestsMovingAverage() {
+		return proportionOfPositiveTestsMovingAverage;
+	}
+
+	public void setProportionOfPositiveTestsMovingAverage(double proportionOfPositiveTestsMovingAverage) {
+		this.proportionOfPositiveTestsMovingAverage = proportionOfPositiveTestsMovingAverage;
 	}
 
 	public double getProportionOfDeathsFromPositives() {
