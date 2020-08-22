@@ -57,7 +57,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartService.getTotalDeathsVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime = chartService.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
+//		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
 		List<List<Map<Object, Object>>> chartDataTotalCurrentDeaths = chartService.getCurrentTotalDeathsWithPercentOfPopulation(dataList, regionPopulation);
 
 		////////// CHART DATA LISTS - TESTS /////////
@@ -101,8 +101,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Configuring all the charts for DEATHS...");
 		DashboardChartConfig chartConfigDeathsByTime = chartConfigDeathsByTime(region, chartDataDeathsByTime);
 		DashboardChartConfig chartConfigRateOfChangeOfDeaths = chartConfigRateOfChangeOfDeaths(region, chartDataRateOfDeathsByTime);
-		DashboardChartConfig chartConfigAccelerationOfDeaths = chartConfigAccelerationOfDeaths(region, chartDataAccelOfDeathsByTime);
-		DashboardChartConfig chartConfigRateOfDeathsVersusDeaths = chartConfigRateOfDeathsVersusDeaths(region, chartDataChangeOfDeathsByDeaths);
+//		DashboardChartConfig chartConfigAccelerationOfDeaths = chartConfigAccelerationOfDeaths(region, chartDataAccelOfDeathsByTime);
+//		DashboardChartConfig chartConfigRateOfDeathsVersusDeaths = chartConfigRateOfDeathsVersusDeaths(region, chartDataChangeOfDeathsByDeaths);
 		
 		////////// CHART CONFIGURATION - TESTS ///////////
 		DashboardChartConfig chartConfigTestsByTime = null;
@@ -190,24 +190,24 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartConfig(chartConfigRateOfChangeOfDeaths)
 				.setRegion(region)
 				.build());
-		dashboardList.add(new DashboardChart.Builder()
-				.setChartData(
-					new DashboardChartData.Builder()
-					.withChartDataLists(chartDataAccelOfDeathsByTime)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_ACCEL.getName())
-					.build())
-				.setChartConfig(chartConfigAccelerationOfDeaths)
-				.setRegion(region)
-				.build());
-		dashboardList.add(new DashboardChart.Builder()
-				.setChartData(
-					new DashboardChartData.Builder()
-					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())
-					.build())
-				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
-				.setRegion(region)
-				.build());
+//		dashboardList.add(new DashboardChart.Builder()
+//				.setChartData(
+//					new DashboardChartData.Builder()
+//					.withChartDataLists(chartDataAccelOfDeathsByTime)
+//					.withCsvHeader(ChartCsvHeaders.DEATHS_ACCEL.getName())
+//					.build())
+//				.setChartConfig(chartConfigAccelerationOfDeaths)
+//				.setRegion(region)
+//				.build());
+//		dashboardList.add(new DashboardChart.Builder()
+//				.setChartData(
+//					new DashboardChartData.Builder()
+//					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
+//					.withCsvHeader(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())
+//					.build())
+//				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
+//				.setRegion(region)
+//				.build());
 		
 		if(isNotWorld) {
 			///// TESTS /////
@@ -706,7 +706,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int factor;
 		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime;
 		chartConfigRatioOfCasesToTestsByTime = new DashboardChartConfig(
-				"Positivity Rate in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
+				"Time History of Positivity Rate in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests, %",
 				"scatter");
 		chartConfigRatioOfCasesToTestsByTime.setyAxisNumberSuffix("%");
 		chartConfigRatioOfCasesToTestsByTime.setxAxisPosition("bottom");

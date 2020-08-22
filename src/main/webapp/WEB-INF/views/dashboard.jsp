@@ -155,10 +155,12 @@
 				<td><div id="chartContainer21" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer22" style="height: 250px; width: 100%"></div></td>
 			</tr>
+			<chart:if test = "${(type == 'us' or type == 'state')}">
 			<tr>
 				<td><div id="chartContainer31" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer32" style="height: 250px; width: 100%"></div></td>
 			</tr>
+			</chart:if>			
 			<tr>
 				<td><div id="chartContainer41" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer42" style="height: 250px; width: 100%"></div></td>
@@ -167,10 +169,6 @@
 			<tr>
 				<td><div id="chartContainer51" style="height: 250px; width: 100%"></div></td>
 				<td><div id="chartContainer52" style="height: 250px; width: 100%"></div></td>
-			</tr>
-			<tr>
-				<td><div id="chartContainer61" style="height: 250px; width: 100%"></div></td>
-				<td><div id="chartContainer62" style="height: 250px; width: 100%"></div></td>
 			</tr>
 			</chart:if>			
 		</table>
@@ -184,46 +182,46 @@
 	<!-- MAKE ALL THE CHARTS LAST -->
 	<script type="text/javascript">
 		var regionType = "${regionType}";
-		const NUM_CHARTS = regionType == 'world' ? 8 : 12;
+		const NUM_CHARTS = regionType == 'world' ? 8 : 10;
 		const CASES_TIME_HISTORY_INDEX = 0;
 		const CASES_CURRENT_TIME_HISTORY_INDEX = 2;
 		const DEATHS_TIME_HISTORY_INDEX = 4;
-		const TESTS_TIME_HISTORY_INDEX = 8;
-		const HOSPCUR_TIME_HISTORY_INDEX = 10;
-		const HOSPCUM_TIME_HISTORY_INDEX = 11;
+		const TESTS_TIME_HISTORY_INDEX = 6;
+		const HOSPCUR_TIME_HISTORY_INDEX = 8;
+		const HOSPCUM_TIME_HISTORY_INDEX = 9;
 		
 		//Constants that define the row-column of the chart position on the dashboard
-		const TIME_SERIES_CASES = "11";
-		const TIME_SERIES_RATE_OF_CASES = "12";
-		const TIME_SERIES_CURRENT_CASES = "21";
-		const CHANGE_IN_CASES_VS_TOTAL_CASES = "22";
-		const TIME_SERIES_DEATHS = "31";
-		const TIME_SERIES_RATE_OF_DEATHS = "32";
-		const TIME_SERIES_ACCEL_OF_DEATHS = "41";
-		const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
-		const TIME_SERIES_TESTS = "51";
-		const TIME_SERIES_RATIO_CASES_TO_TESTS = "52";
-		const TIME_SERIES_HOSP_CUR = "61";
-		const TIME_SERIES_HOSP_CUMUL = "62";
+		const TIME_SERIES_CASES_ROW_COL = "11";
+		const TIME_SERIES_RATE_OF_CASES_ROW_COL = "12";
+		const TIME_SERIES_CURRENT_CASES_ROW_COL = "21";
+		const CHANGE_IN_CASES_VS_TOTAL_CASES_ROW_COL = "22";
+		const TIME_SERIES_DEATHS_ROW_COL = "41";
+		const TIME_SERIES_RATE_OF_DEATHS_ROW_COL = "42";
+		//const TIME_SERIES_ACCEL_OF_DEATHS = "41";
+		//const CHANGE_IN_DEATHS_VS_TOTAL_DEATHS = "42";
+		const TIME_SERIES_TESTS_ROW_COL = "31";
+		const TIME_SERIES_RATIO_CASES_TO_TESTS_ROW_COL = "32";
+		const TIME_SERIES_HOSP_CUR_ROW_COL = "51";
+		const TIME_SERIES_HOSP_CUMUL_ROW_COL = "52";
 	 		
 		//Maps the index of the chart data to the row-column constant
 		//for referencing the chartContainer div tags above
 		var mapIndexToContainerRowCol = new Map();
-		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX, TIME_SERIES_CASES);
-		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATE_OF_CASES);
-		mapIndexToContainerRowCol.set(CASES_CURRENT_TIME_HISTORY_INDEX, TIME_SERIES_CURRENT_CASES);
-		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 3, CHANGE_IN_CASES_VS_TOTAL_CASES);
+		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX, TIME_SERIES_CASES_ROW_COL);
+		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATE_OF_CASES_ROW_COL);
+		mapIndexToContainerRowCol.set(CASES_CURRENT_TIME_HISTORY_INDEX, TIME_SERIES_CURRENT_CASES_ROW_COL);
+		mapIndexToContainerRowCol.set(CASES_TIME_HISTORY_INDEX + 3, CHANGE_IN_CASES_VS_TOTAL_CASES_ROW_COL);
 		
-		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX, TIME_SERIES_DEATHS);
-		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATE_OF_DEATHS);
-		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX + 2, TIME_SERIES_ACCEL_OF_DEATHS);
-		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX + 3, CHANGE_IN_DEATHS_VS_TOTAL_DEATHS);
+		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX, TIME_SERIES_DEATHS_ROW_COL);
+		mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATE_OF_DEATHS_ROW_COL);
+		//mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX + 2, TIME_SERIES_ACCEL_OF_DEATHS);
+		//mapIndexToContainerRowCol.set(DEATHS_TIME_HISTORY_INDEX + 3, CHANGE_IN_DEATHS_VS_TOTAL_DEATHS);
 		
-		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX, TIME_SERIES_TESTS);
-		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATIO_CASES_TO_TESTS);
+		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX, TIME_SERIES_TESTS_ROW_COL);
+		mapIndexToContainerRowCol.set(TESTS_TIME_HISTORY_INDEX + 1, TIME_SERIES_RATIO_CASES_TO_TESTS_ROW_COL);
 		
-		mapIndexToContainerRowCol.set(HOSPCUR_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUR);
-		mapIndexToContainerRowCol.set(HOSPCUM_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUMUL);
+		mapIndexToContainerRowCol.set(HOSPCUR_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUR_ROW_COL);
+		mapIndexToContainerRowCol.set(HOSPCUM_TIME_HISTORY_INDEX, TIME_SERIES_HOSP_CUMUL_ROW_COL);
 		
 		//MAIN ACTIONS
 		var containers = [];
@@ -231,17 +229,16 @@
 		var chartArray = [];
 		
 		makeChartDataFromJavaLists();
-		makeChartConfigs(); 		
+		makeChartConfigurations(); 		
  		for(var i = 0; i < NUM_CHARTS; i++) {
  			if(i == CASES_TIME_HISTORY_INDEX ||
- 	 		   i == CASES_CURRENT_TIME_HISTORY_INDEX ||
  			   i == DEATHS_TIME_HISTORY_INDEX ||
  			   i == TESTS_TIME_HISTORY_INDEX ||
  			   i == HOSPCUR_TIME_HISTORY_INDEX ||
  			   i == HOSPCUM_TIME_HISTORY_INDEX) {
- 				addLoadEvent(makeChartQuantityByTime(containers[i], configObjects[i], chartArray[i]));
+ 				addLoadEvent(makeChartDualAxis(containers[i], configObjects[i], chartArray[i]));
  			} else {
- 				addLoadEvent(makeChart(containers[i], configObjects[i], chartArray[i]));
+ 				addLoadEvent(makeChartSingleAxis(containers[i], configObjects[i], chartArray[i]));
  			}
  		}
  		//END MAIN ACTIONS
@@ -281,7 +278,7 @@
 		}
 		
  		//Function that makes a chart configuration object for each chart
-		function makeChartConfigs() {
+		function makeChartConfigurations() {
 	 		<chart:forEach items = "${allDashboardCharts}" var = "config" varStatus = "loop">
  				var c = parseInt("${loop.index}");
 	 			containers[c] = "chartContainer" + mapIndexToContainerRowCol.get(c);
@@ -289,23 +286,23 @@
 	 			var axis2TitleValue = "";
 	 			var pointColorStr = "blue";
 	 			var lineColorStr = "red";
-	 			if(c < CASES_CURRENT_TIME_HISTORY_INDEX) {
-	 				axis2TitleValue = "Daily poitive Tests";
+	 			if(c == CASES_TIME_HISTORY_INDEX || c == CASES_TIME_HISTORY_INDEX + 1) {
+	 				axis2TitleValue = "Daily Positive Tests";
 		 			var pointColorStr = "blue";
 		 			var lineColorStr = "red";
-	 			} else if(c < DEATHS_TIME_HISTORY_INDEX) {
-	 				axis2TitleValue = "Total Positives (Last 10)";
+	 			} else if(c == CASES_CURRENT_TIME_HISTORY_INDEX || c == CASES_CURRENT_TIME_HISTORY_INDEX + 1) {
+	 				//axis2TitleValue = "Total Positives (Last 10)";
 		 			var pointColorStr = "blue";
 		 			var lineColorStr = "red";
-	 			} else if(c < TESTS_TIME_HISTORY_INDEX) {
+	 			} else if(c == DEATHS_TIME_HISTORY_INDEX || c == DEATHS_TIME_HISTORY_INDEX + 1) {
 	 				axis2TitleValue = "Daily Deaths";
 	 				pointColorStr = "purple";
 	 				lineColorStr = "green";
-	 			} else if(c < HOSPCUR_TIME_HISTORY_INDEX) {
+	 			} else if(c == TESTS_TIME_HISTORY_INDEX || c == TESTS_TIME_HISTORY_INDEX + 1) {
 	 				axis2TitleValue = "Daily Tests";
 	 				pointColorStr = "orange";
 	 				lineColorStr = "black";
-	 			} else {
+	 			} else if(c == HOSPCUR_TIME_HISTORY_INDEX || c == HOSPCUM_TIME_HISTORY_INDEX) {
 	 				axis2TitleValue = "Daily Hospitalizations";
 	 				pointColorStr = "green";
 	 				lineColorStr = "red";
@@ -335,7 +332,7 @@
 		}
  		
  		//Function that makes every chart except the time series of total and daily cases/deaths
-		function makeChart(chartContainerString, config, dataPointsArr) {
+		function makeChartSingleAxis(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
 				exportEnabled: true,
@@ -407,7 +404,7 @@
 		}
 		
  		//Function that makes the time series charts for cases and deaths
-		function makeChartQuantityByTime(chartContainerString, config, dataPointsArr) {
+		function makeChartDualAxis(chartContainerString, config, dataPointsArr) {
  			var chart = new CanvasJS.Chart(chartContainerString, {
 				animationEnabled: true,
 				exportEnabled: true,
