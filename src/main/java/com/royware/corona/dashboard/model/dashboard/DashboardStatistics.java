@@ -6,12 +6,16 @@ import org.springframework.stereotype.Service;
 public class DashboardStatistics {
 	private int casesTotal;
 	private int casesToday;
+	private double casesPerCapita;
+	private double casesPercentOfPop;
 	private double casesMovingSumPrimary;
 	private double casesMovingSumSecondary;
 	private double rateOfCasesToday;
 	private double accelOfCasesToday;
 	private int deathsTotal;
 	private int deathsToday;
+	private double deathsPerCapita;
+	private double deathsPercentOfPop;
 	private double deathsMovingSumPrimary;
 	private double deathsMovingSumSecondary;
 	private double rateOfDeathsToday;
@@ -47,6 +51,22 @@ public class DashboardStatistics {
 
 	public void setCasesToday(int casesToday) {
 		this.casesToday = casesToday;
+	}
+
+	public double getCasesPerCapita() {
+		return casesPerCapita;
+	}
+
+	public void setCasesPerCapita(double casesPerCapita) {
+		this.casesPerCapita = casesPerCapita;
+	}
+
+	public double getCasesPercentOfPop() {
+		return casesPercentOfPop;
+	}
+
+	public void setCasesPercentOfPop(double casesPercentOfPop) {
+		this.casesPercentOfPop = casesPercentOfPop;
 	}
 
 	public double getCasesMovingSumPrimary() {
@@ -95,6 +115,22 @@ public class DashboardStatistics {
 
 	public void setDeathsToday(int deathsToday) {
 		this.deathsToday = deathsToday;
+	}
+
+	public double getDeathsPerCapita() {
+		return deathsPerCapita;
+	}
+
+	public void setDeathsPerCapita(double deathsPerCapita) {
+		this.deathsPerCapita = deathsPerCapita;
+	}
+
+	public double getDeathsPercentOfPop() {
+		return deathsPercentOfPop;
+	}
+
+	public void setDeathsPercentOfPop(double deathsPercentOfPop) {
+		this.deathsPercentOfPop = deathsPercentOfPop;
 	}
 
 	public double getDeathsMovingSumPrimary() {
