@@ -4,6 +4,6 @@
 <nav>
 	<div><a href="${pageContext.request.contextPath}/corona">Home</a></div>
 	<div><a href="${pageContext.request.contextPath}/about">About</a></div>
-	<div><a href="${pageContext.request.contextPath}/commentary">Commentary</a></div>
-	<div><a href="${pageContext.request.contextPath}/math">The Math</a></div>
+	<!-- <div><a href="${pageContext.request.contextPath}/commentary">Commentary</a></div>
+	<div><a href="${pageContext.request.contextPath}/math">The Math</a></div> -->
 </nav>

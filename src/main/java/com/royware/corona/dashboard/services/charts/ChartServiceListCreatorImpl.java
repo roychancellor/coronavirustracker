@@ -257,7 +257,6 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 			xyPairSec.put("x", dayIndex);
 			xyPairSec.put("y", rollingSumSecondary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
-			log.info("index: " + dayIndex + ", pri: " + xyPair.get("y") + ", sec: " + xyPairSec.get("y"));
 			dayIndex++;
 		}
 		scatterChartDataLists.add(dataListPrimary);

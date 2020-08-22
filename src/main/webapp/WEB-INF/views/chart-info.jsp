@@ -71,11 +71,11 @@
 			</tr>
 			<tr>
 				<td class="col-md-2"><div id="chartContainer21" style="height: 430px; width: 100%"><img src="resources/images/chartinfo/Chart-21.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows a 10-day moving sum of cases. 
-				This means that each data point is the sum of the last 10 days. Each day, that day's cases are added and the cases from 10 days prior 
-				is subtracted. Assuming the life span of a positive case is about 10 days, these data point approximate the total number of positive cases 
-				that currently exist in the region right now. The chart also gives the sum divided by the region population times one million to normalize 
-				the data.</p>
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows a 7-day and 10-day moving 
+				sum of positive tests normalized per 100,000 people. 
+				This means that each data point is the sum of the last 7 (or 10) days. Each day, that day's cases are added and the cases from 7 (or 10) days prior 
+				is subtracted. Assuming the life span of a positive case is about 7-10 days, these data points approximate the number of positive cases 
+				that currently exist in the region right now.</p>
 				</div>
 				</td>
 				<td class="col-md-2"><div id="chartContainer22" style="height: 430px; width: 100%"><img src="resources/images/chartinfo/Chart-22.png">
@@ -89,31 +89,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-md-2"><div id="chartContainer31" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-31.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the time history
-				chart for cases, but for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
-				</div>
-				</td>
-				<td class="col-md-2"><div id="chartContainer32" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-32.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
-				the rate of change of cases (speed-o-meter), but for deaths.  Note that deaths lags cases by a few days,
-				but the time scale here is the same as cases.</p>
-				</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="col-md-2"><div id="chartContainer41" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-41.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
-				acceleration chart for cases, but for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
-				</div>
-				</td>
-				<td class="col-md-2"><div id="chartContainer42" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-42.png">
-				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
-				the chart for detecting inflection in cases, but for deaths.</p>
-				</div>
-				</td>
-			</tr>
-			<tr>
 				<td class="col-md-2"><div id="chartContainer51" style="height: 320px; width: 100%"><img src="resources/images/chartinfo/Chart-51.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the
 				cases time history, except for tests conducted. The application computes this as the sum of positive and negative cases.
@@ -123,6 +98,19 @@
 				<td class="col-md-2"><div id="chartContainer52" style="height: 320px; width: 100%"><img src="resources/images/chartinfo/Chart-52.png">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart shows the ratio of positive
 				test results to total tests conducted (i.e. positives / total * 100%) over time.</p>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="col-md-2"><div id="chartContainer31" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-31.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as the time history
+				chart for cases, but for deaths. Note that deaths lags cases by a few days, but the time scale here is the same as cases.</p>
+				</div>
+				</td>
+				<td class="col-md-2"><div id="chartContainer32" style="height: 300px; width: 100%"><img src="resources/images/chartinfo/Chart-32.png">
+				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">This chart is exactly the same as
+				the rate of change of cases (speed-o-meter), but for deaths.  Note that deaths lags cases by a few days,
+				but the time scale here is the same as cases.</p>
 				</div>
 				</td>
 			</tr>

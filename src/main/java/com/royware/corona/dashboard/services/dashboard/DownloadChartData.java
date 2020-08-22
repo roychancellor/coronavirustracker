@@ -37,6 +37,7 @@ public class DownloadChartData {
 		log.info("Writing the header row...");
 		List<String> rows = new ArrayList<>();
 		rows.add(makeCsvHeaderRow(regionType, dashboardCharts));
+		
 		//Make the data rows
 		log.info("Writing the data rows...");
 		rows.addAll(makeCsvDataRows(regionType, dashboardCharts));

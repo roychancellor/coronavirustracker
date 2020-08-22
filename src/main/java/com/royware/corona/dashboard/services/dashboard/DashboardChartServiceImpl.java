@@ -57,7 +57,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartService.getTotalDeathsVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime = chartService.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
+//		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
 		List<List<Map<Object, Object>>> chartDataTotalCurrentDeaths = chartService.getCurrentTotalDeathsWithPercentOfPopulation(dataList, regionPopulation);
 
 		////////// CHART DATA LISTS - TESTS /////////
@@ -93,7 +93,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Configuring all the charts for CASES...");
 		DashboardChartConfig chartConfigCasesByTime = chartConfigCasesByTime(region, chartDataCasesByTime);
 		DashboardChartConfig chartConfigRateOfChangeOfCases = chartConfigRateOfChangeOfCases(region, chartDataRateOfCasesByTime);
-//		DashboardChartConfig chartConfigAccelerationOfCases = chartConfigAccelerationOfCases(region, chartDataAccelOfCasesByTime);
 		DashboardChartConfig chartConfigRateOfCasesVersusCases = chartConfigRateOfCasesVersusCases(region, chartDataChangeOfCasesByCases);
 		DashboardChartConfig chartConfigTotalCurrentCases = chartConfigTotalCurrentCases(region, chartDataTotalCurrentCases);
 		
@@ -101,8 +100,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Configuring all the charts for DEATHS...");
 		DashboardChartConfig chartConfigDeathsByTime = chartConfigDeathsByTime(region, chartDataDeathsByTime);
 		DashboardChartConfig chartConfigRateOfChangeOfDeaths = chartConfigRateOfChangeOfDeaths(region, chartDataRateOfDeathsByTime);
-		DashboardChartConfig chartConfigAccelerationOfDeaths = chartConfigAccelerationOfDeaths(region, chartDataAccelOfDeathsByTime);
-		DashboardChartConfig chartConfigRateOfDeathsVersusDeaths = chartConfigRateOfDeathsVersusDeaths(region, chartDataChangeOfDeathsByDeaths);
 		
 		////////// CHART CONFIGURATION - TESTS ///////////
 		DashboardChartConfig chartConfigTestsByTime = null;
@@ -143,15 +140,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartConfig(chartConfigRateOfChangeOfCases)
 				.setRegion(region)
 				.build());
-//		dashboardList.add(new DashboardChart.Builder()
-//				.setChartData(
-//					new DashboardChartData.Builder()
-//					.withChartDataLists(chartDataAccelOfCasesByTime)
-//					.withCsvHeader(ChartCsvHeaders.CASES_ACCEL.getName())
-//					.build())
-//				.setChartConfig(chartConfigAccelerationOfCases)
-//				.setRegion(region)
-//				.build());
 		dashboardList.add(new DashboardChart.Builder()
 				.setChartData(
 					new DashboardChartData.Builder()
@@ -188,24 +176,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.withCsvHeader(ChartCsvHeaders.DEATHS_RATE.getName())
 					.build())
 				.setChartConfig(chartConfigRateOfChangeOfDeaths)
-				.setRegion(region)
-				.build());
-		dashboardList.add(new DashboardChart.Builder()
-				.setChartData(
-					new DashboardChartData.Builder()
-					.withChartDataLists(chartDataAccelOfDeathsByTime)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_ACCEL.getName())
-					.build())
-				.setChartConfig(chartConfigAccelerationOfDeaths)
-				.setRegion(region)
-				.build());
-		dashboardList.add(new DashboardChart.Builder()
-				.setChartData(
-					new DashboardChartData.Builder()
-					.withChartDataLists(chartDataChangeOfDeathsByDeaths)
-					.withCsvHeader(ChartCsvHeaders.DEATHS_CHG_BY_CASES.getName())
-					.build())
-				.setChartConfig(chartConfigRateOfDeathsVersusDeaths)
 				.setRegion(region)
 				.build());
 		
@@ -332,6 +302,546 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				* 100.0 / (dashStats.getProportionOfPositiveTests() * usaPop));
 	}
 	
+	@Override
+	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartTitle("Time History of Positives in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Total Positive Tests");
+		chartConfig.setDataSeries1Name("Total Positives");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Positives");
+
+		chartConfig.setChartType("scatter");
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
+		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfChangeOfCases(String region, List<List<Map<Object, Object>>> chartDataRateOfCasesByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartTitle("Rate of Change of Positives in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Percent Change in New Positives");
+		chartConfig.setDataSeries1Name("% Change in Positives");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+
+		chartConfig.setChartType("scatter");
+		chartConfig.setyAxisNumberSuffix("%");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfCasesByTime.get(0));
+		maxY = maxY >= 100 ? 99 : maxY;
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("right");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigAccelerationOfCases(String region, List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartTitle("Acceleration of Positives in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Percent Change in Rate of New Positives");
+		chartConfig.setDataSeries1Name("Acceleration of Positives");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+
+		chartConfig.setChartType("scatter");
+		chartConfig.setyAxisNumberSuffix("%");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		int minY = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
+		int minYMovAvg = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(1));
+		minY = (minY < minYMovAvg) ? minY : minYMovAvg;
+		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
+		maxY = maxY >= 100 ? 99 : maxY;
+		minY = minY <= -100 ? -99 : minY;
+		factor = (int) Math.pow(10, (int) Math.log10(minY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMin(minY / factor * factor - factor);
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisInterval(factor);
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+
+		chartConfig.setLegendHorizonalAlign("right");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigTotalCurrentCases(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Time History of Positivity Rate in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue()));
+		chartConfig.setDataSeries1Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
+				+ " (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
+		chartConfig.setDataSeries2Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
+				+ " (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
+
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
+		int maxY2 = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(1));
+		maxY = maxY > maxY2 ? maxY : maxY2;
+		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfCasesVersusCases(String region, List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases) {
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Detecting Inflection of Positives in " + region);
+		chartConfig.setxAxisTitle("Total Positive Cases");
+		chartConfig.setyAxisTitle("Daily Change in Total Positive Cases");
+		chartConfig.setDataSeries1Name("Daily change in positives");
+		chartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
+		
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("true");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("true");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		int cases = (Integer) chartDataChangeOfCasesByCases.get(0).get(0).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		int exp = (int) Math.log10(cases);
+		chartConfig.setxAxisMin((int) Math.pow(10, exp));
+		cases = (Integer) chartDataChangeOfCasesByCases.get(0).get(chartDataChangeOfCasesByCases.get(0).size() - 1).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		exp = (int) Math.log10(cases);
+		chartConfig.setxAxisMax((int) Math.pow(10, 1 + (int) Math.log10(cases)));
+		Double minValue = (Double) chartDataChangeOfCasesByCases.get(0).get(0).get("y");
+		int digits = minValue > 0 ? (int) Math.log10((Double) chartDataChangeOfCasesByCases.get(0).get(0).get("y")) : 1;
+		chartConfig.setyAxisMin((int) Math.pow(10, digits));
+		chartConfig.setyAxisMax((int) Math.pow(10,
+				1 + (int) Math.log10((double) chartDataChangeOfCasesByCases.get(1).get(1).get("y"))));
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigDeathsByTime(String region, List<List<Map<Object, Object>>> chartDataDeathsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Time History of Deaths in " + region);
+		chartConfig.setxAxisTitle("Days Since Deaths > 0");
+		chartConfig.setyAxisTitle("Total Deaths");
+		chartConfig.setDataSeries1Name("Total Deaths");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Deaths");
+		
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataDeathsByTime.get(0));
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfChangeOfDeaths(String region, List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Rate of Change of Deaths in " + region);
+		chartConfig.setxAxisTitle("Days Since Deaths > 0");
+		chartConfig.setyAxisTitle("Percent Change in New Deaths");
+		chartConfig.setDataSeries1Name("% change in deaths");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+		
+		chartConfig.setyAxisNumberSuffix("%");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxAxisGridlinesDisplay("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfDeathsByTime.get(0));
+		maxY = maxY >= 100 ? 99 : maxY;
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisInterval(factor);
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+
+		chartConfig.setLegendHorizonalAlign("right");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigAccelerationOfDeaths(String region, List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		int minY;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Acceleration of Deaths in " + region);
+		chartConfig.setxAxisTitle("Days Since Deaths > 0");
+		chartConfig.setyAxisTitle("Percent Change in Rate of New Deaths");
+		chartConfig.setDataSeries1Name("Acceleration of Deaths");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+		
+		chartConfig.setyAxisNumberSuffix("%");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		minY = getMinValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
+		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
+		maxY = maxY >= 100 ? 99 : maxY;
+		minY = minY <= -100 ? -99 : minY;
+		factor = (int) Math.pow(10, (int) Math.log10(minY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMin(minY / factor * factor - factor);
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisInterval(factor);
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+
+		chartConfig.setLegendHorizonalAlign("right");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRateOfDeathsVersusDeaths(String region, List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths) {
+		int cases;
+		int exp;
+		Double minValue;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Detecting Inflection of Deaths in " + region);
+		chartConfig.setxAxisTitle("Total Deaths");
+		chartConfig.setyAxisTitle("Daily Change in Total Deaths");
+		chartConfig.setDataSeries1Name("Daily change in deaths");
+		chartConfig.setDataSeries2Name("Pure exponential (k = 0.3)");
+		
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("true");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("true");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		cases = (Integer) chartDataChangeOfDeathsByDeaths.get(0).get(0).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		exp = (int) Math.log10(cases);
+		chartConfig.setxAxisMin((int) Math.pow(10, exp));
+		cases = (Integer) chartDataChangeOfDeathsByDeaths.get(0).get(chartDataChangeOfDeathsByDeaths.get(0).size() - 1).get("x");
+		cases = (cases <= 0) ? 1 : cases;
+		exp = (int) Math.log10(cases);
+		chartConfig.setxAxisMax((int) Math.pow(10, 1 + exp));
+		minValue = Double.valueOf(getMinValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(0)));
+		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
+		chartConfig.setyAxisMin((int) Math.pow(10, exp));
+		double maxValue = (double) chartDataChangeOfDeathsByDeaths.get(1).get(1).get("y");
+		maxValue = maxValue > 0 ? maxValue : 1;
+		chartConfig.setyAxisMax((int) Math.pow(10, 1 + (int) Math.log10(maxValue)));
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigRatioOfCasesToTestsByTime(String region, List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Time History of Positivity Rate in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Ratio of Positives to Tests, %");
+		chartConfig.setDataSeries1Name("% Positive per Test");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+		
+		chartConfig.setyAxisNumberSuffix("%");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataRatioOfCasesToTestsByTime.get(0).get(chartDataRatioOfCasesToTestsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
+		maxY = maxY >= 100 ? 99 : maxY;
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("right");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigTestsByTime(String region, List<List<Map<Object, Object>>> chartDataTestsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Time History of Tests in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Total Tests");
+		chartConfig.setDataSeries1Name("Total Tests");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Tests");
+		
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigCurrentHospitalizationsByTime(String region,
+			List<List<Map<Object, Object>>> chartDataCurrentHospitalizationsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Time History of Current Hospitalizations in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Current Hospitalizations");
+		chartConfig.setDataSeries1Name("Current Hospitalizations");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
+		
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataCurrentHospitalizationsByTime.get(0).get(chartDataCurrentHospitalizationsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataCurrentHospitalizationsByTime.get(0));
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	@Override
+	public DashboardChartConfig chartConfigCumulativeHospitalizationsByTime(String region,
+			List<List<Map<Object, Object>>> chartDataCumulativeHospitalizationsByTime) {
+		int maxX;
+		int maxY;
+		int factor;
+		DashboardChartConfig chartConfig = new DashboardChartConfig();
+		
+		chartConfig.setChartType("scatter");
+
+		chartConfig.setChartTitle("Time History of Cumulative Hospitalizations in " + region);
+		chartConfig.setxAxisTitle("Days Since Cases > 0");
+		chartConfig.setyAxisTitle("Cumulative Hospitalizations");
+		chartConfig.setDataSeries1Name("Cumulative Hospitalizations");
+		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
+		
+		chartConfig.setyAxisNumberSuffix("");
+		chartConfig.setxAxisPosition("bottom");
+		chartConfig.setxAxisLogarithmic("false");
+		chartConfig.setyAxisPosition("left");
+		chartConfig.setyAxisLogarithmic("false");
+		chartConfig.setShowLegend("true");
+		chartConfig.setDataPointSize(1);
+		chartConfig.setxGridDashType("dot");
+		chartConfig.setxAxisMin(0);
+		maxX = (int) chartDataCumulativeHospitalizationsByTime.get(0).get(chartDataCumulativeHospitalizationsByTime.get(0).size() - 1).get("x");
+		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
+		chartConfig.setyAxisMin(0);
+		maxY = getMaxValueFromListOfXYMaps(chartDataCumulativeHospitalizationsByTime.get(0));
+		factor = (int) Math.pow(10, (int) Math.log10(maxY));
+		if (factor == 0) {
+			factor = 10;
+		}
+		chartConfig.setyAxisMax(maxY / factor * factor + factor);
+		chartConfig.setyAxisInterval(factor);
+
+		chartConfig.setLegendHorizonalAlign("left");
+		chartConfig.setLegendVerticalAlign("top");
+		return chartConfig;
+	}
+
+	////// HELPER METHODS /////////
 	private <T extends CanonicalData> int computeTotalTestsLastN(List<T> dataList, int lastN) {
 		if(dataList.size() < lastN + 1) {
 			return 0;
@@ -368,480 +878,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		return sum;
 	}
 
-	@Override
-	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
-		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Positives in " + region,
-				"Days Since Cases > 0", "Total Positive Tests", "scatter");
-		chartConfig.setyAxisNumberSuffix("");
-		chartConfig.setxAxisPosition("bottom");
-		chartConfig.setxAxisLogarithmic("false");
-		chartConfig.setyAxisPosition("left");
-		chartConfig.setyAxisLogarithmic("false");
-		chartConfig.setShowLegend("true");
-		chartConfig.setDataPointSize(1);
-		chartConfig.setxGridDashType("dot");
-		chartConfig.setxAxisMin(0);
-		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
-		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfig.setyAxisMin(0);
-		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
-		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfig.setyAxisMax(maxY / factor * factor + factor);
-		chartConfig.setyAxisInterval(factor);
-
-		chartConfig.setLegendHorizonalAlign("left");
-		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Total Positives");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Positives");
-		return chartConfig;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigRateOfChangeOfCases(String region, List<List<Map<Object, Object>>> chartDataRateOfCasesByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfig = new DashboardChartConfig(
-				"Rate of Change of Positives in " + region, "Days Since Positives > 0", "Percent Change in New Positives",
-				"scatter");
-		chartConfig.setyAxisNumberSuffix("%");
-		chartConfig.setxAxisPosition("bottom");
-		chartConfig.setxAxisLogarithmic("false");
-		chartConfig.setyAxisPosition("left");
-		chartConfig.setyAxisLogarithmic("false");
-		chartConfig.setShowLegend("true");
-		chartConfig.setDataPointSize(1);
-		chartConfig.setxGridDashType("dot");
-		chartConfig.setxAxisMin(0);
-		maxX = (int) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("x");
-		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfCasesByTime.get(0));
-		maxY = maxY >= 100 ? 99 : maxY;
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfig.setyAxisMax(maxY / factor * factor + factor);
-		chartConfig.setyAxisInterval(factor);
-
-		chartConfig.setLegendHorizonalAlign("right");
-		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("% Change in Positives");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
-		return chartConfig;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigAccelerationOfCases(String region, List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfigAccelerationOfCases = new DashboardChartConfig(
-				"Acceleration of Positives in " + region, "Days Since Cases > 0", "Percent Change in the Rate of New Positives",
-				"scatter");
-		chartConfigAccelerationOfCases.setyAxisNumberSuffix("%");
-		chartConfigAccelerationOfCases.setxAxisPosition("bottom");
-		chartConfigAccelerationOfCases.setxAxisLogarithmic("false");
-		chartConfigAccelerationOfCases.setyAxisPosition("left");
-		chartConfigAccelerationOfCases.setyAxisLogarithmic("false");
-		chartConfigAccelerationOfCases.setShowLegend("true");
-		chartConfigAccelerationOfCases.setDataPointSize(1);
-		chartConfigAccelerationOfCases.setxGridDashType("dot");
-		chartConfigAccelerationOfCases.setxAxisMin(0);
-		maxX = (int) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("x");
-		chartConfigAccelerationOfCases.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		int minY = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
-		int minYMovAvg = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(1));
-		minY = (minY < minYMovAvg) ? minY : minYMovAvg;
-		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
-		maxY = maxY >= 100 ? 99 : maxY;
-		minY = minY <= -100 ? -99 : minY;
-		factor = (int) Math.pow(10, (int) Math.log10(minY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigAccelerationOfCases.setyAxisMin(minY / factor * factor - factor);
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigAccelerationOfCases.setyAxisInterval(factor);
-		chartConfigAccelerationOfCases.setyAxisMax(maxY / factor * factor + factor);
-
-		chartConfigAccelerationOfCases.setLegendHorizonalAlign("right");
-		chartConfigAccelerationOfCases.setLegendVerticalAlign("top");
-		chartConfigAccelerationOfCases.setDataSeries1Name("Acceleration of Positives");
-		chartConfigAccelerationOfCases.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
-		return chartConfigAccelerationOfCases;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigTotalCurrentCases(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
-		DashboardChartConfig chartConfig = new DashboardChartConfig(
-				"Time History of Current Positives in " + region,
-				"Days Since Positives > 0",
-				"Total Positives (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + ")",
-				"scatter");
-		chartConfig.setyAxisNumberSuffix("");
-		chartConfig.setxAxisPosition("bottom");
-		chartConfig.setxAxisLogarithmic("false");
-		chartConfig.setyAxisPosition("left");
-		chartConfig.setyAxisLogarithmic("false");
-		chartConfig.setShowLegend("true");
-		chartConfig.setDataPointSize(1);
-		chartConfig.setxGridDashType("dot");
-		chartConfig.setxAxisMin(0);
-		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
-		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfig.setyAxisMin(0);
-		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
-		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfig.setyAxisMax(maxY / factor * factor + factor);
-		chartConfig.setyAxisInterval(factor);
-
-		chartConfig.setLegendHorizonalAlign("left");
-		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
-				+ " (last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
-		chartConfig.setDataSeries2Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
-				+ " (last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
-		return chartConfig;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigRateOfCasesVersusCases(String region, List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases) {
-		DashboardChartConfig chartConfigRateOfCasesVersusCases = new DashboardChartConfig(
-				"Detecting Inflection of Positives in " + region, "Total Positives", "Daily Change in Total Positives", "scatter");
-		chartConfigRateOfCasesVersusCases.setyAxisNumberSuffix("");
-		chartConfigRateOfCasesVersusCases.setxAxisPosition("bottom");
-		chartConfigRateOfCasesVersusCases.setxAxisLogarithmic("true");
-		chartConfigRateOfCasesVersusCases.setyAxisPosition("left");
-		chartConfigRateOfCasesVersusCases.setyAxisLogarithmic("true");
-		chartConfigRateOfCasesVersusCases.setShowLegend("true");
-		chartConfigRateOfCasesVersusCases.setDataPointSize(1);
-		chartConfigRateOfCasesVersusCases.setxGridDashType("dot");
-		int cases = (Integer) chartDataChangeOfCasesByCases.get(0).get(0).get("x");
-		cases = (cases <= 0) ? 1 : cases;
-		int exp = (int) Math.log10(cases);
-		chartConfigRateOfCasesVersusCases.setxAxisMin((int) Math.pow(10, exp));
-		cases = (Integer) chartDataChangeOfCasesByCases.get(0).get(chartDataChangeOfCasesByCases.get(0).size() - 1).get("x");
-		cases = (cases <= 0) ? 1 : cases;
-		exp = (int) Math.log10(cases);
-		chartConfigRateOfCasesVersusCases.setxAxisMax((int) Math.pow(10, 1 + (int) Math.log10(cases)));
-		Double minValue = (Double) chartDataChangeOfCasesByCases.get(0).get(0).get("y");
-		int digits = minValue > 0 ? (int) Math.log10((Double) chartDataChangeOfCasesByCases.get(0).get(0).get("y")) : 1;
-		chartConfigRateOfCasesVersusCases.setyAxisMin((int) Math.pow(10, digits));
-		chartConfigRateOfCasesVersusCases.setyAxisMax((int) Math.pow(10,
-				1 + (int) Math.log10((double) chartDataChangeOfCasesByCases.get(1).get(1).get("y"))));
-
-		chartConfigRateOfCasesVersusCases.setLegendHorizonalAlign("left");
-		chartConfigRateOfCasesVersusCases.setLegendVerticalAlign("top");
-		chartConfigRateOfCasesVersusCases.setDataSeries1Name("Daily change in positives");
-		chartConfigRateOfCasesVersusCases.setDataSeries2Name("Pure exponential (k = 0.3)");
-		return chartConfigRateOfCasesVersusCases;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigDeathsByTime(String region, List<List<Map<Object, Object>>> chartDataDeathsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfigDeathsByTime = new DashboardChartConfig("Time History of Deaths in " + region,
-				"Days Since Deaths > 0", "Total Deaths", "scatter");
-		chartConfigDeathsByTime.setyAxisNumberSuffix("");
-		chartConfigDeathsByTime.setxAxisPosition("bottom");
-		chartConfigDeathsByTime.setxAxisLogarithmic("false");
-		chartConfigDeathsByTime.setyAxisPosition("left");
-		chartConfigDeathsByTime.setyAxisLogarithmic("false");
-		chartConfigDeathsByTime.setShowLegend("true");
-		chartConfigDeathsByTime.setDataPointSize(1);
-		chartConfigDeathsByTime.setxGridDashType("dot");
-		chartConfigDeathsByTime.setxAxisMin(0);
-		maxX = (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("x");
-		chartConfigDeathsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfigDeathsByTime.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataDeathsByTime.get(0));
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigDeathsByTime.setyAxisMax(maxY / factor * factor + factor);
-		chartConfigDeathsByTime.setyAxisInterval(factor);
-
-		chartConfigDeathsByTime.setLegendHorizonalAlign("left");
-		chartConfigDeathsByTime.setLegendVerticalAlign("top");
-		chartConfigDeathsByTime.setDataSeries1Name("Total Deaths");
-		chartConfigDeathsByTime.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Deaths");
-		return chartConfigDeathsByTime;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigRateOfChangeOfDeaths(String region, List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfigRateOfChangeOfDeaths = new DashboardChartConfig(
-				"Rate of Change of Deaths in " + region, "Days Since Deaths > 0", "Percent Change in New Deaths",
-				"scatter");
-		chartConfigRateOfChangeOfDeaths.setyAxisNumberSuffix("%");
-		chartConfigRateOfChangeOfDeaths.setxAxisPosition("bottom");
-		chartConfigRateOfChangeOfDeaths.setxAxisLogarithmic("false");
-		chartConfigRateOfChangeOfDeaths.setyAxisPosition("left");
-		chartConfigRateOfChangeOfDeaths.setyAxisLogarithmic("false");
-		chartConfigRateOfChangeOfDeaths.setShowLegend("true");
-		chartConfigRateOfChangeOfDeaths.setDataPointSize(1);
-		chartConfigRateOfChangeOfDeaths.setxAxisGridlinesDisplay("dot");
-		chartConfigRateOfChangeOfDeaths.setxAxisMin(0);
-		maxX = (int) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("x");
-		chartConfigRateOfChangeOfDeaths.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfigRateOfChangeOfDeaths.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfDeathsByTime.get(0));
-		maxY = maxY >= 100 ? 99 : maxY;
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigRateOfChangeOfDeaths.setyAxisInterval(factor);
-		chartConfigRateOfChangeOfDeaths.setyAxisMax(maxY / factor * factor + factor);
-
-		chartConfigRateOfChangeOfDeaths.setLegendHorizonalAlign("right");
-		chartConfigRateOfChangeOfDeaths.setLegendVerticalAlign("top");
-		chartConfigRateOfChangeOfDeaths.setDataSeries1Name("% change in deaths");
-		chartConfigRateOfChangeOfDeaths.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
-		return chartConfigRateOfChangeOfDeaths;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigAccelerationOfDeaths(String region, List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		int minY;
-		DashboardChartConfig chartConfigAccelerationOfDeaths = new DashboardChartConfig(
-				"Acceleration of Deaths in " + region, "Days Since Deaths > 0", "Percent Change in the Rate of New Deaths",
-				"scatter");
-		chartConfigAccelerationOfDeaths.setyAxisNumberSuffix("%");
-		chartConfigAccelerationOfDeaths.setxAxisPosition("bottom");
-		chartConfigAccelerationOfDeaths.setxAxisLogarithmic("false");
-		chartConfigAccelerationOfDeaths.setyAxisPosition("left");
-		chartConfigAccelerationOfDeaths.setyAxisLogarithmic("false");
-		chartConfigAccelerationOfDeaths.setShowLegend("true");
-		chartConfigAccelerationOfDeaths.setDataPointSize(1);
-		chartConfigAccelerationOfDeaths.setxGridDashType("dot");
-		chartConfigAccelerationOfDeaths.setxAxisMin(0);
-		maxX = (int) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("x");
-		chartConfigAccelerationOfDeaths.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		minY = getMinValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
-		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
-		maxY = maxY >= 100 ? 99 : maxY;
-		minY = minY <= -100 ? -99 : minY;
-		factor = (int) Math.pow(10, (int) Math.log10(minY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigAccelerationOfDeaths.setyAxisMin(minY / factor * factor - factor);
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigAccelerationOfDeaths.setyAxisInterval(factor);
-		chartConfigAccelerationOfDeaths.setyAxisMax(maxY / factor * factor + factor);
-
-		chartConfigAccelerationOfDeaths.setLegendHorizonalAlign("right");
-		chartConfigAccelerationOfDeaths.setLegendVerticalAlign("top");
-		chartConfigAccelerationOfDeaths.setDataSeries1Name("Acceleration of Deaths");
-		chartConfigAccelerationOfDeaths.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
-		return chartConfigAccelerationOfDeaths;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigRateOfDeathsVersusDeaths(String region, List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths) {
-		int cases;
-		int exp;
-		Double minValue;
-		DashboardChartConfig chartConfigRateOfDeathsVersusDeaths = new DashboardChartConfig(
-				"Detecting Inflection of Deaths in " + region, "Total Deaths", "Daily Change in Total Deaths",
-				"scatter");
-		chartConfigRateOfDeathsVersusDeaths.setyAxisNumberSuffix("");
-		chartConfigRateOfDeathsVersusDeaths.setxAxisPosition("bottom");
-		chartConfigRateOfDeathsVersusDeaths.setxAxisLogarithmic("true");
-		chartConfigRateOfDeathsVersusDeaths.setyAxisPosition("left");
-		chartConfigRateOfDeathsVersusDeaths.setyAxisLogarithmic("true");
-		chartConfigRateOfDeathsVersusDeaths.setShowLegend("true");
-		chartConfigRateOfDeathsVersusDeaths.setDataPointSize(1);
-		chartConfigRateOfDeathsVersusDeaths.setxGridDashType("dot");
-		cases = (Integer) chartDataChangeOfDeathsByDeaths.get(0).get(0).get("x");
-		cases = (cases <= 0) ? 1 : cases;
-		exp = (int) Math.log10(cases);
-		chartConfigRateOfDeathsVersusDeaths.setxAxisMin((int) Math.pow(10, exp));
-		cases = (Integer) chartDataChangeOfDeathsByDeaths.get(0).get(chartDataChangeOfDeathsByDeaths.get(0).size() - 1).get("x");
-		cases = (cases <= 0) ? 1 : cases;
-		exp = (int) Math.log10(cases);
-		chartConfigRateOfDeathsVersusDeaths.setxAxisMax((int) Math.pow(10, 1 + exp));
-		minValue = Double.valueOf(getMinValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(0)));
-		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
-		chartConfigRateOfDeathsVersusDeaths.setyAxisMin((int) Math.pow(10, exp));
-		double maxValue = (double) chartDataChangeOfDeathsByDeaths.get(1).get(1).get("y");
-		maxValue = maxValue > 0 ? maxValue : 1;
-		chartConfigRateOfDeathsVersusDeaths.setyAxisMax((int) Math.pow(10, 1 + (int) Math.log10(maxValue)));
-
-		chartConfigRateOfDeathsVersusDeaths.setLegendHorizonalAlign("left");
-		chartConfigRateOfDeathsVersusDeaths.setLegendVerticalAlign("top");
-		chartConfigRateOfDeathsVersusDeaths.setDataSeries1Name("Daily change in deaths");
-		chartConfigRateOfDeathsVersusDeaths.setDataSeries2Name("Pure exponential (k = 0.3)");
-		return chartConfigRateOfDeathsVersusDeaths;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigRatioOfCasesToTestsByTime(String region, List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime;
-		chartConfigRatioOfCasesToTestsByTime = new DashboardChartConfig(
-				"Positivity Rate in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
-				"scatter");
-		chartConfigRatioOfCasesToTestsByTime.setyAxisNumberSuffix("%");
-		chartConfigRatioOfCasesToTestsByTime.setxAxisPosition("bottom");
-		chartConfigRatioOfCasesToTestsByTime.setxAxisLogarithmic("false");
-		chartConfigRatioOfCasesToTestsByTime.setyAxisPosition("left");
-		chartConfigRatioOfCasesToTestsByTime.setyAxisLogarithmic("false");
-		chartConfigRatioOfCasesToTestsByTime.setShowLegend("true");
-		chartConfigRatioOfCasesToTestsByTime.setDataPointSize(1);
-		chartConfigRatioOfCasesToTestsByTime.setxGridDashType("dot");
-		chartConfigRatioOfCasesToTestsByTime.setxAxisMin(0);
-		maxX = (int) chartDataRatioOfCasesToTestsByTime.get(0).get(chartDataRatioOfCasesToTestsByTime.get(0).size() - 1).get("x");
-		chartConfigRatioOfCasesToTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfigRatioOfCasesToTestsByTime.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
-		maxY = maxY >= 100 ? 99 : maxY;
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigRatioOfCasesToTestsByTime.setyAxisMax(maxY / factor * factor + factor);
-		chartConfigRatioOfCasesToTestsByTime.setyAxisInterval(factor);
-
-		chartConfigRatioOfCasesToTestsByTime.setLegendHorizonalAlign("right");
-		chartConfigRatioOfCasesToTestsByTime.setLegendVerticalAlign("top");
-		chartConfigRatioOfCasesToTestsByTime.setDataSeries1Name("% Positive per Test");
-		chartConfigRatioOfCasesToTestsByTime.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
-		return chartConfigRatioOfCasesToTestsByTime;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigTestsByTime(String region, List<List<Map<Object, Object>>> chartDataTestsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfigTestsByTime;
-		chartConfigTestsByTime = new DashboardChartConfig("Time History of Tests " + region,
-				"Days Since Tests > 0", "Total Tests", "scatter");
-		chartConfigTestsByTime.setyAxisNumberSuffix("");
-		chartConfigTestsByTime.setxAxisPosition("bottom");
-		chartConfigTestsByTime.setxAxisLogarithmic("false");
-		chartConfigTestsByTime.setyAxisPosition("left");
-		chartConfigTestsByTime.setyAxisLogarithmic("false");
-		chartConfigTestsByTime.setShowLegend("true");
-		chartConfigTestsByTime.setDataPointSize(1);
-		chartConfigTestsByTime.setxGridDashType("dot");
-		chartConfigTestsByTime.setxAxisMin(0);
-		maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
-		chartConfigTestsByTime.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfigTestsByTime.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfigTestsByTime.setyAxisMax(maxY / factor * factor + factor);
-		chartConfigTestsByTime.setyAxisInterval(factor);
-
-		chartConfigTestsByTime.setLegendHorizonalAlign("left");
-		chartConfigTestsByTime.setLegendVerticalAlign("top");
-		chartConfigTestsByTime.setDataSeries1Name("Total Tests");
-		chartConfigTestsByTime.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Tests");
-		return chartConfigTestsByTime;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigCurrentHospitalizationsByTime(String region,
-			List<List<Map<Object, Object>>> chartDataCurrentHospitalizationsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Current Hospitalizations in " + region,
-				"Days Since Hospitalizations > 0", "Current Hospitalizations", "scatter");
-		chartConfig.setyAxisNumberSuffix("");
-		chartConfig.setxAxisPosition("bottom");
-		chartConfig.setxAxisLogarithmic("false");
-		chartConfig.setyAxisPosition("left");
-		chartConfig.setyAxisLogarithmic("false");
-		chartConfig.setShowLegend("true");
-		chartConfig.setDataPointSize(1);
-		chartConfig.setxGridDashType("dot");
-		chartConfig.setxAxisMin(0);
-		maxX = (int) chartDataCurrentHospitalizationsByTime.get(0).get(chartDataCurrentHospitalizationsByTime.get(0).size() - 1).get("x");
-		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataCurrentHospitalizationsByTime.get(0));
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfig.setyAxisMax(maxY / factor * factor + factor);
-		chartConfig.setyAxisInterval(factor);
-
-		chartConfig.setLegendHorizonalAlign("left");
-		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Current Hospitalizations");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
-		return chartConfig;
-	}
-
-	@Override
-	public DashboardChartConfig chartConfigCumulativeHospitalizationsByTime(String region,
-			List<List<Map<Object, Object>>> chartDataCumulativeHospitalizationsByTime) {
-		int maxX;
-		int maxY;
-		int factor;
-		DashboardChartConfig chartConfig = new DashboardChartConfig("Time History of Cumulative Hospitalizations in " + region,
-				"Days Since Hospitalizations > 0", "Cumulative Hospitalizations", "scatter");
-		chartConfig.setyAxisNumberSuffix("");
-		chartConfig.setxAxisPosition("bottom");
-		chartConfig.setxAxisLogarithmic("false");
-		chartConfig.setyAxisPosition("left");
-		chartConfig.setyAxisLogarithmic("false");
-		chartConfig.setShowLegend("true");
-		chartConfig.setDataPointSize(1);
-		chartConfig.setxGridDashType("dot");
-		chartConfig.setxAxisMin(0);
-		maxX = (int) chartDataCumulativeHospitalizationsByTime.get(0).get(chartDataCumulativeHospitalizationsByTime.get(0).size() - 1).get("x");
-		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataCumulativeHospitalizationsByTime.get(0));
-		factor = (int) Math.pow(10, (int) Math.log10(maxY));
-		if (factor == 0) {
-			factor = 10;
-		}
-		chartConfig.setyAxisMax(maxY / factor * factor + factor);
-		chartConfig.setyAxisInterval(factor);
-
-		chartConfig.setLegendHorizonalAlign("left");
-		chartConfig.setLegendVerticalAlign("top");
-		chartConfig.setDataSeries1Name("Cumulative Hospitalizations");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
-		return chartConfig;
-	}
-
-	////// HELPER METHODS /////////
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
 		int dayThreshold = ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue();
 		if(dataList.size() < dayThreshold) {
