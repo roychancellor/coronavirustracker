@@ -486,7 +486,7 @@
         	var content = "Date: " + e.entries[0].dataPoint.indexLabel + "</br>";
         	var positionRowCol = chartContainerString.substring(chartContainerString.length - 2, chartContainerString.length);
         	
-        	if(positionRowCol == CHANGE_IN_CASES_VS_TOTAL_CASES) {
+        	if(positionRowCol == CHANGE_IN_CASES_VS_TOTAL_CASES_ROW_COL) {
         		content += "Total Cases: "
         			+ "<strong>"
         			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
@@ -496,33 +496,22 @@
      				+ "<strong>"
      				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
      				+ "</strong>";
-     		} else if(positionRowCol == CHANGE_IN_DEATHS_VS_TOTAL_DEATHS) {
-        		content += "Total Deaths: "
-        			+ "<strong>"
-        			+ CanvasJS.formatNumber(e.entries[0].dataPoint.x, "#,###")
-	 				+ "</strong>"
-	 				+ "</br>"
-	 				+ "Daily Change in Deaths: "
-	 				+ "<strong>"
-	 				+ CanvasJS.formatNumber(e.entries[0].dataPoint.y, "#,###")
-	 				+ "</strong>";
- 			} else {      	
+     		} else {      	
 	        	for(var i = 0; i < e.entries.length; i++) {
-	        		if(positionRowCol == TIME_SERIES_CASES
-	        				|| positionRowCol == TIME_SERIES_CURRENT_CASES
-	        				|| positionRowCol == TIME_SERIES_DEATHS
-	        				|| positionRowCol == TIME_SERIES_TESTS
-	        				|| positionRowCol == TIME_SERIES_HOSP_CUR
-	        				|| positionRowCol == TIME_SERIES_HOSP_CUMUL) {
+	        		if(positionRowCol == TIME_SERIES_CASES_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_CURRENT_CASES_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_DEATHS_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_TESTS_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_HOSP_CUR_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_HOSP_CUMUL_ROW_COL) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 		        			+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#,###")
 		        			+ "</strong>";
 		        		content += "<br/>";
-	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES
-	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS
-	        				|| positionRowCol == TIME_SERIES_ACCEL_OF_DEATHS
-	        				|| positionRowCol == TIME_SERIES_RATIO_CASES_TO_TESTS) {
+	        		} else if(positionRowCol == TIME_SERIES_RATE_OF_CASES_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_RATE_OF_DEATHS_ROW_COL
+	        				|| positionRowCol == TIME_SERIES_RATIO_CASES_TO_TESTS_ROW_COL) {
 		        		content += e.entries[i].dataSeries.name + ": "
 		        			+ "<strong>"
 	        				+ CanvasJS.formatNumber(e.entries[i].dataPoint.y, "#.##") + "%"
