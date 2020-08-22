@@ -290,7 +290,7 @@
 	 			var pointColorStr = "blue";
 	 			var lineColorStr = "red";
 	 			if(c < CASES_CURRENT_TIME_HISTORY_INDEX) {
-	 				axis2TitleValue = "Daily Cases";
+	 				axis2TitleValue = "Daily poitive Tests";
 		 			var pointColorStr = "blue";
 		 			var lineColorStr = "red";
 	 			} else if(c < DEATHS_TIME_HISTORY_INDEX) {

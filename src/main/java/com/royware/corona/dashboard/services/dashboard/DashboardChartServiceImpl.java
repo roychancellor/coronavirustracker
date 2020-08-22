@@ -482,9 +482,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	@Override
 	public DashboardChartConfig chartConfigTotalCurrentCases(String region, List<List<Map<Object, Object>>> chartDataCasesByTime) {
 		DashboardChartConfig chartConfig = new DashboardChartConfig(
-				"Time History of Current Positives in " + region,
+				"Time History of Positivity Rate in " + region,
 				"Days Since Positives > 0",
-				"Total Positives (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + ")",
+				"Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue()),
 				"scatter");
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");
@@ -509,9 +509,9 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
 		chartConfig.setDataSeries1Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
-				+ " (last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
+				+ " (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
 		chartConfig.setDataSeries2Name("Positives per " + NumberFormat.getNumberInstance().format(MovingAverageSizes.PER_CAPITA_BASIS.getValue())
-				+ " (last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
+				+ " (Last " + MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
 		return chartConfig;
 	}
 
