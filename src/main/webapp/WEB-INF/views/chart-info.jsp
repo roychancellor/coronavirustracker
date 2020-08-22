@@ -27,21 +27,24 @@
 				</div>
 				</td>
 				<td class="col-md-2">
-				<div id="dashboardExplanation" style="height: 350px; width: 100%">
+				<div id="dashboardExplanation" style="height: 400px; width: 100%">
 				<p style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">The dashboard shows relevant statistics for
 				the current day. Some of the statistics are self-describing, but others need some explanation.</p>
 				<ul style="font-size:0.55em; color:white; padding:2px; margin:2px; line-height:1.07em;">
-					<li><strong style="color:#00FF00;">Region All-Time:</strong> The all-time cumulative number of confirmed positive cases or deaths 
+					<li><strong style="color:#00FF00;">All-Time Totals (Today):</strong> The all-time cumulative number of confirmed positive cases or deaths 
 					(increase in cases or deaths from the previous day)</li>
-					<li><strong style="color:#00FF00;">Region Last 10 Days:</strong> A moving sum of confirmed positive cases or deaths over the last 10 days 
-					(percentage of the region population). <strong>This is an estimate of the current number of positive cases in the region.</strong></li>
-					<li><strong style="color:#FFA500;">Rate of Change:</strong> The % increase in number of cases or deaths, computed as 
+					<li><strong style="color:#00FF00;">Rate of Change:</strong> The % increase in number of cases or deaths, computed as 
 					(today - yesterday) / yesterday * 100
 					(change: the % change in the rate computed as (rate today - rate yesterday) / rate yesterday * 100)</li>
-					<li><strong style="color:#FF0000;">By Region Population:</strong> Total all-time cases or deaths divided by the population * 100 
-					(i.e. total / population * 1,000,000)</li>
-					<li><strong style="color:FFFFFF;">By Testing:</strong> Total all-time positive cases or deaths divided by total tests * 100</li>
-					<li><strong style="color:#0000FF;">By U.S. Totals:</strong> Total all-time region cases (or deaths) divided by total U.S. cases (or deaths) * 100 
+					<li><strong style="color:#FFFFFF;">Per Capita Rate L7 (L10):</strong> A moving ratio of confirmed positive cases or deaths over the 
+					last 7 days (last 10 days) to a standardized number of people (100,000 currently). 
+					<strong>This is an estimate of the current per capita rate of positive cases in the region.</strong></li>
+					<li><strong style="color:#FFFFFF;">Test Positivity Rate (L7):</strong> Total positive cases for last 7 days divided by total tests over last 7 days * 100.
+					Not computed for deaths because there is not currently a way to correlate specific positive tests with specific deaths.</li>
+					<li><strong style="color:#FF8000;">Test Positivity Rate (All-Time):</strong> Total all-time positive cases or deaths divided by total tests * 100</li>
+					<li><strong style="color:#FF8000;">Positivity Rate (per Capita):</strong> Total all-time cases or deaths divided by the population * 100 
+					(i.e. total / population * 100,000)</li>
+					<li><strong style="color:#FF8000;">Positivity Rate (per U.S. Totals):</strong> Total all-time region cases (or deaths) divided by total U.S. cases (or deaths) * 100 
 					(i.e. total region cases / total U.S. cases * 100)
 				</ul>
 				</div>
