@@ -17,6 +17,8 @@ import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionSer
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
+import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 @Component
@@ -26,6 +28,12 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	
 	@Autowired
 	private DashboardStatistics dashStats;
+	
+	@Autowired
+	private DashboardMeta dashMeta;
+	
+	@Autowired
+	private DashboardHeader dashHeader;
 	
 	@Autowired
 	private DashboardChartService dashboardChartService;
@@ -76,25 +84,29 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		log.info("Done calling makeAllDashboardCharts");
 		
 		//This setting determines whether the last row of the statistics table will show
-		map.addAttribute("regionType", "us");
+		dashMeta.setRegionType("us");
 		if(rawRegionString.length() == 3 && !rawRegionString.equalsIgnoreCase("USA")) {
-			map.put("regionType", "world");
+			dashMeta.setRegionType("world");
 		} else if(rawRegionString.length() == 2 || isMultiRegion) {
-			map.put("regionType", "state");
+			dashMeta.setRegionType("state");
 			dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
 		}
+		dashMeta.setPerCapitaBasis(MovingAverageSizes.PER_CAPITA_BASIS.getValue());
 
-		map.addAttribute("fullregion", fullRegionString);
+		dashHeader.setFullRegion(fullRegionString);
 		if(fullRegionString.length() > MAX_REGION_LENGTH_TO_DISPLAY) {
-			map.addAttribute("fullregion", fullRegionString.substring(0, MAX_REGION_LENGTH_TO_DISPLAY + 1) + "...");
+			dashHeader.setFullRegion(fullRegionString.substring(0, MAX_REGION_LENGTH_TO_DISPLAY + 1) + "...");
 		}
+		dashHeader.setPopulation(regionPopulation);
+		
+		dashStats.setCasesPerCapita(dashStats.getCasesTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
+		dashStats.setCasesPercentOfPop(dashStats.getCasesTotal() * 100.0 / regionPopulation);
+		dashStats.setDeathsPerCapita(dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
+		dashStats.setDeathsPercentOfPop(dashStats.getDeathsTotal() * 100.0 / regionPopulation);
+		
+		map.addAttribute("dashmeta", dashMeta);
+		map.addAttribute("dashheader", dashHeader);
 		map.addAttribute("dashstats", dashStats);
-		map.addAttribute("population", regionPopulation);
-		map.addAttribute("casespercapita", dashStats.getCasesTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
-		map.addAttribute("casespercent", dashStats.getCasesTotal() * 100.0 / regionPopulation);
-		map.addAttribute("deathspercapita", dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
-		map.addAttribute("deathspercent", dashStats.getDeathsTotal() * 100.0 / regionPopulation);
-		map.addAttribute("percapitabasis", MovingAverageSizes.PER_CAPITA_BASIS.getValue());
 		
 		return true;
 	}

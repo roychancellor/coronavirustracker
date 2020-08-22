@@ -311,9 +311,13 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Making total tests conducted");
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
-		log.info("Making ProportionOfPositiveTests");
+		log.info("Making ProportionOfPositiveTests and ProportionOfPositiveTestsMovingAverage");
 		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				* 100.0 / dashStats.getTotalTestsConducted());
+		int totalTestsLastN = computeTotalTestsLastN(dataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue());
+		dashStats.setTotalTestsConductedLastN(totalTestsLastN);
+		dashStats.setProportionOfPositiveTestsMovingAverage(
+				computeTotalPositivesLastN(dataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())* 100.0 / totalTestsLastN);
 		log.info("Making ProportionOfPopulationTested");
 		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
 				* 100.0 / usaPop);
@@ -326,6 +330,42 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Making ProportionOfDeathsOfExtrapolatedCases");
 		dashStats.setProportionOfDeathsOfExtrapolatedCases(dataList.get(dataList.size() - 1).getTotalDeaths()
 				* 100.0 / (dashStats.getProportionOfPositiveTests() * usaPop));
+	}
+	
+	private <T extends CanonicalData> int computeTotalTestsLastN(List<T> dataList, int lastN) {
+		if(dataList.size() < lastN + 1) {
+			return 0;
+		}
+		
+		int sum = 0;
+		int posToday = 0;
+		int posYesterday = 0;
+		int negToday = 0;
+		int negYesterday = 0;
+		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
+			posToday = dataList.get(n).getTotalPositiveCases();
+			posYesterday = dataList.get(n - 1).getTotalPositiveCases();
+			negToday = dataList.get(n).getTotalNegativeCases();
+			negYesterday = dataList.get(n - 1).getTotalNegativeCases();
+			sum += posToday - posYesterday + negToday - negYesterday;
+		}
+		return sum;
+	}
+	
+	private <T extends CanonicalData> int computeTotalPositivesLastN(List<T> dataList, int lastN) {
+		if(dataList.size() < lastN + 1) {
+			return 0;
+		}
+		
+		int sum = 0;
+		int posToday = 0;
+		int posYesterday = 0;
+		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
+			posToday = dataList.get(n).getTotalPositiveCases();
+			posYesterday = dataList.get(n - 1).getTotalPositiveCases();
+			sum += posToday - posYesterday;
+		}
+		return sum;
 	}
 
 	@Override
@@ -666,7 +706,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int factor;
 		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime;
 		chartConfigRatioOfCasesToTestsByTime = new DashboardChartConfig(
-				"Ratio of Positives to Tests in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
+				"Positivity Rate in " + region, "Days Since Cases > 0", "Ratio of Positives to Tests",
 				"scatter");
 		chartConfigRatioOfCasesToTestsByTime.setyAxisNumberSuffix("%");
 		chartConfigRatioOfCasesToTestsByTime.setxAxisPosition("bottom");
