@@ -51,13 +51,10 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;
 		final int MAX_REGION_LENGTH_TO_DISPLAY = 28;
 		
+		//Check for null data service or an empty multi-region
 		ExternalDataService dataService = getExternalDataServiceFromFactory(rawRegionString);
-		if(dataService == null) {
-			return false;
-		}
-		
-		//Check for empty multi-region
-		if(isMultiRegion && rawRegionString.substring(6).length() < 2) {
+		if(dataService == null || (isMultiRegion && rawRegionString.substring(6).length() < 2)) {
+			log.error("In populateDashboardModelMap: Unable to getExternalDataServiceFromFactory");
 			return false;
 		}
 		
@@ -71,11 +68,13 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
 			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
 			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
+			log.info("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
 		}
 		log.info("Finished making the data list...");
 		
 		//Check for a null or empty data list. This is VERY important!!!
 		if(dataList == null || dataList.isEmpty()) {
+			log.error("In populateDashboardModelMap: The dataList is null or empty");
 			return false;
 		}
 		

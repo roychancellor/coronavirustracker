@@ -67,7 +67,7 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		} else if(dataSource.toUpperCase().contains("OWID")) {
 			worldData = getDataFromOurWorldInData();
 		}
-		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA *****");
+		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA (worldData size: " + worldData.size() +  ") *****");
 		return worldData;
 	}
 	
@@ -91,6 +91,7 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 			log.error("The returned worldData list is null!!!");
 			return new ArrayList<WorldData>();
 		}
+		log.info("The size of the raw world data list is: " + worldData.getRecords().length);
 		return Arrays.asList(worldData.getRecords());
 	}
 	
