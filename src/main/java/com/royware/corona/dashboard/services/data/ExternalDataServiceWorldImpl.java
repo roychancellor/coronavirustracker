@@ -151,6 +151,12 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 			}
 		}
 		
+		//Need to reverse the list here because in the ExternalDataServiceSingleCountryImpl class,
+		//the method reverses the list because it assumes it came from Euro CDC that is in newest to oldest order.
+		//Since the OWID data comes in oldest to newest order, the reverse isn't necessary, but until
+		//it is removed from that class, this reverse is necessary (essentially creating a double reverse
+		//which is wasteful, but necessary until fixed)
+		//TODO: Fix the need for a double reverse
 		Collections.reverse(worldDataList);
 		return worldDataList;
 	}
