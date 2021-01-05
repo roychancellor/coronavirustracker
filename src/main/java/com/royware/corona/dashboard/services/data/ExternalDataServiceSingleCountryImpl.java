@@ -53,6 +53,10 @@ public class ExternalDataServiceSingleCountryImpl implements ExternalDataService
 				})
 				.collect(Collectors.toList());
 		
+		//Euro CDC data comes in reverse chronological order, so need to reverse the list so the data is oldest to newest
+		//Our World In Data comes in oldest to newest order, so don't need to reverse it, but
+		//because of this statement, had to reverse the list before getting here so it gets re-reversed to correct order
+		//TODO: Fix this so that only the Euro CDC data gets reversed to avoid double-reversing a list
 		Collections.reverse(casesInOneCountry);
 		
 		WorldData wc;

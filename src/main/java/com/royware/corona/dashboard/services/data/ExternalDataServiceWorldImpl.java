@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.WorldDataOWID;
 import com.royware.corona.dashboard.model.data.WorldDataSourceEuroCDC;
 import com.royware.corona.dashboard.model.data.WorldDataSourceOurWorldInData;
 
@@ -96,15 +98,15 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 	}
 	
 	private List<WorldData> getDataFromOurWorldInData() {
-		Map<String, List<WorldDataSourceOurWorldInData>> worldData;
+		Map<String, WorldDataSourceOurWorldInData> worldData;
 		ObjectMapper mapper = new ObjectMapper();
 		
 		int tries = 0;
 		do {
 			try {
 				URL jsonUrl = new URL(DataUrls.WORLD_DATA_URL_OWID.getName());
-				TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>> tr =
-						new TypeReference<LinkedHashMap<String, List<WorldDataSourceOurWorldInData>>>() {/*do nothing*/};
+				TypeReference<LinkedHashMap<String, WorldDataSourceOurWorldInData>> tr =
+						new TypeReference<LinkedHashMap<String, WorldDataSourceOurWorldInData>>() {/*do nothing*/};
 				worldData = mapper.readValue(jsonUrl, tr);
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM OUR WORLD IN DATA *****");
 			} catch (JsonParseException e) {
@@ -135,31 +137,35 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		return worldDataListFromMap(worldData);
 	}
 	
-	private List<WorldData> worldDataListFromMap(Map<String, List<WorldDataSourceOurWorldInData>> worldDataMap) {
+	private List<WorldData> worldDataListFromMap(Map<String, WorldDataSourceOurWorldInData> worldDataMap) {
 		List<WorldData> worldDataList = new ArrayList<>();
 		
+		//Iterate through all country codes (map keys) and create a list of WorldData objects
 		for(String countryKey : worldDataMap.keySet()) {
-			for(WorldDataSourceOurWorldInData wr : worldDataMap.get(countryKey)) {
-				worldDataList.add(worldDataFromWorldDataSourceOwid(wr, countryKey));
+			long pop = worldDataMap.get(countryKey).getPopulation();
+			for(WorldDataOWID owid : worldDataMap.get(countryKey).getData()) {
+				WorldData wd = worldDataFromWorldDataSourceOwid(countryKey, owid);
+				wd.setRegionString(countryKey);
+				wd.setPopulation(pop);
+				worldDataList.add(wd);
 			}
 		}
 		
+		Collections.reverse(worldDataList);
 		return worldDataList;
 	}
 	
-	private WorldData worldDataFromWorldDataSourceOwid(WorldDataSourceOurWorldInData wr, String countryKey) {
+	private WorldData worldDataFromWorldDataSourceOwid(String countryKey, WorldDataOWID owid) {
 		WorldData wd = new WorldData();
-		wd.setTotalDeaths((int)wr.getTotalDeaths());
-		wd.setTotalPositiveCases((int)wr.getTotalCases());
-		wd.setStringDate(wr.getDateStringYYYY_MM_DD().replace("-",  "/"));
-		wd.setYear(Integer.parseInt(wr.getDateStringYYYY_MM_DD().substring(0,4)));
-		wd.setMonth(Integer.parseInt(wr.getDateStringYYYY_MM_DD().substring(5,7)));
-		wd.setDay(Integer.parseInt(wr.getDateStringYYYY_MM_DD().substring(8)));
+		wd.setTotalDeaths((int)owid.getTotalDeaths());
+		wd.setTotalPositiveCases((int)owid.getTotalCases());
+		wd.setStringDate(owid.getDateStringYYYY_MM_DD().replace("-",  "/"));
+		wd.setYear(Integer.parseInt(owid.getDateStringYYYY_MM_DD().substring(0,4)));
+		wd.setMonth(Integer.parseInt(owid.getDateStringYYYY_MM_DD().substring(5,7)));
+		wd.setDay(Integer.parseInt(owid.getDateStringYYYY_MM_DD().substring(8)));
 		wd.setDateChecked(wd.getYear(), wd.getMonth(), wd.getDay());
-		wd.setDailyNewCases((int)wr.getNewCases());
-		wd.setDailyNewDeaths((int)wr.getNewDeaths());
-		wd.setRegionString(countryKey);
-		wd.setPopulation(wr.getPopulation());
+		wd.setDailyNewCases((int)owid.getNewCases());
+		wd.setDailyNewDeaths((int)owid.getNewDeaths());
 		
 		return wd;
 	}
