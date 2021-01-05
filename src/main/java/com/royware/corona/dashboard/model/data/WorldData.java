@@ -12,8 +12,8 @@ public class WorldData implements CanonicalData {
 	@JsonProperty("year") private int year;
 	@JsonProperty("month") private int month;
 	@JsonProperty("day") private int day;
-	@JsonProperty("cases") private int dailyNewCases;
-	@JsonProperty("deaths") private int dailyNewDeaths;
+	@JsonProperty("cases_weekly") private int dailyNewCases;
+	@JsonProperty("deaths_weekly") private int dailyNewDeaths;
 	@JsonProperty("countryterritoryCode") private String regionString;
 	@JsonProperty("popData2018") private long population;
 	

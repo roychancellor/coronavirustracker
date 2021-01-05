@@ -38,13 +38,14 @@ public class ExternalDataServiceSingleCountryImpl implements ExternalDataService
 		log.info("Calling the WorldDataServiceImpl makeDataListFromExternalSource method (should be cached)");
 		log.info("In SingleCountryDataServiceImpl class: worldDataService hashcode: " + this.hashCode());
 		List<WorldData> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
-		log.info("Got the world data");
+		log.info("Got the world data list and its size is: " + worldCases.size());
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
 		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		casesInOneCountry = worldCases
 				.stream()
 				.filter(wc -> {
 					if(wc.getRegionString() == null || wc.getDailyNewCases() < 0) {
+						log.error("In the .filter, region string is null or daily new cases < 0");
 						return false;
 					}
 					return wc.getRegionString().equalsIgnoreCase(countryThreeLetterCode)
@@ -52,6 +53,10 @@ public class ExternalDataServiceSingleCountryImpl implements ExternalDataService
 				})
 				.collect(Collectors.toList());
 		
+		//Euro CDC data comes in reverse chronological order, so need to reverse the list so the data is oldest to newest
+		//Our World In Data comes in oldest to newest order, so don't need to reverse it, but
+		//because of this statement, had to reverse the list before getting here so it gets re-reversed to correct order
+		//TODO: Fix this so that only the Euro CDC data gets reversed to avoid double-reversing a list
 		Collections.reverse(casesInOneCountry);
 		
 		WorldData wc;
@@ -71,7 +76,7 @@ public class ExternalDataServiceSingleCountryImpl implements ExternalDataService
 				wc.setTotalDeaths(wc.getDailyNewDeaths());
 			}
 		}
-		log.info("***** FINISHED FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
+		log.info("***** FINISHED FILTER FOR COUNTRY " + countryThreeLetterCode + " (size of list: " + casesInOneCountry.size() + ") ****");
 	
 		return casesInOneCountry;
 	}
