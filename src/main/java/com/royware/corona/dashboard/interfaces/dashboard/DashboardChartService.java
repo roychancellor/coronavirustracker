@@ -5,14 +5,14 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 @Service
 public interface DashboardChartService {
-	public <T extends CanonicalData> List<DashboardChart> makeAllDashboardCharts(
+	public <T extends CanonicalCaseDeathData> List<DashboardChart> makeAllDashboardCharts(
 			List<T> caseList, String region, Integer regionPopulation, DashboardStatistics dashStats);
 	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats);
 	public void makeDashboardStatsForRegion(DashboardStatistics dashStats,
@@ -24,7 +24,7 @@ public interface DashboardChartService {
 			List<List<Map<Object, Object>>> chartDataDeathsMovingSum,
 			List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime,
 			List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime);
-	public <T extends CanonicalData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats);
+	public <T extends CanonicalCaseDeathData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats);
 	
 	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime);
 	public DashboardChartConfig chartConfigRateOfChangeOfCases(String region, List<List<Map<Object, Object>>> chartDataRateOfCasesByTime);

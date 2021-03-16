@@ -1,3 +1,5 @@
+//TODO: TURN THIS BACK INTO A POJO WITHOUT ANY OF THE JSON ANNOTATIONS, AS IT WILL BE BUILT SEPARATELY
+
 package com.royware.corona.dashboard.model.data;
 
 import java.time.LocalDate;
@@ -6,25 +8,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
-import com.royware.corona.dashboard.interfaces.model.UsHospitalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalHospitalData;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UnitedStatesData implements CanonicalData, UsHospitalData {
+public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospitalData {
+	@JsonProperty("date") private int dateInteger;
+	@JsonProperty("positive") private int totalPositiveCases;
+	@JsonProperty("negative") private int totalNegativeCases;
+	@JsonProperty("posNeg") private int totalPositivePlusNegative;
+	@JsonProperty("death") private int totalDeaths;
+	@JsonProperty("pending") private int pendingTests;
 	@JsonProperty("state") private String regionString;
-	@JsonProperty("date") private String dateTimeString;
-	@JsonProperty("cases") private int totalPositiveCases;
-	@JsonProperty("deaths") private int totalDeaths;
+	@JsonProperty("hospitalizedCurrently") private int hospitalizedCurrently;
+	@JsonProperty("hospitalizedCumulative") private int hospitalizedCumulative;
 	
-	@JsonIgnore private int totalNegativeCases;
-	@JsonIgnore private int dateInteger;
 	@JsonIgnore private LocalDate dateChecked;
-	@JsonIgnore private int pendingTests;
-	@JsonIgnore private int totalPositivePlusNegative;
-	@JsonIgnore private int hospitalizedCurrently;
-	@JsonIgnore private int hospitalizedCumulative;
+	@JsonIgnore private String dateTimeString;
 			
 	public UnitedStatesData() {
 		super();

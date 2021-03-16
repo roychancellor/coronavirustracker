@@ -17,7 +17,7 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 	private ExternalDataService usDataService;
 	
 	@Autowired
-	@Qualifier(value = "singleState")
+	@Qualifier(value = "singleStateCDCSource")
 	private ExternalDataService singleStateDataService;
 	
 	@Autowired

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +19,12 @@ import com.royware.corona.dashboard.model.data.UnitedStatesData;
 /**
  * Provides service methods for getting dashboard data from external sources
  */
-@Component("singleStateCDCSource")
-public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
+@Component("singleState")
+public class ExternalDataServiceSingleStateImpl_OLD_CovidTrackingProjectAsSource implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleStateImpl.class);
-	
-	private Map<Integer, Object> casesAndDeaths;
-	private Map<Integer, Object> hospitalizations;
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleStateImpl_OLD_CovidTrackingProjectAsSource.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override

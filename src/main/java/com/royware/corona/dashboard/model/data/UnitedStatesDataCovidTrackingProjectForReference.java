@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
-import com.royware.corona.dashboard.interfaces.model.UsHospitalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalHospitalData;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UnitedStatesDataCovidTrackingProjectForReference implements CanonicalData, UsHospitalData {
+public class UnitedStatesDataCovidTrackingProjectForReference implements CanonicalCaseDeathData, CanonicalHospitalData {
 	@JsonProperty("state") private String regionString;
 	@JsonProperty("date") private int dateInteger;
 	@JsonProperty("cases") private int totalPositiveCases;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.RegionData;
 import com.royware.corona.dashboard.model.data.UnitedStatesData;
 import com.royware.corona.dashboard.model.data.WorldData;
@@ -835,5 +835,5 @@ public enum RegionsData {
 	};
 	
 	public abstract RegionData getRegionData();
-	public abstract <T extends CanonicalData> List<T> getCoronaVirusDataFromExternalSource(ExternalDataService dataService);
+	public abstract <T extends CanonicalCaseDeathData> List<T> getCoronaVirusDataFromExternalSource(ExternalDataService dataService);
 }

@@ -16,7 +16,7 @@ import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
 import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
@@ -45,7 +45,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	
 	@Override
 	public boolean populateDashboardModelMap(String rawRegionString, ModelMap map) {
-		List<? extends CanonicalData> dataList = new ArrayList<>();
+		List<? extends CanonicalCaseDeathData> dataList = new ArrayList<>();
 		String fullRegionString;
 		int regionPopulation;
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;
