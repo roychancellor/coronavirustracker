@@ -12,21 +12,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UnitedStatesData implements CanonicalData, UsHospitalData {
+public class UnitedStatesDataCovidTrackingProjectForReference implements CanonicalData, UsHospitalData {
 	@JsonProperty("state") private String regionString;
-	@JsonProperty("date") private String dateTimeString;
+	@JsonProperty("date") private int dateInteger;
 	@JsonProperty("cases") private int totalPositiveCases;
 	@JsonProperty("deaths") private int totalDeaths;
+	@JsonProperty("posNeg") private int totalPositivePlusNegative;
+	@JsonProperty("pending") private int pendingTests;
+	@JsonProperty("actuals.hospitalBeds.currentUsageCovid") private int hospitalizedCurrently;
+	@JsonProperty("hospitalizedCumulative") private int hospitalizedCumulative;
 	
 	@JsonIgnore private int totalNegativeCases;
-	@JsonIgnore private int dateInteger;
 	@JsonIgnore private LocalDate dateChecked;
-	@JsonIgnore private int pendingTests;
-	@JsonIgnore private int totalPositivePlusNegative;
-	@JsonIgnore private int hospitalizedCurrently;
-	@JsonIgnore private int hospitalizedCumulative;
+	@JsonIgnore private String dateTimeString;
 			
-	public UnitedStatesData() {
+	public UnitedStatesDataCovidTrackingProjectForReference() {
 		super();
 	}
 
@@ -152,7 +152,7 @@ public class UnitedStatesData implements CanonicalData, UsHospitalData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UnitedStatesData other = (UnitedStatesData) obj;
+		UnitedStatesDataCovidTrackingProjectForReference other = (UnitedStatesDataCovidTrackingProjectForReference) obj;
 		if (dateInteger != other.dateInteger)
 			return false;
 		if (regionString == null) {
