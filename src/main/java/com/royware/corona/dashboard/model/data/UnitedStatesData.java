@@ -28,10 +28,6 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 
 	public void setDateInteger(int dateInteger) {
 		this.dateInteger = dateInteger;
-//		this.dateChecked = LocalDate.of(dateInteger/10000, (dateInteger % 10000)/100, dateInteger % 100);
-//		String month = (dateInteger % 10000)/100 < 10 ? "0" + String.valueOf((dateInteger % 10000)/100) : String.valueOf((dateInteger % 10000)/100);
-//		String day = dateInteger % 100 < 10 ? "0" + String.valueOf(dateInteger % 100) : String.valueOf(dateInteger % 100);
-//		this.dateTimeString = String.valueOf(dateInteger/10000) + "-" + month + "-" + day + "T00:00:00Z";
 	}
 	
 	public int getTotalPositiveCases() {
@@ -87,8 +83,6 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 	}
 
 	public void setDateTimeString(String dateTimeString) {
-//		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
-//				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
 		this.dateTimeString = dateTimeString;
 	}
 
@@ -97,8 +91,6 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 	}
 
 	public void setDateChecked(LocalDate dateChecked) {
-//		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
-//				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
 		this.dateChecked = dateChecked;
 	}
 
