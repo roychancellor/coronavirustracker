@@ -17,7 +17,7 @@ import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartData;
@@ -35,7 +35,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	private static final Logger log = LoggerFactory.getLogger(DashboardChartServiceImpl.class);
 	
 	@Override
-	public <T extends CanonicalData> List<DashboardChart> makeAllDashboardCharts(
+	public <T extends CanonicalCaseDeathData> List<DashboardChart> makeAllDashboardCharts(
 			List<T> dataList, String region, Integer regionPopulation, DashboardStatistics dashStats) {
 		
 		List<DashboardChart> dashboardList = new ArrayList<>();
@@ -275,7 +275,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	@Override
-	public <T extends CanonicalData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats) {
+	public <T extends CanonicalCaseDeathData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats) {
 		log.info("Getting the region population from the Regions enum");
 		int usaPop = RegionsData.USA.getRegionData().getPopulation();
 		log.info("Making total tests conducted");
@@ -842,7 +842,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	////// HELPER METHODS /////////
-	private <T extends CanonicalData> int computeTotalTestsLastN(List<T> dataList, int lastN) {
+	private <T extends CanonicalCaseDeathData> int computeTotalTestsLastN(List<T> dataList, int lastN) {
 		if(dataList.size() < lastN + 1) {
 			return 0;
 		}
@@ -862,7 +862,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		return sum;
 	}
 	
-	private <T extends CanonicalData> int computeTotalPositivesLastN(List<T> dataList, int lastN) {
+	private <T extends CanonicalCaseDeathData> int computeTotalPositivesLastN(List<T> dataList, int lastN) {
 		if(dataList.size() < lastN + 1) {
 			return 0;
 		}

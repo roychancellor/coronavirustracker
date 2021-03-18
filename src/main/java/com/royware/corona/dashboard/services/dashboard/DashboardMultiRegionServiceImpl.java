@@ -170,7 +170,9 @@ public class DashboardMultiRegionServiceImpl implements DashboardMultiRegionServ
 			multiRegionDataList.add(new UnitedStatesData());
 			UnitedStatesData thisItem = multiRegionDataList.get(multiRegionDataList.size() - 1);
 			LocalDate localDate = localDateFromStringDate(dateInteger + "");
-			thisItem.setDateTimeString(localDate.toString());  //also sets dateChecked
+			thisItem.setDateTimeString(localDate.toString());
+			thisItem.setDateChecked(localDate);
+			thisItem.setDateInteger(dateInteger);
 			thisItem.setTotalPositiveCases(regionPositiveCases.get(dateInteger));
 			thisItem.setTotalNegativeCases(regionNegativeCases.get(dateInteger));
 			thisItem.setTotalPositivePlusNegative(regionPosNegCases.get(dateInteger));

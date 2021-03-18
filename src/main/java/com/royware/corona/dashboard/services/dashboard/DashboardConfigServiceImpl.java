@@ -16,7 +16,7 @@ import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
-import com.royware.corona.dashboard.interfaces.model.CanonicalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
 import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
@@ -45,7 +45,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	
 	@Override
 	public boolean populateDashboardModelMap(String rawRegionString, ModelMap map) {
-		List<? extends CanonicalData> dataList = new ArrayList<>();
+		List<? extends CanonicalCaseDeathData> dataList = new ArrayList<>();
 		String fullRegionString;
 		int regionPopulation;
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;
@@ -83,10 +83,11 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		log.info("Done calling makeAllDashboardCharts");
 		
 		//This setting determines whether the last row of the statistics table will show
+		boolean populateUSTotals = false;
 		dashMeta.setRegionType("us");
 		if(rawRegionString.length() == 3 && !rawRegionString.equalsIgnoreCase("USA")) {
 			dashMeta.setRegionType("world");
-		} else if(rawRegionString.length() == 2 || isMultiRegion) {
+		} else if((rawRegionString.length() == 2 || isMultiRegion) && populateUSTotals) {
 			dashMeta.setRegionType("state");
 			dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
 		}

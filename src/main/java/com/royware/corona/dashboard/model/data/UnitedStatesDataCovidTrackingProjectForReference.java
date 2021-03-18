@@ -2,23 +2,31 @@ package com.royware.corona.dashboard.model.data;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.interfaces.model.CanonicalHospitalData;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospitalData {
-	private int dateInteger;
-	private int totalPositiveCases;
-	private int totalNegativeCases;
-	private int totalPositivePlusNegative;
-	private int totalDeaths;
-	private int pendingTests;
-	private String regionString;
-	private int hospitalizedCurrently;
-	private int hospitalizedCumulative;
-	private LocalDate dateChecked;
-	private String dateTimeString;
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class UnitedStatesDataCovidTrackingProjectForReference implements CanonicalCaseDeathData, CanonicalHospitalData {
+	@JsonProperty("state") private String regionString;
+	@JsonProperty("date") private int dateInteger;
+	@JsonProperty("cases") private int totalPositiveCases;
+	@JsonProperty("deaths") private int totalDeaths;
+	@JsonProperty("posNeg") private int totalPositivePlusNegative;
+	@JsonProperty("pending") private int pendingTests;
+	@JsonProperty("actuals.hospitalBeds.currentUsageCovid") private int hospitalizedCurrently;
+	@JsonProperty("hospitalizedCumulative") private int hospitalizedCumulative;
+	
+	@JsonIgnore private int totalNegativeCases;
+	@JsonIgnore private LocalDate dateChecked;
+	@JsonIgnore private String dateTimeString;
 			
-	public UnitedStatesData() {
+	public UnitedStatesDataCovidTrackingProjectForReference() {
 		super();
 	}
 
@@ -28,6 +36,10 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 
 	public void setDateInteger(int dateInteger) {
 		this.dateInteger = dateInteger;
+		this.dateChecked = LocalDate.of(dateInteger/10000, (dateInteger % 10000)/100, dateInteger % 100);
+		String month = (dateInteger % 10000)/100 < 10 ? "0" + String.valueOf((dateInteger % 10000)/100) : String.valueOf((dateInteger % 10000)/100);
+		String day = dateInteger % 100 < 10 ? "0" + String.valueOf(dateInteger % 100) : String.valueOf(dateInteger % 100);
+		this.dateTimeString = String.valueOf(dateInteger/10000) + "-" + month + "-" + day + "T00:00:00Z";
 	}
 	
 	public int getTotalPositiveCases() {
@@ -83,6 +95,8 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 	}
 
 	public void setDateTimeString(String dateTimeString) {
+		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
+				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
 		this.dateTimeString = dateTimeString;
 	}
 
@@ -91,7 +105,8 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 	}
 
 	public void setDateChecked(LocalDate dateChecked) {
-		this.dateChecked = dateChecked;
+		this.dateChecked = LocalDate.of(Integer.parseInt(dateTimeString.substring(0,4)),
+				Integer.parseInt(dateTimeString.substring(5,7)), Integer.parseInt(dateTimeString.substring(8,10)));
 	}
 
 	public int getHospitalizedCurrently() {
@@ -111,20 +126,21 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 	}
 
 	@Override
+	public String toString() {
+		return "UnitedStatesCases [date=" + dateInteger + ", totalPositiveCases=" + totalPositiveCases
+				+ ", totalNegativeCases=" + totalNegativeCases + ", totalDeaths=" + totalDeaths + ", regionString="
+				+ regionString + ", dateTimeString=" + dateTimeString + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dateChecked == null) ? 0 : dateChecked.hashCode());
 		result = prime * result + dateInteger;
-		result = prime * result + ((dateTimeString == null) ? 0 : dateTimeString.hashCode());
-		result = prime * result + hospitalizedCumulative;
-		result = prime * result + hospitalizedCurrently;
-		result = prime * result + pendingTests;
 		result = prime * result + ((regionString == null) ? 0 : regionString.hashCode());
 		result = prime * result + totalDeaths;
 		result = prime * result + totalNegativeCases;
 		result = prime * result + totalPositiveCases;
-		result = prime * result + totalPositivePlusNegative;
 		return result;
 	}
 
@@ -136,24 +152,8 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UnitedStatesData other = (UnitedStatesData) obj;
-		if (dateChecked == null) {
-			if (other.dateChecked != null)
-				return false;
-		} else if (!dateChecked.equals(other.dateChecked))
-			return false;
+		UnitedStatesDataCovidTrackingProjectForReference other = (UnitedStatesDataCovidTrackingProjectForReference) obj;
 		if (dateInteger != other.dateInteger)
-			return false;
-		if (dateTimeString == null) {
-			if (other.dateTimeString != null)
-				return false;
-		} else if (!dateTimeString.equals(other.dateTimeString))
-			return false;
-		if (hospitalizedCumulative != other.hospitalizedCumulative)
-			return false;
-		if (hospitalizedCurrently != other.hospitalizedCurrently)
-			return false;
-		if (pendingTests != other.pendingTests)
 			return false;
 		if (regionString == null) {
 			if (other.regionString != null)
@@ -166,20 +166,8 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 			return false;
 		if (totalPositiveCases != other.totalPositiveCases)
 			return false;
-		if (totalPositivePlusNegative != other.totalPositivePlusNegative)
-			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "UnitedStatesData [dateInteger=" + dateInteger + ", totalPositiveCases=" + totalPositiveCases
-				+ ", totalNegativeCases=" + totalNegativeCases + ", totalPositivePlusNegative="
-				+ totalPositivePlusNegative + ", totalDeaths=" + totalDeaths + ", pendingTests=" + pendingTests
-				+ ", regionString=" + regionString + ", hospitalizedCurrently=" + hospitalizedCurrently
-				+ ", hospitalizedCumulative=" + hospitalizedCumulative + ", dateChecked=" + dateChecked
-				+ ", dateTimeString=" + dateTimeString + "]";
-	}
 
-	
 }
