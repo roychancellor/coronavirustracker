@@ -6,42 +6,42 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.CacheActions;
-import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
-import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.ICacheActions;
+import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
 @Component
-public class CacheActionsImpl implements CacheActions {
+public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
+	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_US.getName();
 	
 	@Autowired
-	private WorldDataServiceCaller worldDataServiceCaller;
-	
+	@Qualifier(value = "us")
+	private ExternalDataService usaDataService;
+		
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
 	public void cacheEvictAndRepopulate() {
 		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
 		
 		log.info("Getting the world data from its source...if unavailable, will NOT evict the cache.");
-		List<WorldData> newCacheData = getNewCacheDataIfAvailable();
+		List<UnitedStatesData> newCacheData = getNewCacheDataFromSource();
 		if(newCacheData.isEmpty()) {
-			log.info("The world data source is NOT available. Returning to operation with previous version of cache.");
+			log.info("The USA data source is NOT available. Returning to operation with previous version of cache.");
 			return;
 		}
 		
 		evictCache();
 		log.info("DONE EVICTING: " + LocalDateTime.now());		
 		
-		populateCacheFromExistingData(CacheKeys.CACHE_KEY_WORLD.getName(), newCacheData);
+		populateCacheFromExistingData(CACHE_KEY, newCacheData);
 		log.info("DONE REPOPULATING: " + LocalDateTime.now());
-	}
-	
-	private List<WorldData> getNewCacheDataIfAvailable() {
-		return worldDataServiceCaller.getDataFromWorldSource();
 	}
 	
 	//The following two methods used to be annotated with @CacheEvict and @CachePut, but they didn't seem to be working properly
@@ -55,7 +55,7 @@ public class CacheActionsImpl implements CacheActions {
 	}	
 
 	@Override
-	public void populateCacheFromExistingData(String cacheKey, List<WorldData> newCacheData) {
+	public <T extends CanonicalCaseDeathData> void populateCacheFromExistingData(String cacheKey, List<T> newCacheData) {
 		log.info("In the populateCacheFromExistingData method: " + LocalDateTime.now());
 		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
 	}
@@ -64,6 +64,10 @@ public class CacheActionsImpl implements CacheActions {
 	public void populateCacheFromSource(String cacheKey) {
 		log.info("In the populateCacheFromSource method: " + LocalDateTime.now());
 		log.info("Getting the world data from its source...");
-		CacheManagerProvider.getManager().put(cacheKey, getNewCacheDataIfAvailable());
+		CacheManagerProvider.getManager().put(cacheKey, getNewCacheDataFromSource());
+	}
+	
+	private List<UnitedStatesData> getNewCacheDataFromSource() {
+		return usaDataService.makeDataListFromExternalSource(CACHE_KEY);
 	}
 }

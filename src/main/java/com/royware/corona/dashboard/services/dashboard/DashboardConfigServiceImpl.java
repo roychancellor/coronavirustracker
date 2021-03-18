@@ -13,9 +13,9 @@ import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardMultiRegionService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
 import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
@@ -39,7 +39,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	private DashboardChartService dashboardChartService;
 	
 	@Autowired
-	private DashboardMultiRegionService dashboardMultiRegionService;
+	private IMultiRegionExternalDataService dashboardMultiRegionService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardConfigServiceImpl.class);
 	
@@ -49,6 +49,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		String fullRegionString;
 		int regionPopulation;
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;
+		boolean isUSA = rawRegionString.equalsIgnoreCase("USA");
 		final int MAX_REGION_LENGTH_TO_DISPLAY = 28;
 		
 		//Check for null data service or an empty multi-region
@@ -64,12 +65,17 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			String regionsOnlyCsvString = dashboardMultiRegionService.getStatesFromMultiRegionString(rawRegionString);
 			regionPopulation = dashboardMultiRegionService.getMultiRegionPopulation(regionsOnlyCsvString);
 			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(regionsOnlyCsvString, dataService);
+		} else if(isUSA) {
+			//As of 03/07/2021, there is no longer a single source of data available for the U.S., so need to treat it like a multi-region
+			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
+			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
+			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(ALL_STATES_AS_CSV, dataService);
 		} else {
 			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
 			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
 			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
-			log.info("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
 		}
+		log.info("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
 		log.info("Finished making the data list...");
 		
 		//Check for a null or empty data list. This is VERY important!!!
