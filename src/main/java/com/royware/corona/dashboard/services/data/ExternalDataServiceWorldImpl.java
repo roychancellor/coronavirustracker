@@ -12,6 +12,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,7 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 	@Override
 	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
 		cacheManager = CacheManagerProvider.getManager();
-		List<WorldData> worldData = (List<WorldData>)cacheManager.get(cacheKey).get();
+		List<WorldData> worldData = safeGetDataFromCache(cacheKey);
 		if(worldData == null || worldData.isEmpty()) {
 			log.info("Getting the world data from its source, then putting it into the cache.");
 			worldData = getDataFromWorldSource();
@@ -56,6 +57,15 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		return worldData;
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<WorldData> safeGetDataFromCache(String cacheKey) {
+		ValueWrapper springCacheValueWrapper = cacheManager.get(cacheKey);
+		if(springCacheValueWrapper == null) {
+			return null;
+		}
+		return (List<WorldData>)springCacheValueWrapper.get();
+	}
+	
 	//This only gets called when the cache is initialized and when it is evicted/refreshed
 	@Override
 	public List<WorldData> getDataFromWorldSource() {

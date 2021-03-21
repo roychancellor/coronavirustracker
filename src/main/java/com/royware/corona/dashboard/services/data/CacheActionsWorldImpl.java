@@ -15,7 +15,7 @@ import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.WorldData;
 
-@Component
+@Component("ca_world")
 public class CacheActionsWorldImpl implements ICacheActions {
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_WORLD.getName();
@@ -30,7 +30,7 @@ public class CacheActionsWorldImpl implements ICacheActions {
 		
 		log.info("Getting the world data from its source...if unavailable, will NOT evict the cache.");
 		List<WorldData> newCacheData = getNewCacheDataIfAvailable();
-		if(newCacheData.isEmpty()) {
+		if(newCacheData == null || newCacheData.isEmpty()) {
 			log.info("The world data source is NOT available. Returning to operation with previous version of cache.");
 			return;
 		}
@@ -38,7 +38,7 @@ public class CacheActionsWorldImpl implements ICacheActions {
 		evictCache();
 		log.info("DONE EVICTING: " + LocalDateTime.now());		
 		
-		populateCacheFromExistingData(CACHE_KEY, newCacheData);
+		populateCacheFromDataList(CACHE_KEY, newCacheData);
 		log.info("DONE REPOPULATING: " + LocalDateTime.now());
 	}
 	
@@ -52,12 +52,13 @@ public class CacheActionsWorldImpl implements ICacheActions {
 	public void evictCache() {
 		log.info("In the evictCache method: " + LocalDateTime.now());
 		log.info("EVICTING...");
-		CacheManagerProvider.getManager().clear();
+		CacheManagerProvider.getManager().put(CACHE_KEY, null);
+		//CacheManagerProvider.getManager().clear();
 		log.info("...DONE");
 	}	
 
 	@Override
-	public <T extends CanonicalCaseDeathData> void populateCacheFromExistingData(String cacheKey, List<T> newCacheData) {
+	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
 		log.info("In the populateCacheFromExistingData method: " + LocalDateTime.now());
 		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
 	}

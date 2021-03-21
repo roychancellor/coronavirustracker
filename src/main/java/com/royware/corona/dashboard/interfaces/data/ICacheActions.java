@@ -12,6 +12,6 @@ public interface ICacheActions {
 	
 	public void cacheEvictAndRepopulate();
 	public void evictCache();
-	public <T extends CanonicalCaseDeathData> void populateCacheFromExistingData(String cacheName, List<T> newCacheData);
+	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheName, List<T> newCacheData);
 	public void populateCacheFromSource(String cacheName);
 }

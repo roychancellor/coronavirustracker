@@ -21,7 +21,7 @@ import com.royware.corona.dashboard.model.data.UnitedStatesData;
 /**
  * Provides service methods for getting dashboard data from external sources
  */
-@Component("singleStateCDCSource")
+@Component("singleState")
 public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 	@Autowired
 	private RestTemplate restTemplate;

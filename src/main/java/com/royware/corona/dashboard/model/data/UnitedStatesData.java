@@ -17,7 +17,7 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 	private int hospitalizedCumulative;
 	private LocalDate dateChecked;
 	private String dateTimeString;
-			
+	
 	public UnitedStatesData() {
 		super();
 	}

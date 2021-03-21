@@ -16,7 +16,7 @@ import com.royware.corona.dashboard.interfaces.data.ICacheActions;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.UnitedStatesData;
 
-@Component
+@Component("ca_us")
 public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_US.getName();
@@ -30,9 +30,9 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	public void cacheEvictAndRepopulate() {
 		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
 		
-		log.info("Getting the world data from its source...if unavailable, will NOT evict the cache.");
+		log.info("Getting the United States data from its source. If unavailable, will NOT evict the cache.");
 		List<UnitedStatesData> newCacheData = getNewCacheDataFromSource();
-		if(newCacheData.isEmpty()) {
+		if(newCacheData == null || newCacheData.isEmpty()) {
 			log.info("The USA data source is NOT available. Returning to operation with previous version of cache.");
 			return;
 		}
@@ -40,7 +40,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 		evictCache();
 		log.info("DONE EVICTING: " + LocalDateTime.now());		
 		
-		populateCacheFromExistingData(CACHE_KEY, newCacheData);
+		populateCacheFromDataList(CACHE_KEY, newCacheData);
 		log.info("DONE REPOPULATING: " + LocalDateTime.now());
 	}
 	
@@ -50,24 +50,28 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	public void evictCache() {
 		log.info("In the evictCache method: " + LocalDateTime.now());
 		log.info("EVICTING...");
-		CacheManagerProvider.getManager().clear();
+		CacheManagerProvider.getManager().put(CACHE_KEY, null);
 		log.info("...DONE");
 	}	
 
 	@Override
-	public <T extends CanonicalCaseDeathData> void populateCacheFromExistingData(String cacheKey, List<T> newCacheData) {
+	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
 		log.info("In the populateCacheFromExistingData method: " + LocalDateTime.now());
-		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
+		putDataIntoCache(cacheKey, newCacheData);
 	}
 
 	@Override
 	public void populateCacheFromSource(String cacheKey) {
 		log.info("In the populateCacheFromSource method: " + LocalDateTime.now());
-		log.info("Getting the world data from its source...");
-		CacheManagerProvider.getManager().put(cacheKey, getNewCacheDataFromSource());
+		log.info("Getting the United States data from its source...");
+		putDataIntoCache(cacheKey, getNewCacheDataFromSource());
 	}
 	
 	private List<UnitedStatesData> getNewCacheDataFromSource() {
 		return usaDataService.makeDataListFromExternalSource(CACHE_KEY);
+	}
+
+	private <T extends CanonicalCaseDeathData> void putDataIntoCache(String cacheKey, List<T> newCacheData) {
+		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
 	}
 }
