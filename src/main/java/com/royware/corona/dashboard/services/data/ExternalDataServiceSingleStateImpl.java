@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.data.DataUrls;
@@ -31,23 +32,49 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateAbbreviation) {
-		String urlCaseDeath = DataUrls.STATE_DATA_URL_START.getName()
-				+ DataUrls.STATE_DATA_URL_CASES_DEATHS.getName()
-				+ DataUrls.STATE_DATA_URL_END.getName()
-				+ stateAbbreviation.toUpperCase();
-		log.info("***** ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + urlCaseDeath + " FOR " + stateAbbreviation);
-		CaseDeathDataCDC[] stateCaseDeathDataArray = restTemplate.getForObject(urlCaseDeath, CaseDeathDataCDC[].class);
+		CaseDeathDataCDC[] stateCaseDeathDataArray;
+		int tries = 0;
+		do {
+			try {
+				String urlCaseDeath = DataUrls.STATE_DATA_URL_START.getName()
+						+ DataUrls.STATE_DATA_URL_CASES_DEATHS.getName() + DataUrls.STATE_DATA_URL_END.getName()
+						+ stateAbbreviation.toUpperCase();
+				log.info("***** ABOUT TO HIT ENDPOINT FOR STATE CASE/DEATH DATA AT " + urlCaseDeath + " FOR " + stateAbbreviation);
+				stateCaseDeathDataArray = restTemplate.getForObject(urlCaseDeath, CaseDeathDataCDC[].class);
+			} catch (RestClientException e) {
+				log.error("RestClientException is: " + e.getMessage());
+				log.info("*** ERROR CONNECTING TO STATE DATA SOURCE FOR CASE/DEATH DATA: RETRYING: TRY #" + (tries+1) + " ***");
+				tries++;
+				stateCaseDeathDataArray = null;
+			} 
+		} while (tries <= 3 && stateCaseDeathDataArray == null);
 		
-		String urlHospitalization = DataUrls.STATE_DATA_URL_START.getName()
-				+ DataUrls.STATE_DATA_URL_HOSPITAL_LOAD.getName()
-				+ DataUrls.STATE_DATA_URL_END.getName()
-				+ stateAbbreviation.toUpperCase();
-		log.info("***** ABOUT TO HIT ENDPOINT FOR STATE DATA AT " + urlHospitalization + " FOR " + stateAbbreviation);
-		HospitalDataCDC[] hospitalizationDataArray = restTemplate.getForObject(urlHospitalization, HospitalDataCDC[].class);
-
+		HospitalDataCDC[] hospitalizationDataArray;
+		tries = 0;
+		do {
+			try {
+				String urlHospitalization = DataUrls.STATE_DATA_URL_START.getName()
+						+ DataUrls.STATE_DATA_URL_HOSPITAL_LOAD.getName() + DataUrls.STATE_DATA_URL_END.getName()
+						+ stateAbbreviation.toUpperCase();
+				log.info("***** ABOUT TO HIT ENDPOINT FOR STATE HOSPITALIZATION DATA AT " + urlHospitalization + " FOR "
+						+ stateAbbreviation);
+				hospitalizationDataArray = restTemplate.getForObject(urlHospitalization, HospitalDataCDC[].class);
+			} catch (RestClientException e) {
+				log.error("RestClientException is: " + e.getMessage());
+				log.info("*** ERROR CONNECTING TO STATE DATA SOURCE FOR HOSPITAL DATA: RETRYING: TRY #" + (tries+1) + " ***");
+				tries++;
+				hospitalizationDataArray = null;
+			} 
+		} while (tries <= 3 && hospitalizationDataArray == null);
+		
+		if(stateCaseDeathDataArray == null || hospitalizationDataArray == null) {
+			log.error("The returned stateCaseDeathDataArray or the hospitalizationDataArray (or both) is null!!!");
+			return new ArrayList<UnitedStatesData>();
+		}
+		
 		List<UnitedStatesData> stateDataList = buildUnitedStatesDataList(stateCaseDeathDataArray, hospitalizationDataArray);
+		log.info("The size of the pre-filtered state data list for " + stateAbbreviation + " is: " + stateDataList.size());
 		
-		//Collections.reverse(stateDataList);
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		
 		log.info("***** FINISHED GETTING DATA FOR STATE: " + stateAbbreviation + " ****");

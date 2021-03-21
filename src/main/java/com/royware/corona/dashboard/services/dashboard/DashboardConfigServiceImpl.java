@@ -69,7 +69,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			//As of 03/07/2021, there is no longer a single source of data available for the U.S., so need to treat it like a multi-region
 			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
 			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
-			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(ALL_STATES_AS_CSV, dataService);
+			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
 		} else {
 			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
 			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
