@@ -34,12 +34,12 @@ public class DownloadChartData {
 		response.setHeader("Content-disposition", "attachment;filename=" + filename);
 		
 		//Make the header row
-		log.info("Writing the header row...");
+		log.debug("Writing the header row...");
 		List<String> rows = new ArrayList<>();
 		rows.add(makeCsvHeaderRow(regionType, dashboardCharts));
 		
 		//Make the data rows
-		log.info("Writing the data rows...");
+		log.debug("Writing the data rows...");
 		rows.addAll(makeCsvDataRows(regionType, dashboardCharts));
  
 		//Write the data to a CSV file
@@ -70,7 +70,7 @@ public class DownloadChartData {
 			sb.append(COMMA);
 		}
 		sb.deleteCharAt(sb.length() - 1);  //so there is no trailing comma
-		log.info("The header row is: " + sb.toString());
+		log.debug("The header row is: " + sb.toString());
 		sb.append(CRLF);
 		return sb.toString();
 	}
@@ -116,7 +116,7 @@ public class DownloadChartData {
 				sb.append(COMMA);
 			}
 			sb.deleteCharAt(sb.length() - 1); //delete the trailing comma
-			log.info("The data row is: " + sb.toString());
+			log.debug("The data row is: " + sb.toString());
 			dataRows.add(sb.toString());
 			dataRows.add(CRLF);
 		}

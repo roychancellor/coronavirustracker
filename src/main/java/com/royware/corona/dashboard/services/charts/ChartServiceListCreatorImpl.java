@@ -620,8 +620,8 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		//Find the first object having a current hospitalizations > 0 for two consecutive days
-		log.info("Making time history of CURRENT hospitalizations");
-		log.info("Making time history of DAILY NEW hospitalizations");
+		log.debug("Making time history of CURRENT hospitalizations");
+		log.debug("Making time history of DAILY NEW hospitalizations");
 		
 		//First day with positive hospitalizations
 		int startDayIndex = findFirstDayIndexWithPositiveCurrentHospitalizations(regionDataList);
@@ -669,8 +669,8 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 
-		log.info("Making time history of CUMULATIVE hospitalizations");
-		log.info("Making time history of DAILY NEW hospitalizations (from Cumulative)");
+		log.debug("Making time history of CUMULATIVE hospitalizations");
+		log.debug("Making time history of DAILY NEW hospitalizations (from Cumulative)");
 		int startDayIndex = findFirstDayIndexWithPositiveCumulativeHospitalizations(regionDataList);
 		xyPair = makeXYPairWithDateStamp(startDayIndex,
 				regionDataList.get(startDayIndex).getHospitalizedCumulative(),
@@ -720,7 +720,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private <T extends CanonicalCaseDeathData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getTotalDeaths() > 0) {
-				log.info("first day index with positive deaths: " + dayIndex
+				log.debug("first day index with positive deaths: " + dayIndex
 						+ " with " + regionDataList.get(dayIndex).getTotalDeaths() + " deaths");
 				return dayIndex;
 			}
@@ -731,7 +731,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private <T extends CanonicalCaseDeathData> int findFirstDayIndexWithPositiveCurrentHospitalizations(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getHospitalizedCurrently() > 0) {
-				log.info("first day index with positive current hospitalizations: " + dayIndex
+				log.debug("first day index with positive current hospitalizations: " + dayIndex
 						+ " with " + regionDataList.get(dayIndex).getHospitalizedCurrently() + " hospitalizations");
 				return dayIndex;
 			}
@@ -742,7 +742,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 	private <T extends CanonicalCaseDeathData> int findFirstDayIndexWithPositiveCumulativeHospitalizations(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getHospitalizedCumulative() > 0) {
-				log.info("first day index with positive cumulative hospitalizations: " + dayIndex
+				log.debug("first day index with positive cumulative hospitalizations: " + dayIndex
 						+ " with " + regionDataList.get(dayIndex).getHospitalizedCumulative() + " hospitalizations");
 				return dayIndex;
 			}
@@ -782,7 +782,7 @@ public class ChartServiceListCreatorImpl implements ChartServiceListCreator {
 					movingAverage += amountToAdd;
 					divisor++;
 				} else {
-					log.info("Oops...amountToAdd is not a real number, it is " + amountToAdd + ", so it will NOT be in the moving average.");
+					log.trace("Oops...amountToAdd is not a real number, it is " + amountToAdd + ", so it will NOT be in the moving average.");
 				}
 			}
 			if(divisor > 0) {

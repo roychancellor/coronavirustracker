@@ -31,7 +31,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 		
 		int latestDateValueCases = getLatestDate(mapOfStateDataLists, states, DataFields.CASES);
 		int latestDateValueDeaths = getLatestDate(mapOfStateDataLists, states, DataFields.DEATHS);
-		log.info("Found the latest date for cases: " + latestDateValueCases + " and the latest date for deaths: " + latestDateValueDeaths);
+		log.debug("Found the latest date for cases: " + latestDateValueCases + " and the latest date for deaths: " + latestDateValueDeaths);
 		
 		//Go through the state data lists and create a list of UnitedStatesData objects whose
 		//cases and deaths are the sum of cases and deaths for each state AND where the date > latest date
@@ -69,7 +69,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 				}
 			}			
 		}
-		log.info("Made all the DATA FIELD maps containing the SUMS for all states in the multi-region");
+		log.debug("Made all the DATA FIELD maps containing the SUMS for all states in the multi-region");
 		
 		//NOW, iterate through the keys from the latest case date through the current day as an integer
 		//and construct a list of UnitedStatesData objects that will contain the sum for the whole region for each day
@@ -91,7 +91,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 				thisDateForRegion.setTotalDeaths(0);
 			}
 		}
-		log.info("Finished making the region data list and ready to return it.");
+		log.debug("Finished making the region data list and ready to return it.");
 		
 		return multiRegionDataListToReturn;
 	}
@@ -101,12 +101,12 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 		Map<String, List<UnitedStatesData>> stateDataLists = new HashMap<>();
 		
 		//Make a map where the key is the state and the value is the list of data for the state
-		log.info("The array of states for getting data is:");
+		log.debug("The array of states for getting data is:");
 		for(String state : states) {
 			log.info(state);
 			stateDataLists.put(state, dataService.makeDataListFromExternalSource(state));
 		}
-		log.info("Made the map containing all state data lists");
+		log.debug("Made the map containing all state data lists");
 		return stateDataLists;
 	}
 

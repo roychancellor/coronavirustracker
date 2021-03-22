@@ -34,14 +34,14 @@ public class ExternalDataServiceUSAImpl implements ExternalDataService {
 		cacheManager = CacheManagerProvider.getManager();
 		List<UnitedStatesData> usaData = safeGetDataFromCache(cacheKey);
 		if(usaData == null || usaData.isEmpty()) {
-			log.info("Getting the USA data from its source (via multi-region).");
+			log.info("US Data not in cache. Getting the USA data from its source (via multi-region).");
 			usaData = multiRegionDataService.getMultiRegionDataFromExternalSource(
 					DashboardConfigService.ALL_STATES_AS_CSV,
 					dataService.getExternalDataService("MULTI")
 			);
-			//cacheManager.put(cacheKey, usaData);
+		} else {
+			log.info("Returning the cached version of the USA data.");
 		}
-		log.info("Returning the cached version of the USA data.");
 		return usaData;
 	}
 	

@@ -49,7 +49,6 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		String fullRegionString;
 		int regionPopulation;
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;
-		boolean isUSA = rawRegionString.equalsIgnoreCase("USA");
 		final int MAX_REGION_LENGTH_TO_DISPLAY = 28;
 		
 		//Check for null data service or an empty multi-region
@@ -60,22 +59,18 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		}
 		
 		//Need to get the data differently for a multi-region selection 
+		//As of 03/07/2021, there is no longer a single source of data available for the U.S., so need to treat it like a multi-region
 		if(isMultiRegion) {
 			fullRegionString = rawRegionString;
 			String regionsOnlyCsvString = dashboardMultiRegionService.getStatesFromMultiRegionString(rawRegionString);
 			regionPopulation = dashboardMultiRegionService.getMultiRegionPopulation(regionsOnlyCsvString);
 			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(regionsOnlyCsvString, dataService);
-		} else if(isUSA) {
-			//As of 03/07/2021, there is no longer a single source of data available for the U.S., so need to treat it like a multi-region
-			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
-			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
-			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
 		} else {
 			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
 			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
 			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
 		}
-		log.info("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
+		log.debug("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
 		log.info("Finished making the data list...");
 		
 		//Check for a null or empty data list. This is VERY important!!!
@@ -120,7 +115,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	private ExternalDataService getExternalDataServiceFromFactory(String region) {
 		try {
 			ExternalDataService dataService = dataFactory.getExternalDataService(region);
-			log.info("Success, got the dataService: " + dataService.toString());
+			log.debug("Success, got the dataService: " + dataService.toString());
 			return dataService;
 		} catch (IllegalArgumentException e) {
 			log.error("Unable to find data source for region '" + region + "'. No dashboard to build!");

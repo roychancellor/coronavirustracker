@@ -38,9 +38,9 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 	public ExternalDataService getExternalDataService(String regionOfService) {
 		ExternalDataService dataService;
 		
-		log.info("getExternalDataService trying to make dataService for " + regionOfService);
+		log.debug("getExternalDataService trying to make dataService for " + regionOfService);
 		if(regionOfService.equalsIgnoreCase(RegionsData.USA.name())) {
-			log.info("Making dataService for " + RegionsData.USA.name());
+			log.debug("Making dataService for " + RegionsData.USA.name());
 			dataService = usDataService;
 		} else if(regionOfService.equalsIgnoreCase(RegionsData.USA_NO_NY.name())) {
 			dataService = usExcludingStateDataService;
@@ -51,7 +51,7 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 		} else if(regionOfService.substring(0,5).equalsIgnoreCase("MULTI")) {
 			dataService = multiStateDataService;
 		} else {
-			log.info("getExternalDataService NO MATCHES to regionOfService: '" + regionOfService + "'. Throwing exception!!!");
+			log.error("getExternalDataService NO MATCHES to regionOfService: '" + regionOfService + "'. Throwing exception!!!");
 			throw new IllegalArgumentException("NO MATCH TO regionOfService");
 		}
 		

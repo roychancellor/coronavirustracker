@@ -33,7 +33,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 		log.info("Getting the United States data from its source. If unavailable, will NOT evict the cache.");
 		List<UnitedStatesData> newCacheData = getNewCacheDataFromSource();
 		if(newCacheData == null || newCacheData.isEmpty()) {
-			log.info("The USA data source is NOT available. Returning to operation with previous version of cache.");
+			log.error("The USA data source is NOT available. Returning to operation with previous version of cache.");
 			return;
 		}
 		
@@ -48,22 +48,22 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	//so now doing the eviction and repopulation manually with get and put operations.
 	@Override
 	public void evictCache() {
-		log.info("In the evictCache method: " + LocalDateTime.now());
-		log.info("EVICTING...");
+		log.debug("In the evictCache method: " + LocalDateTime.now());
+		log.debug("EVICTING...");
 		CacheManagerProvider.getManager().put(CACHE_KEY, null);
-		log.info("...DONE");
+		log.debug("...DONE");
 	}	
 
 	@Override
 	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
-		log.info("In the populateCacheFromExistingData method: " + LocalDateTime.now());
+		log.debug("In the populateCacheFromExistingData method: " + LocalDateTime.now());
 		putDataIntoCache(cacheKey, newCacheData);
 	}
 
 	@Override
 	public void populateCacheFromSource(String cacheKey) {
-		log.info("In the populateCacheFromSource method: " + LocalDateTime.now());
-		log.info("Getting the United States data from its source...");
+		log.debug("In the populateCacheFromSource method: " + LocalDateTime.now());
+		log.debug("Getting the United States data from its source...");
 		putDataIntoCache(cacheKey, getNewCacheDataFromSource());
 	}
 	

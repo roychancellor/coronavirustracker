@@ -87,14 +87,14 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		List<UnitedStatesData> multiRegionDataList = new ArrayList<>();
 		Map<String, List<UnitedStatesData>> mapOfStateDataLists = new HashMap<String, List<UnitedStatesData>>();
 		
-		log.debug("Getting the multi-region data from an external source");
+		log.info("Getting the multi-region data from an external source");
 		String[] states = makeUniqueArrayOfStates(fullRegionName);
 		
 		mapOfStateDataLists = listStitcher.makeMapOfStateDataLists(dataService, states);
 		
 		multiRegionDataList = listStitcher.stitchMultiStateListsIntoOneList(mapOfStateDataLists, states);
 		
-		log.debug("Finished getting the multi-region data from an external source");
+		log.info("Finished getting the multi-region data from an external source");
 		return multiRegionDataList;
 	}
 

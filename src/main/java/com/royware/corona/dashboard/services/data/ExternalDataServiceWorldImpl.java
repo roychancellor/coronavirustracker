@@ -49,11 +49,11 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		cacheManager = CacheManagerProvider.getManager();
 		List<WorldData> worldData = safeGetDataFromCache(cacheKey);
 		if(worldData == null || worldData.isEmpty()) {
-			log.info("Getting the world data from its source, then putting it into the cache.");
+			log.info("World data not in cache. Getting the world data from its source.");
 			worldData = getDataFromWorldSource();
-			cacheManager.put(cacheKey, worldData);
+		} else {
+			log.info("Returning the cached version of the world data.");
 		}
-		log.info("Returning the cached version of the world data.");
 		return worldData;
 	}
 

@@ -30,9 +30,9 @@ public class ApplicationStartup {
 	@EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent() {
 		log.info("Application has successfully started in environment: {}", env.getProperty("ENVIRONMENT"));
-		log.info("About to initialize the cache with cacheActions object of class: {}", cacheActionsWorld.getClass().getSimpleName());
+		log.info("About to initialize the WORLD cache with cacheActions object of class: {}", cacheActionsWorld.getClass().getSimpleName());
 		cacheActionsWorld.populateCacheFromSource(CacheKeys.CACHE_KEY_WORLD.getName());
-		log.info("About to initialize the cache with cacheActions object of class: {}", cacheActionsUS.getClass().getSimpleName());
+		log.info("About to initialize the USA cache with cacheActions object of class: {}", cacheActionsUS.getClass().getSimpleName());
 		cacheActionsUS.populateCacheFromSource(CacheKeys.CACHE_KEY_US.getName());
 	}
 }

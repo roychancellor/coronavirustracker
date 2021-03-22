@@ -43,7 +43,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 				stateCaseDeathDataArray = restTemplate.getForObject(urlCaseDeath, CaseDeathDataCDC[].class);
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.info("*** ERROR CONNECTING TO STATE DATA SOURCE FOR CASE/DEATH DATA: RETRYING: TRY #" + (tries+1) + " ***");
+				log.error("*** ERROR CONNECTING TO STATE DATA SOURCE FOR CASE/DEATH DATA: RETRYING: TRY #" + (tries+1) + " ***");
 				tries++;
 				stateCaseDeathDataArray = null;
 			} 
@@ -61,7 +61,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 				hospitalizationDataArray = restTemplate.getForObject(urlHospitalization, HospitalDataCDC[].class);
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.info("*** ERROR CONNECTING TO STATE DATA SOURCE FOR HOSPITAL DATA: RETRYING: TRY #" + (tries+1) + " ***");
+				log.error("*** ERROR CONNECTING TO STATE DATA SOURCE FOR HOSPITAL DATA: RETRYING: TRY #" + (tries+1) + " ***");
 				tries++;
 				hospitalizationDataArray = null;
 			} 
@@ -73,7 +73,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 		}
 		
 		List<UnitedStatesData> stateDataList = buildUnitedStatesDataList(stateCaseDeathDataArray, hospitalizationDataArray);
-		log.info("The size of the pre-filtered state data list for " + stateAbbreviation + " is: " + stateDataList.size());
+		log.debug("The size of the pre-filtered state data list for " + stateAbbreviation + " is: " + stateDataList.size());
 		
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		
