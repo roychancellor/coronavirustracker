@@ -31,8 +31,8 @@ public class ExternalDataServiceUSAExcludingStateImpl implements ExternalDataSer
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
-		log.info("***** ABOUT TO FILTER *OUT* STATE: " + stateToExclude + " ****");
-		List<UnitedStatesData> usDataExcludingState = usDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.toString());
+		log.info("***** ABOUT TO <<<FILTER OUT>>> STATE: " + stateToExclude + " ****");
+		List<UnitedStatesData> usDataExcludingState = usDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.getName());
 		List<UnitedStatesData> stateDataToExclude = stateDataService.makeDataListFromExternalSource(stateToExclude);
 		
 		for(int i = 0; i < usDataExcludingState.size(); i++) {

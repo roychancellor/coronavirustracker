@@ -227,19 +227,19 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	@Override
 	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats) {
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
-		log.info("Getting U.S. data for populating By U.S. Totals row of dashboard...");
+		log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
 		List<UnitedStatesData> usaData = RegionsData.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(RegionsData.USA.name()));
 		int totalUsCases = usaData.get(usaData.size() - 1).getTotalPositiveCases();
-		log.info("Making totalUsCases");
+		log.debug("Making totalUsCases");
 		dashStats.setTotalUsCases(totalUsCases);
-		log.info("Making proportionOfRegionCasesToUsCases");
+		log.debug("Making proportionOfRegionCasesToUsCases");
 		dashStats.setProportionOfRegionCasesToUsCases(dashStats.getCasesTotal() * 100.0 / totalUsCases);
 		int totalUsDeaths = usaData.get(usaData.size() - 1).getTotalDeaths();
-		log.info("Making totalUsDeaths");
+		log.debug("Making totalUsDeaths");
 		dashStats.setTotalUsDeaths(totalUsDeaths);
-		log.info("Making proportionOfRegionDeathsToUsCases");
+		log.debug("Making proportionOfRegionDeathsToUsCases");
 		dashStats.setProportionOfRegionDeathsToUsDeaths(dashStats.getDeathsTotal() * 100.0 / totalUsDeaths);
-		log.info("Making proportionOfRegionPopToUsPop");
+		log.debug("Making proportionOfRegionPopToUsPop");
 		dashStats.setProportionOfRegionPopToUsPop(regionPopulation * 100.0 / RegionsData.USA.getRegionData().getPopulation());
 	}
 
@@ -276,28 +276,28 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 	@Override
 	public <T extends CanonicalCaseDeathData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats) {
-		log.info("Getting the region population from the Regions enum");
+		log.debug("Getting the region population from the Regions enum");
 		int usaPop = RegionsData.USA.getRegionData().getPopulation();
-		log.info("Making total tests conducted");
+		log.debug("Making total tests conducted");
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());
-		log.info("Making ProportionOfPositiveTests and ProportionOfPositiveTestsMovingAverage");
+		log.debug("Making ProportionOfPositiveTests and ProportionOfPositiveTestsMovingAverage");
 		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				* 100.0 / dashStats.getTotalTestsConducted());
 		int totalTestsLastN = computeTotalTestsLastN(dataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue());
 		dashStats.setTotalTestsConductedLastN(totalTestsLastN);
 		dashStats.setProportionOfPositiveTestsMovingAverage(
 				computeTotalPositivesLastN(dataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())* 100.0 / totalTestsLastN);
-		log.info("Making ProportionOfPopulationTested");
+		log.debug("Making ProportionOfPopulationTested");
 		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
 				* 100.0 / usaPop);
-		log.info("Making ProportionOfDeathsFromPositives");
+		log.debug("Making ProportionOfDeathsFromPositives");
 		dashStats.setProportionOfDeathsFromPositives(dataList.get(dataList.size() - 1).getTotalDeaths()
 				* 100.0 / dataList.get(dataList.size() - 1).getTotalPositiveCases());
-		log.info("Making ProportionOfDeathsFromTested");
+		log.debug("Making ProportionOfDeathsFromTested");
 		dashStats.setProportionOfDeathsFromTested(dataList.get(dataList.size() - 1).getTotalDeaths()
 				* 100.0 / dashStats.getTotalTestsConducted());
-		log.info("Making ProportionOfDeathsOfExtrapolatedCases");
+		log.debug("Making ProportionOfDeathsOfExtrapolatedCases");
 		dashStats.setProportionOfDeathsOfExtrapolatedCases(dataList.get(dataList.size() - 1).getTotalDeaths()
 				* 100.0 / (dashStats.getProportionOfPositiveTests() * usaPop));
 	}

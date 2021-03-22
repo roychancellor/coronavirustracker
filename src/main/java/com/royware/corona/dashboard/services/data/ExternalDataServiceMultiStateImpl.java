@@ -19,7 +19,7 @@ public class ExternalDataServiceMultiStateImpl implements ExternalDataService {
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceMultiStateImpl.class);
 	
 	@Autowired
-	@Qualifier(value = "singleStateCDCSource")
+	@Qualifier(value = "singleState")
 	private ExternalDataService singleStateDataService;
 	
 	@SuppressWarnings("unchecked")

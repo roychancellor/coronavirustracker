@@ -35,12 +35,12 @@ public class ExternalDataServiceSingleCountryImpl implements ExternalDataService
 	public List<WorldData> makeDataListFromExternalSource(String countryThreeLetterCode) {
 		log.info("***** ABOUT TO GET DATA FOR COUNTRY " + countryThreeLetterCode + " ****");
 		List<WorldData> casesInOneCountry = new ArrayList<>();
-		log.info("Calling the WorldDataServiceImpl makeDataListFromExternalSource method (should be cached)");
-		log.info("In SingleCountryDataServiceImpl class: worldDataService hashcode: " + this.hashCode());
+		log.debug("Calling the WorldDataServiceImpl makeDataListFromExternalSource method (should be cached)");
+		log.debug("In SingleCountryDataServiceImpl class: worldDataService hashcode: " + this.hashCode());
 		List<WorldData> worldCases = worldDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_WORLD.getName());
-		log.info("Got the world data list and its size is: " + worldCases.size());
+		log.debug("Got the world data list and its size is: " + worldCases.size());
 		//Because the country data returns daily new cases and deaths, need to compute the totals by day
-		log.info("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
+		log.debug("***** ABOUT TO FILTER FOR COUNTRY " + countryThreeLetterCode + " ****");
 		casesInOneCountry = worldCases
 				.stream()
 				.filter(wc -> {
