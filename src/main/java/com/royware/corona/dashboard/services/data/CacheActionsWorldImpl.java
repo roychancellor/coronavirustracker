@@ -24,9 +24,9 @@ public class CacheActionsWorldImpl implements ICacheActions {
 	private WorldDataServiceCaller worldDataServiceCaller;
 	
 	@Override
-	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
+	@Scheduled(initialDelayString = "${spring.cache.refresh.period.world}", fixedDelayString = "${spring.cache.refresh.period.world}")
 	public void cacheEvictAndRepopulate() {
-		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
+		log.info("WORLD: About to START the evict and repopulate process at: " + LocalDateTime.now());
 		
 		log.info("Getting the world data from its source...if unavailable, will NOT evict the cache.");
 		List<WorldData> newCacheData = getNewCacheDataIfAvailable();
@@ -36,10 +36,10 @@ public class CacheActionsWorldImpl implements ICacheActions {
 		}
 		
 		evictCache();
-		log.info("DONE EVICTING: " + LocalDateTime.now());		
+		log.info("WORLD: DONE EVICTING: " + LocalDateTime.now());		
 		
 		populateCacheFromDataList(CACHE_KEY, newCacheData);
-		log.info("DONE REPOPULATING: " + LocalDateTime.now());
+		log.info("WORLD: DONE REPOPULATING: " + LocalDateTime.now());
 	}
 	
 	//The following two methods used to be annotated with @CacheEvict and @CachePut, but they didn't seem to be working properly

@@ -26,9 +26,12 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	private ExternalDataService usaDataService;
 		
 	@Override
-	@Scheduled(initialDelayString = "${spring.cache.refresh.period}", fixedDelayString = "${spring.cache.refresh.period}")
+	@Scheduled(initialDelayString = "${spring.cache.refresh.period.usa}", fixedDelayString = "${spring.cache.refresh.period.usa}")
 	public void cacheEvictAndRepopulate() {
-		log.info("About to START the evict and repopulate process at: " + LocalDateTime.now());
+		log.info("USA Cache: About to START the evict and repopulate process at: " + LocalDateTime.now());
+		
+		evictCache();
+		log.info("USA: DONE EVICTING: " + LocalDateTime.now());		
 		
 		log.info("Getting the United States data from its source. If unavailable, will NOT evict the cache.");
 		List<UnitedStatesData> newCacheData = getNewCacheDataFromSource();
@@ -37,11 +40,8 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 			return;
 		}
 		
-		evictCache();
-		log.info("DONE EVICTING: " + LocalDateTime.now());		
-		
 		populateCacheFromDataList(CACHE_KEY, newCacheData);
-		log.info("DONE REPOPULATING: " + LocalDateTime.now());
+		log.info("USA: DONE REPOPULATING: " + LocalDateTime.now());
 	}
 	
 	//The following two methods used to be annotated with @CacheEvict and @CachePut, but they didn't seem to be working properly
