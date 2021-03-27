@@ -36,7 +36,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 		int tries = 0;
 		do {
 			try {
-				String urlCaseDeath = DataUrls.STATE_DATA_URL_START.getName()
+				String urlCaseDeath = DataUrls.STATE_DATA_URL_CASES_DEATHS_START.getName()
 						+ DataUrls.STATE_DATA_URL_CASES_DEATHS.getName() + DataUrls.STATE_DATA_URL_END.getName()
 						+ stateAbbreviation.toUpperCase();
 				log.info("***** ABOUT TO HIT ENDPOINT FOR STATE CASE/DEATH DATA AT " + urlCaseDeath + " FOR " + stateAbbreviation);
@@ -53,7 +53,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 		tries = 0;
 		do {
 			try {
-				String urlHospitalization = DataUrls.STATE_DATA_URL_START.getName()
+				String urlHospitalization = DataUrls.STATE_DATA_URL_HOSPITAL_LOAD_START.getName()
 						+ DataUrls.STATE_DATA_URL_HOSPITAL_LOAD.getName() + DataUrls.STATE_DATA_URL_END.getName()
 						+ stateAbbreviation.toUpperCase();
 				log.info("***** ABOUT TO HIT ENDPOINT FOR STATE HOSPITALIZATION DATA AT " + urlHospitalization + " FOR "

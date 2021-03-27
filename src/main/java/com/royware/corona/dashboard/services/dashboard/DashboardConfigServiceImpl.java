@@ -84,7 +84,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		log.info("Done calling makeAllDashboardCharts");
 		
 		//This setting determines whether the last row of the statistics table will show
-		boolean populateUSTotals = false;
+		boolean populateUSTotals = true;
 		dashMeta.setRegionType("us");
 		if(rawRegionString.length() == 3 && !rawRegionString.equalsIgnoreCase("USA")) {
 			dashMeta.setRegionType("world");
