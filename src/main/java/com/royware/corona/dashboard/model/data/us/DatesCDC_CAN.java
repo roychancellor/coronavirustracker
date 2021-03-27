@@ -2,12 +2,12 @@ package com.royware.corona.dashboard.model.data.us;
 
 import java.time.LocalDate;
 
-public class DatesCDC {
+public class DatesCDC_CAN {
 	private String dateAsStringYYYYMMDD;	
 	private int dateAsIntegerYYYYMMDD;
 	private LocalDate dateAsLocalDate;
 	
-	public DatesCDC() {
+	public DatesCDC_CAN() {
 		super();
 	}
 
@@ -47,7 +47,7 @@ public class DatesCDC {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DatesCDC other = (DatesCDC) obj;
+		DatesCDC_CAN other = (DatesCDC_CAN) obj;
 		if (dateAsIntegerYYYYMMDD != other.dateAsIntegerYYYYMMDD)
 			return false;
 		if (dateAsLocalDate == null) {

@@ -14,7 +14,7 @@ public class HospitalDataCDC {
 	@JsonProperty("date") private String dateTimeString;
 	@JsonProperty("inpatient_beds_used_covid") private int totalBedsCovidCurrently;
 	
-	@JsonIgnore private DatesCDC datesCDC = new DatesCDC();	
+	@JsonIgnore private DatesCDC_CAN datesCDC = new DatesCDC_CAN();	
 	
 	public HospitalDataCDC() {
 		super();
@@ -38,7 +38,7 @@ public class HospitalDataCDC {
 	public void setTotalBedsCovidCurrently(int totalBedsCovidCurrently) {
 		this.totalBedsCovidCurrently = totalBedsCovidCurrently;
 	}
-	public DatesCDC getDatesCDC() {
+	public DatesCDC_CAN getDatesCDC() {
 		return datesCDC;
 	}
 	@Override
