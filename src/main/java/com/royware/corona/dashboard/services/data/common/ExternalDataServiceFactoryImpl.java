@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data;
+package com.royware.corona.dashboard.services.data.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
