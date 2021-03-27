@@ -26,10 +26,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
-import com.royware.corona.dashboard.model.data.WorldData;
-import com.royware.corona.dashboard.model.data.WorldDataOWID;
-import com.royware.corona.dashboard.model.data.WorldDataSourceEuroCDC;
-import com.royware.corona.dashboard.model.data.WorldDataSourceOurWorldInData;
+import com.royware.corona.dashboard.model.data.world.WorldData;
+import com.royware.corona.dashboard.model.data.world.WorldDataOWID;
+import com.royware.corona.dashboard.model.data.world.WorldDataSourceEuroCDC;
+import com.royware.corona.dashboard.model.data.world.WorldDataSourceOurWorldInData;
 
 @Component
 public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldDataServiceCaller {

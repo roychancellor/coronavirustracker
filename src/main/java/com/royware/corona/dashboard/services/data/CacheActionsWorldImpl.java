@@ -13,7 +13,7 @@ import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ICacheActions;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
-import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.world.WorldData;
 
 @Component("ca_world")
 public class CacheActionsWorldImpl implements ICacheActions {

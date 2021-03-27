@@ -22,7 +22,7 @@ import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
 public class DashboardChartServiceImpl implements DashboardChartService {

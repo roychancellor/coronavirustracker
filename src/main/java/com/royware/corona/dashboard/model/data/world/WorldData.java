@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model.data;
+package com.royware.corona.dashboard.model.data.world;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;

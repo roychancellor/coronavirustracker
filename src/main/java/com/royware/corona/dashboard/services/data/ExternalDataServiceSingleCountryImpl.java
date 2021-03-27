@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.world.WorldData;
 
 /**
  * Provides service methods for getting dashboard data from external sources

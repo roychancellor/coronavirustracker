@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model.data;
+package com.royware.corona.dashboard.model.data.us;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,15 +8,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class HospitalDataCDC {
+public class CaseDeathDataCDC {
 
 	@JsonProperty("state") private String regionString;
-	@JsonProperty("date") private String dateTimeString;
-	@JsonProperty("inpatient_beds_used_covid") private int totalBedsCovidCurrently;
+	@JsonProperty("submission_date") private String dateTimeString;
+	@JsonProperty("tot_cases") private int totalPositiveCases;
+	@JsonProperty("tot_death") private int totalDeaths;
 	
 	@JsonIgnore private DatesCDC datesCDC = new DatesCDC();	
 	
-	public HospitalDataCDC() {
+	public CaseDeathDataCDC() {
 		super();
 	}
 	public String getRegionString() {
@@ -30,13 +31,18 @@ public class HospitalDataCDC {
 	}
 	public void setDateTimeString(String dateTimeString) {
 		this.dateTimeString = dateTimeString;
-		//datesCDC.setDateFields(dateTimeString);
 	}
-	public int getTotalBedsCovidCurrently() {
-		return totalBedsCovidCurrently;
+	public int getTotalPositiveCases() {
+		return totalPositiveCases;
 	}
-	public void setTotalBedsCovidCurrently(int totalBedsCovidCurrently) {
-		this.totalBedsCovidCurrently = totalBedsCovidCurrently;
+	public void setTotalPositiveCases(int totalPositiveCases) {
+		this.totalPositiveCases = totalPositiveCases;
+	}
+	public int getTotalDeaths() {
+		return totalDeaths;
+	}
+	public void setTotalDeaths(int totalDeaths) {
+		this.totalDeaths = totalDeaths;
 	}
 	public DatesCDC getDatesCDC() {
 		return datesCDC;
@@ -48,7 +54,8 @@ public class HospitalDataCDC {
 		result = prime * result + ((dateTimeString == null) ? 0 : dateTimeString.hashCode());
 		result = prime * result + ((datesCDC == null) ? 0 : datesCDC.hashCode());
 		result = prime * result + ((regionString == null) ? 0 : regionString.hashCode());
-		result = prime * result + totalBedsCovidCurrently;
+		result = prime * result + totalDeaths;
+		result = prime * result + totalPositiveCases;
 		return result;
 	}
 	@Override
@@ -59,7 +66,7 @@ public class HospitalDataCDC {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HospitalDataCDC other = (HospitalDataCDC) obj;
+		CaseDeathDataCDC other = (CaseDeathDataCDC) obj;
 		if (dateTimeString == null) {
 			if (other.dateTimeString != null)
 				return false;
@@ -75,7 +82,9 @@ public class HospitalDataCDC {
 				return false;
 		} else if (!regionString.equals(other.regionString))
 			return false;
-		if (totalBedsCovidCurrently != other.totalBedsCovidCurrently)
+		if (totalDeaths != other.totalDeaths)
+			return false;
+		if (totalPositiveCases != other.totalPositiveCases)
 			return false;
 		return true;
 	}

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import com.royware.corona.dashboard.enums.data.DataFields;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
 public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {

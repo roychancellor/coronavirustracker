@@ -15,9 +15,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.data.CaseDeathDataCDC;
-import com.royware.corona.dashboard.model.data.HospitalDataCDC;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.CaseDeathDataCDC;
+import com.royware.corona.dashboard.model.data.us.HospitalDataCDC;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
