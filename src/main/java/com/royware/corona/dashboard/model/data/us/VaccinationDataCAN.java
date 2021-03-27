@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class CovidActNowActual {
+public class VaccinationDataCAN {
 
 	@JsonProperty("vaccinesDistributed") private int vaccDist;
 	@JsonProperty("vaccinationsInitiated") private int vaccInit;
@@ -18,7 +18,7 @@ public class CovidActNowActual {
 	
 	@JsonIgnore private DatesCDC_CAN datesCDC = new DatesCDC_CAN();
 
-	public CovidActNowActual() {
+	public VaccinationDataCAN() {
 		super();
 	}
 
@@ -97,7 +97,7 @@ public class CovidActNowActual {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CovidActNowActual other = (CovidActNowActual) obj;
+		VaccinationDataCAN other = (VaccinationDataCAN) obj;
 		if (dateYYYY_MM_DD == null) {
 			if (other.dateYYYY_MM_DD != null)
 				return false;

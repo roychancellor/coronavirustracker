@@ -90,7 +90,7 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		int tries = 0;
 		do {	
 			try {
-				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL_EUROCDC.getName(), WorldDataSourceEuroCDC.class);
+				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL_EUROCDC.getText(), WorldDataSourceEuroCDC.class);
 				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM EURO CDC *****");
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
@@ -115,7 +115,7 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		int tries = 0;
 		do {
 			try {
-				URL jsonUrl = new URL(DataUrls.WORLD_DATA_URL_OWID.getName());
+				URL jsonUrl = new URL(DataUrls.WORLD_DATA_URL_OWID.getText());
 				TypeReference<LinkedHashMap<String, WorldDataSourceOurWorldInData>> tr =
 						new TypeReference<LinkedHashMap<String, WorldDataSourceOurWorldInData>>() {/*do nothing*/};
 				worldData = mapper.readValue(jsonUrl, tr);
