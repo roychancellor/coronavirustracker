@@ -162,7 +162,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 				usd.setHospitalizedCurrently(hospitalizations.get(caseDate).getTotalBedsCovidCurrently());
 			}
 			if(vaccinations.containsKey(caseDate)) {
-				usd.setPendingTests(vaccinations.get(caseDate).getVaccComp());
+				usd.setTotalVaccCompleted(vaccinations.get(caseDate).getVaccComp());
 			}
 			toReturn.add(usd);
 		}

@@ -17,6 +17,7 @@ public interface ChartServiceListCreator {
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeDailyAccelerationOfDeathsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeChangeInTotalDeathsVersusDeathsWithExponentialLineList(List<T> regionDataList);
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeDailyVaccTotalVaccVersusTimeList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeDailyTestsTotalTestsVersusTimeList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeDailyRatioCasesToTestsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeDailyHospitalizedNowWithMovingAverageList(List<T> regionDataList);

@@ -4,19 +4,21 @@ import java.time.LocalDate;
 
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.interfaces.model.CanonicalHospitalData;
+import com.royware.corona.dashboard.interfaces.model.CanonicalVaccinationData;
 
-public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospitalData {
+public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospitalData, CanonicalVaccinationData {
 	private int dateInteger;
+	private String dateTimeString;
 	private int totalPositiveCases;
 	private int totalNegativeCases;
 	private int totalPositivePlusNegative;
 	private int totalDeaths;
+	private int totalVaccCompleted;
 	private int pendingTests;
 	private String regionString;
 	private int hospitalizedCurrently;
 	private int hospitalizedCumulative;
 	private LocalDate dateChecked;
-	private String dateTimeString;
 	
 	public UnitedStatesData() {
 		super();
@@ -52,6 +54,14 @@ public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospit
 
 	public void setTotalDeaths(int death) {
 		this.totalDeaths = death;
+	}
+
+	public int getTotalVaccCompleted() {
+		return totalVaccCompleted;
+	}
+
+	public void setTotalVaccCompleted(int totalVaccCompleted) {
+		this.totalVaccCompleted = totalVaccCompleted;
 	}
 
 	public String getRegionString() {

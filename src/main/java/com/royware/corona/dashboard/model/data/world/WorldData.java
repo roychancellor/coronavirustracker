@@ -154,6 +154,17 @@ public class WorldData implements CanonicalCaseDeathData {
 	}
 
 	@Override
+	@JsonIgnore
+	public int getTotalVaccCompleted() {
+		return 0;
+	}
+
+	@Override
+	@JsonIgnore
+	public void setTotalVaccCompleted(int totalVaccCompleted) {		
+	}
+
+	@Override
 	public String toString() {
 		return "WorldCases [dateDDMMYYYY=" + stringDate + ", dailyNewCases=" + dailyNewCases + ", dailyNewDeaths="
 				+ dailyNewDeaths + ", countryAbbrev=" + regionString + ", population2018=" + population + "]";
@@ -207,6 +218,4 @@ public class WorldData implements CanonicalCaseDeathData {
 			return false;
 		return true;
 	}
-
-
 }

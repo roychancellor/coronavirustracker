@@ -17,6 +17,7 @@ public interface ChartService {
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyRateOfChangeOfDeathsWithMovingAverage(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyAccelerationOfDeathsWithMovingAverage(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getChangeInTotalDeathsVersusDeathsWithExponentialLine(List<T> regionDataList);
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyVaccTotalVaccVersusTime(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyTestsTotalTestsVersusTime(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyRatioCasesToTestsWithMovingAverage(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyHospitalizedNowWithMovingAverage(List<T> regionDataList);
