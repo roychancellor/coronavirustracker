@@ -12,6 +12,7 @@ public enum ChartCsvHeaders {
 	DEATHS_CHG_BY_CASES("chgDeathsOverDeaths"),
 	TESTS_TIME_SERIES("totalTestsConducted"),
 	TESTS_RATIO("ratioDailyPositivesToDailyTests"),
+	VACC_TIME_SERIES("totalVaccConducted"),
 	HOSP_CURRENT("hospCurrent"),
 	HOSP_CUMULATIVE("hospCumulative");
 	
