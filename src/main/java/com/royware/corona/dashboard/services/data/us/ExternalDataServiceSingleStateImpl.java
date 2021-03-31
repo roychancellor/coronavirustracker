@@ -45,7 +45,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 				stateCaseDeathDataArray = restTemplate.getForObject(urlCaseDeath, CaseDeathDataCDC[].class);
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.error("ERROR CONNECTING TO CASE/DEATH DATA: RETRYING: TRY #" + (tries+1));
+				log.info("ERROR CONNECTING TO CASE/DEATH DATA: RETRYING: TRY #" + (tries+1));
 				tries++;
 				stateCaseDeathDataArray = null;
 			} 
@@ -62,7 +62,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 				hospitalizationDataArray = restTemplate.getForObject(urlHospitalization, HospitalDataCDC[].class);
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.error("ERROR CONNECTING TO HOSPITAL DATA SOURCE: RETRYING: TRY #" + (tries+1));
+				log.info("ERROR CONNECTING TO HOSPITAL DATA SOURCE: RETRYING: TRY #" + (tries+1));
 				tries++;
 				hospitalizationDataArray = null;
 			} 
@@ -77,12 +77,12 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 					.append(DataUrls.STATE_DATA_URL_VACCINATIONS_START.getText())
 					.append(stateAbbreviation.toUpperCase())
 					.append(DataUrls.STATE_DATA_URL_VACCINATIONS_FILE.getText())
-					.append(DataUrls.STATE_DATA_URL_END.getText());
+					.append(DataUrls.STATE_DATA_URL_VACCINATIONS_END.getText());
 				log.debug("VACCINATION DATA AT " + urlVacc.toString() + " FOR " + stateAbbreviation);
 				vaccArray = restTemplate.getForObject(urlVacc.toString(), VaccinationTimeSeriesCAN.class);
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.error("ERROR CONNECTING VACCINATION DATA SOURCE: RETRYING: TRY #" + (tries+1));
+				log.info("ERROR CONNECTING VACCINATION DATA SOURCE: RETRYING: TRY #" + (tries+1));
 				tries++;
 				vaccArray = null;
 			} 
@@ -98,7 +98,7 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 		
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
 		
-		log.info("FINISHED GETTING DATA FOR STATE: " + stateAbbreviation + " ****");
+		log.debug("FINISHED GETTING DATA FOR STATE: " + stateAbbreviation);
 		
 		return stateDataList;
 	}

@@ -104,6 +104,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		dashStats.setCasesPercentOfPop(dashStats.getCasesTotal() * 100.0 / regionPopulation);
 		dashStats.setDeathsPerCapita(dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		dashStats.setDeathsPercentOfPop(dashStats.getDeathsTotal() * 100.0 / regionPopulation);
+		dashStats.setVaccPerCapita(dashStats.getTotalVaccCompleted() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		dashStats.setVaccPercentOfPop(dashStats.getTotalVaccCompleted() * 100.0 / regionPopulation);
 		
 		map.addAttribute("dashmeta", dashMeta);

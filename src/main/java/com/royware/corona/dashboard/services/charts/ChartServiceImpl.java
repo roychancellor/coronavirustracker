@@ -96,6 +96,6 @@ public class ChartServiceImpl implements ChartService {
 
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyVaccTotalVaccVersusTime(List<T> regionDataList) {
-		return serviceDao.getDailyTestsTotalTestsVersusTimeList(regionDataList);
+		return serviceDao.getDailyVaccTotalVaccVersusTimeList(regionDataList);
 	}
 }

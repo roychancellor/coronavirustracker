@@ -98,8 +98,8 @@
 					</td>
 					<chart:if test = "${(type == 'us' or type == 'state')}">
 						<td style="color:#FFFFFF;">
-							<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.casesPercentOfPop}" />% all-time
-							(<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.casesPerCapita}" /> 
+							<fmt:formatNumber type = "number" pattern = "#.##" value = "${dashstats.vaccPercentOfPop}" />% all-time
+							(<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.vaccPerCapita}" /> 
 							per <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashmeta.perCapitaBasis}" />)
 						</td>
 					</chart:if>

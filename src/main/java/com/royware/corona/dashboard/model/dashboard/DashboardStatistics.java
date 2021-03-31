@@ -29,6 +29,7 @@ public class DashboardStatistics {
 	
 	private int totalVaccCompleted;
 	private int vaccToday;
+	private double vaccPerCapita;
 	private double vaccPercentOfPop;
 	
 	private double proportionOfPopulationTested;
@@ -338,6 +339,14 @@ public class DashboardStatistics {
 
 	public void setVaccToday(int vaccToday) {
 		this.vaccToday = vaccToday;
+	}
+
+	public double getVaccPerCapita() {
+		return vaccPerCapita;
+	}
+
+	public void setVaccPerCapita(double vaccPerCapita) {
+		this.vaccPerCapita = vaccPerCapita;
 	}
 
 	public double getVaccPercentOfPop() {

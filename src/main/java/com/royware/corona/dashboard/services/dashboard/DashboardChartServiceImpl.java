@@ -112,7 +112,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		DashboardChartConfig chartConfigVaccByTime = null;
 		if(isNotWorld) {
 			log.info("Configuring all the charts for VACCINATIONS...");
-			chartConfigVaccByTime = chartConfigTestsByTime(region, chartDataTestsByTime);
+			chartConfigVaccByTime = chartConfigVaccByTime(region, chartDataVaccByTime);
 		}
 		
 		////////// CHART CONFIGURATION - TESTS ///////////
@@ -233,6 +233,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.setChartConfig(chartConfigCumulativeHospitalizationsByTime)
 					.setRegion(region)
 					.build());
+			
 			///// VACCINATIONS /////
 			dashboardList.add(new DashboardChart.Builder()
 					.setChartData(
