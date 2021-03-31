@@ -48,18 +48,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		////////// CHART DATA LISTS - CASES //////////
 		log.debug("Making all the chart data lists for CASES");
 		List<List<Map<Object, Object>>> chartDataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(dataList);
-		List<List<Map<Object, Object>>> chartDataRateOfCasesByTime = chartService.getDailyRateOfChangeOfCasesWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime = chartService.getDailyAccelerationOfCasesWithMovingAverage(dataList);
 		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
 		List<List<Map<Object, Object>>> chartDataTotalCurrentCases = chartService.getCurrentTotalPositivesWithPercentOfPopulation(dataList, regionPopulation);
 		
 		////////// CHART DATA LISTS - DEATHS /////////
 		log.debug("Making all the chart data lists for DEATHS");
 		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartService.getTotalDeathsVersusTimeWithExponentialFit(dataList);
-		List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime = chartService.getDailyRateOfChangeOfDeathsWithMovingAverage(dataList);
-		List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime = chartService.getDailyAccelerationOfDeathsWithMovingAverage(dataList);
-//		List<List<Map<Object, Object>>> chartDataChangeOfDeathsByDeaths = chartService.getChangeInTotalDeathsVersusDeathsWithExponentialLine(dataList);
-		List<List<Map<Object, Object>>> chartDataTotalCurrentDeaths = chartService.getCurrentTotalDeathsWithPercentOfPopulation(dataList, regionPopulation);
 
 		////////// CHART DATA LISTS - VACCINATIONS /////////
 		List<List<Map<Object, Object>>> chartDataVaccByTime = null;
@@ -68,29 +62,17 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 			chartDataVaccByTime = chartService.getDailyVaccTotalVaccVersusTime(dataList);
 		}
 
-		////////// CHART DATA LISTS - TESTS /////////
-//		List<List<Map<Object, Object>>> chartDataTestsByTime = null;
-//		List<List<Map<Object, Object>>> chartDataRatioOfCasesToTestsByTime = null;
-//		if(isNotWorld) {
-//			log.info("Making all the chart data lists for TESTS");
-//			chartDataTestsByTime = chartService.getDailyTestsTotalTestsVersusTime(dataList);
-//			chartDataRatioOfCasesToTestsByTime = chartService.getDailyRatioCasesToTestsWithMovingAverage(dataList);
-//		}
-
 		////////// CHART DATA LISTS - HOSPITALIZATIONS /////////
 		List<List<Map<Object, Object>>> chartDataCurrentHospitalizationsByTime = null;
-//		List<List<Map<Object, Object>>> chartDataCumulativeHospitalizationsByTime = null;
 		if(isNotWorld) {
 			log.debug("Making all the chart data lists for HOSPITALIZATIONS");
 			chartDataCurrentHospitalizationsByTime = chartService.getDailyHospitalizedNowWithMovingAverage(dataList);
-//			chartDataCumulativeHospitalizationsByTime = chartService.getDailyHospitalizedTotalWithMovingAverage(dataList);
 		}
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
 		log.debug("Making all the DASHBOARD STATISTICS FOR REGION - ORIGINAL");
-		makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataTotalCurrentCases, chartDataRateOfCasesByTime,
-				chartDataAccelOfCasesByTime, chartDataDeathsByTime, chartDataTotalCurrentDeaths, chartDataRateOfDeathsByTime,
-				chartDataAccelOfDeathsByTime, chartDataVaccByTime);
+		
+		makeDashboardStatsForRegion(dashStats, regionPopulation, chartDataCasesByTime, chartDataTotalCurrentCases, chartDataDeathsByTime, chartDataVaccByTime);
 		
 		if(isNotWorld) {
 			log.debug("Making all the DASHBOARD STATISTICS FOR REGION - BY TESTING");
@@ -100,14 +82,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		////////// CHART CONFIGURATION - CASES ///////////
 		log.debug("Configuring all the charts for CASES...");
 		DashboardChartConfig chartConfigCasesByTime = chartConfigCasesByTime(region, chartDataCasesByTime);
-//		DashboardChartConfig chartConfigRateOfChangeOfCases = chartConfigRateOfChangeOfCases(region, chartDataRateOfCasesByTime);
-		DashboardChartConfig chartConfigRateOfCasesVersusCases = chartConfigRateOfCasesVersusCases(region, chartDataChangeOfCasesByCases);
 		DashboardChartConfig chartConfigTotalCurrentCases = chartConfigTotalCurrentCases(region, chartDataTotalCurrentCases);
+		DashboardChartConfig chartConfigRateOfCasesVersusCases = chartConfigRateOfCasesVersusCases(region, chartDataChangeOfCasesByCases);
 		
 		////////// CHART CONFIGURATION - DEATHS ///////////
 		log.debug("Configuring all the charts for DEATHS...");
 		DashboardChartConfig chartConfigDeathsByTime = chartConfigDeathsByTime(region, chartDataDeathsByTime);
-//		DashboardChartConfig chartConfigRateOfChangeOfDeaths = chartConfigRateOfChangeOfDeaths(region, chartDataRateOfDeathsByTime);
 		
 		////////// CHART CONFIGURATION - VACCINATIONS ///////////
 		DashboardChartConfig chartConfigVaccByTime = null;
@@ -116,22 +96,11 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 			chartConfigVaccByTime = chartConfigVaccByTime(region, chartDataVaccByTime);
 		}
 		
-		////////// CHART CONFIGURATION - TESTS ///////////
-//		DashboardChartConfig chartConfigTestsByTime = null;
-//		DashboardChartConfig chartConfigRatioOfCasesToTestsByTime = null;
-//		if(isNotWorld) {
-//			log.info("Configuring all the charts for TESTS...");
-//			chartConfigTestsByTime = chartConfigTestsByTime(region, chartDataTestsByTime);
-//			chartConfigRatioOfCasesToTestsByTime = chartConfigRatioOfCasesToTestsByTime(region, chartDataRatioOfCasesToTestsByTime);
-//		}
-		
 		////////// CHART CONFIGURATION - HOSPITALIZATIONS ///////////
 		DashboardChartConfig chartConfigCurrentHospitalizationsByTime = null;
-//		DashboardChartConfig chartConfigCumulativeHospitalizationsByTime = null;
 		if(isNotWorld) {
 			log.debug("Configuring all the charts for HOSPITALIZATIONS...");
 			chartConfigCurrentHospitalizationsByTime = chartConfigCurrentHospitalizationsByTime(region, chartDataCurrentHospitalizationsByTime);
-//			chartConfigCumulativeHospitalizationsByTime = chartConfigCumulativeHospitalizationsByTime(region, chartDataCumulativeHospitalizationsByTime);
 		}
 		
 		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
@@ -146,15 +115,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartConfig(chartConfigCasesByTime)
 				.setRegion(region)
 				.build());
-//		dashboardList.add(new DashboardChart.Builder()
-//				.setChartData(
-//					new DashboardChartData.Builder()
-//					.withChartDataLists(chartDataRateOfCasesByTime)
-//					.withCsvHeader(ChartCsvHeaders.CASES_RATE.getName())
-//					.build())
-//				.setChartConfig(chartConfigRateOfChangeOfCases)
-//				.setRegion(region)
-//				.build());
 		dashboardList.add(new DashboardChart.Builder()
 				.setChartData(
 					new DashboardChartData.Builder()
@@ -184,37 +144,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 				.setChartConfig(chartConfigDeathsByTime)
 				.setRegion(region)
 				.build());
-//		dashboardList.add(new DashboardChart.Builder()
-//				.setChartData(
-//					new DashboardChartData.Builder()
-//					.withChartDataLists(chartDataRateOfDeathsByTime)
-//					.withCsvHeader(ChartCsvHeaders.DEATHS_RATE.getName())
-//					.build())
-//				.setChartConfig(chartConfigRateOfChangeOfDeaths)
-//				.setRegion(region)
-//				.build());
 		
 		if(isNotWorld) {
-			///// TESTS /////
-//			dashboardList.add(new DashboardChart.Builder()
-//					.setChartData(
-//						new DashboardChartData.Builder()
-//						.withChartDataLists(chartDataTestsByTime)
-//						.withCsvHeader(ChartCsvHeaders.TESTS_TIME_SERIES.getName())
-//						.build())
-//					.setChartConfig(chartConfigTestsByTime)
-//					.setRegion(region)
-//					.build());
-//			dashboardList.add(new DashboardChart.Builder()
-//					.setChartData(
-//						new DashboardChartData.Builder()
-//						.withChartDataLists(chartDataRatioOfCasesToTestsByTime)
-//						.withCsvHeader(ChartCsvHeaders.TESTS_RATIO.getName())
-//						.build())
-//					.setChartConfig(chartConfigRatioOfCasesToTestsByTime)
-//					.setRegion(region)
-//					.build());
-
 			///// HOSPITALIZATIONS /////
 			dashboardList.add(new DashboardChart.Builder()
 					.setChartData(
@@ -225,15 +156,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.setChartConfig(chartConfigCurrentHospitalizationsByTime)
 					.setRegion(region)
 					.build());
-//			dashboardList.add(new DashboardChart.Builder()
-//					.setChartData(
-//						new DashboardChartData.Builder()
-//						.withChartDataLists(chartDataCumulativeHospitalizationsByTime)
-//						.withCsvHeader(ChartCsvHeaders.HOSP_CUMULATIVE.getName())
-//						.build())
-//					.setChartConfig(chartConfigCumulativeHospitalizationsByTime)
-//					.setRegion(region)
-//					.build());
 			
 			///// VACCINATIONS /////
 			dashboardList.add(new DashboardChart.Builder()
@@ -274,16 +196,12 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashStats.setProportionOfRegionVaccToUsVacc(dashStats.getTotalVaccCompleted() * 100.0 / totalUSVacc);
 	}
 
+	//makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataTotalCurrentCases, chartDataDeathsByTime, chartDataVaccByTime);
 	@Override
-	public void makeDashboardStatsForRegion(DashboardStatistics dashStats,
+	public void makeDashboardStatsForRegion(DashboardStatistics dashStats, int regionPopulation,
 			List<List<Map<Object, Object>>> chartDataCasesByTime,
 			List<List<Map<Object, Object>>> chartDataCasesMovingSum,
-			List<List<Map<Object, Object>>> chartDataRateOfCasesByTime,
-			List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime,
 			List<List<Map<Object, Object>>> chartDataDeathsByTime,
-			List<List<Map<Object, Object>>> chartDataDeathsMovingSum,
-			List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime,
-			List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime,
 			List<List<Map<Object, Object>>> chartDataVaccByTime) {
 		
 		log.info("Making all the GENERAL DASHBOARD STATISTICS FOR REGION");
@@ -291,10 +209,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashStats.setCasesTotal((int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setCasesToday((int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("y")
 				- (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 2).get("y"));
-		dashStats.setRateOfCasesToday(
-				(double) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("y"));
-		dashStats.setAccelOfCasesToday(
-				(double) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("y"));
 		dashStats.setCasesMovingSumPrimary((double) chartDataCasesMovingSum.get(0).get(chartDataCasesMovingSum.get(0).size() - 1).get("y"));
 		dashStats.setCasesMovingSumSecondary((double) chartDataCasesMovingSum.get(1).get(chartDataCasesMovingSum.get(1).size() - 1).get("y"));
 		
@@ -302,17 +216,27 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashStats.setDeathsTotal((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y"));
 		dashStats.setDeathsToday((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 2).get("y"));
-		dashStats.setRateOfDeathsToday(
-				(double) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("y"));
-		dashStats.setAccelOfDeathsToday(
-				(double) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("y"));
-		dashStats.setDeathsMovingSumPrimary((double) chartDataDeathsMovingSum.get(0).get(chartDataDeathsMovingSum.get(0).size() - 1).get("y"));
-		dashStats.setDeathsMovingSumSecondary((double) chartDataDeathsMovingSum.get(1).get(chartDataDeathsMovingSum.get(1).size() - 1).get("y"));
+		dashStats.setDeathsMovingSumPrimary(
+				(double) computeTotalQuantityLastN(chartDataDeathsByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
+				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				/ regionPopulation);
+		dashStats.setDeathsMovingSumSecondary(
+				(double) computeTotalQuantityLastN(chartDataDeathsByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
+				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				/ regionPopulation);
 		
 		///////// VACCINATIONS /////////
 		dashStats.setTotalVaccCompleted((int) chartDataVaccByTime.get(0).get(chartDataVaccByTime.get(0).size() - 1).get("y"));
 		dashStats.setVaccToday((int) chartDataVaccByTime.get(0).get(chartDataVaccByTime.get(0).size() - 1).get("y")
 				- (int) chartDataVaccByTime.get(0).get(chartDataVaccByTime.get(0).size() - 2).get("y"));
+		dashStats.setVaccMovingSumPrimary(
+				(double) computeTotalQuantityLastN(chartDataVaccByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
+				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				/ regionPopulation);
+		dashStats.setVaccMovingSumSecondary(
+				(double) computeTotalQuantityLastN(chartDataVaccByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
+				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				/ regionPopulation);
 	}
 
 	@Override
@@ -925,41 +849,37 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	////// HELPER METHODS /////////
-	private <T extends CanonicalCaseDeathData> int computeTotalTestsLastN(List<T> dataList, int lastN) {
+	private int computeTotalQuantityLastN(List<Map<Object, Object>> dataList, int lastN) {
 		if(dataList.size() < lastN + 1) {
 			return 0;
 		}
 		
 		int sum = 0;
-		int posToday = 0;
-		int posYesterday = 0;
-		int negToday = 0;
-		int negYesterday = 0;
+		int qtyToday = 0;
+		int qtyYesterday = 0;
 		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
-			posToday = dataList.get(n).getTotalPositiveCases();
-			posYesterday = dataList.get(n - 1).getTotalPositiveCases();
-			negToday = dataList.get(n).getTotalNegativeCases();
-			negYesterday = dataList.get(n - 1).getTotalNegativeCases();
-			sum += posToday - posYesterday + negToday - negYesterday;
+			qtyToday = (int)dataList.get(n).get("y");
+			qtyYesterday = (int)dataList.get(n - 1).get("y");
+			sum += qtyToday - qtyYesterday;
 		}
 		return sum;
 	}
 	
-	private <T extends CanonicalCaseDeathData> int computeTotalPositivesLastN(List<T> dataList, int lastN) {
-		if(dataList.size() < lastN + 1) {
-			return 0;
-		}
-		
-		int sum = 0;
-		int posToday = 0;
-		int posYesterday = 0;
-		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
-			posToday = dataList.get(n).getTotalPositiveCases();
-			posYesterday = dataList.get(n - 1).getTotalPositiveCases();
-			sum += posToday - posYesterday;
-		}
-		return sum;
-	}
+//	private <T extends CanonicalCaseDeathData> int computeTotalPositivesLastN(List<T> dataList, int lastN) {
+//		if(dataList.size() < lastN + 1) {
+//			return 0;
+//		}
+//		
+//		int sum = 0;
+//		int posToday = 0;
+//		int posYesterday = 0;
+//		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
+//			posToday = dataList.get(n).getTotalPositiveCases();
+//			posYesterday = dataList.get(n - 1).getTotalPositiveCases();
+//			sum += posToday - posYesterday;
+//		}
+//		return sum;
+//	}
 
 	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
 		int dayThreshold = ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue();

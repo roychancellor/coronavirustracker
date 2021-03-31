@@ -31,6 +31,8 @@ public class DashboardStatistics {
 	private int vaccToday;
 	private double vaccPerCapita;
 	private double vaccPercentOfPop;
+	private double vaccMovingSumPrimary;
+	private double vaccMovingSumSecondary;
 	
 	private double proportionOfPopulationTested;
 	private double proportionOfPopulationVaccinated;
@@ -355,5 +357,21 @@ public class DashboardStatistics {
 
 	public void setVaccPercentOfPop(double vaccPercentOfPop) {
 		this.vaccPercentOfPop = vaccPercentOfPop;
+	}
+
+	public double getVaccMovingSumPrimary() {
+		return vaccMovingSumPrimary;
+	}
+
+	public void setVaccMovingSumPrimary(double vaccMovingSumPrimary) {
+		this.vaccMovingSumPrimary = vaccMovingSumPrimary;
+	}
+
+	public double getVaccMovingSumSecondary() {
+		return vaccMovingSumSecondary;
+	}
+
+	public void setVaccMovingSumSecondary(double vaccMovingSumSecondary) {
+		this.vaccMovingSumSecondary = vaccMovingSumSecondary;
 	}
 }

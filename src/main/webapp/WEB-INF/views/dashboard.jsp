@@ -44,7 +44,7 @@
 					</region:form>
 					<td style="color:#0000FF;font-size:2em;font-weight:bold;">Positive Tests</td>
 					<chart:if test = "${(type == 'us' or type == 'state')}">
-						<td style="color:#770077;font-size:2em;font-weight:bold;">Vaccinations</td>
+						<td style="color:#FFFF00;font-size:2em;font-weight:bold;">Vaccinations</td>
 					</chart:if>
 					<td style="color:#770077;font-size:2em;font-weight:bold;">Deaths</td>
 				</tr>
@@ -78,7 +78,10 @@
 					</td>
 					<chart:if test = "${(type == 'us' or type == 'state')}">
 						<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
-							----- N/A -----
+							<!-- ----- N/A ----- -->
+						<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.vaccMovingSumPrimary}" /> 
+						per <fmt:formatNumber type = "number" pattern = "#,###" value = "${dashmeta.perCapitaBasis}" /> 
+						(<fmt:formatNumber type = "number" pattern = "#,###" value = "${dashstats.vaccMovingSumSecondary}" />) 
 						</td>
 					</chart:if>
 					<td style="color:#FFFFFF;font-weight:bold;font-size:1.5em;">
