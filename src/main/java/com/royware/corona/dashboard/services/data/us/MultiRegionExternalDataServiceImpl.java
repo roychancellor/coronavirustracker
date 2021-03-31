@@ -97,5 +97,4 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		log.info("Finished getting the multi-region data from an external source");
 		return multiRegionDataList;
 	}
-
 }

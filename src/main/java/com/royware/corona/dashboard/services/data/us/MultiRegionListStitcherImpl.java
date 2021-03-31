@@ -26,7 +26,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 		Map<Integer, Integer> sumPositiveCases = new TreeMap<>();
 		Map<Integer, Integer> sumNegativeCases = new TreeMap<>();
 		Map<Integer, Integer> sumPosNegCases = new TreeMap<>();
-		Map<Integer, Integer> sumPendingTests = new TreeMap<>();
+		Map<Integer, Integer> sumVaccinations = new TreeMap<>();
 		Map<Integer, Integer> sumDeaths = new TreeMap<>();
 		
 		int latestDateValueCases = getLatestDate(mapOfStateDataLists, states, DataFields.CASES);
@@ -54,10 +54,10 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 					} else {
 						sumPosNegCases.put(dateInteger, usd.getTotalPositivePlusNegative());
 					}
-					if(sumPendingTests.containsKey(dateInteger)) {
-						sumPendingTests.put(dateInteger, sumPendingTests.get(dateInteger) + usd.getPendingTests());
+					if(sumVaccinations.containsKey(dateInteger)) {
+						sumVaccinations.put(dateInteger, sumVaccinations.get(dateInteger) + usd.getTotalVaccCompleted());
 					} else {
-						sumPendingTests.put(dateInteger, usd.getPendingTests());
+						sumVaccinations.put(dateInteger, usd.getTotalVaccCompleted());
 					}
 				}
 				if(usd.getDateInteger() >= latestDateValueDeaths && usd.getDateInteger() >= latestDateValueCases) {
@@ -84,7 +84,11 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 			thisDateForRegion.setTotalPositiveCases(sumPositiveCases.get(dateInteger));
 			thisDateForRegion.setTotalNegativeCases(sumNegativeCases.get(dateInteger));
 			thisDateForRegion.setTotalPositivePlusNegative(sumPosNegCases.get(dateInteger));
-			thisDateForRegion.setPendingTests(sumPendingTests.get(dateInteger));
+			if(sumDeaths.containsKey(dateInteger)) {
+				thisDateForRegion.setTotalVaccCompleted(sumVaccinations.get(dateInteger));
+			} else {
+				thisDateForRegion.setTotalVaccCompleted(0);
+			}
 			if(sumDeaths.containsKey(dateInteger)) {
 				thisDateForRegion.setTotalDeaths(sumDeaths.get(dateInteger));
 			} else {

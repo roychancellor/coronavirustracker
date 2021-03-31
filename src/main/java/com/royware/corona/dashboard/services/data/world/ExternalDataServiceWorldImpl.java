@@ -74,13 +74,13 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		log.info("The spring.world.data.source is: " + dataSource);
 		List<WorldData> worldData = new ArrayList<>();
 		
-		log.info("***** ABOUT TO HIT ENDPOINT FOR ALL WORLD DATA *****");
+		log.info("HITTING ENDPOINT FOR ALL WORLD DATA");
 		if(dataSource.toUpperCase().contains("EURO")) {
 			worldData = getDataFromEuroCDC();
 		} else if(dataSource.toUpperCase().contains("OWID")) {
 			worldData = getDataFromOurWorldInData();
 		}
-		log.info("***** FINISHED HITTING ENDPOINT FOR ALL WORLD DATA (worldData size: " + worldData.size() +  ") *****");
+		log.info("FINISHED HITTING ENDPOINT FOR ALL WORLD DATA (worldData size: " + worldData.size() +  ")");
 		return worldData;
 	}
 	
@@ -91,10 +91,10 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 		do {	
 			try {
 				worldData = restTemplate.getForObject(DataUrls.WORLD_DATA_URL_EUROCDC.getText(), WorldDataSourceEuroCDC.class);
-				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM EURO CDC *****");
+				log.info("GOT THROUGH PARSING ALL WORLD DATA FROM EURO CDC *****");
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
+				log.info("ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
 				tries++;
 				worldData = null;
 			}
@@ -119,19 +119,19 @@ public class ExternalDataServiceWorldImpl implements ExternalDataService, WorldD
 				TypeReference<LinkedHashMap<String, WorldDataSourceOurWorldInData>> tr =
 						new TypeReference<LinkedHashMap<String, WorldDataSourceOurWorldInData>>() {/*do nothing*/};
 				worldData = mapper.readValue(jsonUrl, tr);
-				log.info("***** GOT THROUGH PARSING ALL WORLD DATA FROM OUR WORLD IN DATA *****");
+				log.info("GOT THROUGH PARSING ALL WORLD DATA FROM OUR WORLD IN DATA *****");
 			} catch (JsonParseException e) {
-				log.info("*** ERROR PARSING JSON ***");
+				log.info("ERROR PARSING JSON");
 				tries++;
 				worldData = null;
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				log.info("*** ERROR MAPPING JSON ***");
+				log.info("ERROR MAPPING JSON");
 				tries++;
 				worldData = null;
 				e.printStackTrace();
 			} catch (IOException e) {
-				log.info("*** ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1) + " ***");
+				log.info("ERROR CONNECTING TO WORLD DATA SOURCE: RETRYING: TRY #" + (tries+1));
 				tries++;
 				worldData = null;
 				e.printStackTrace();
