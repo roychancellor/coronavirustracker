@@ -17,6 +17,7 @@ public interface ChartServiceDao {
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyRateOfChangeOfDeathsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyAccelerationOfDeathsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getChangeInTotalDeathsVersusDeathsWithExponentialLineList(List<T> regionDataList);
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyVaccTotalVaccVersusTimeList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyTestsTotalTestsVersusTimeList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyRatioCasesToTestsWithMovingAverageList(List<T> regionDataList);
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyHospitalizedNowWithMovingAverageList(List<T> regionDataList);

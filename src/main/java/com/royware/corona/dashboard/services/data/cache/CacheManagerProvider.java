@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data;
+package com.royware.corona.dashboard.services.data.cache;
 
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 

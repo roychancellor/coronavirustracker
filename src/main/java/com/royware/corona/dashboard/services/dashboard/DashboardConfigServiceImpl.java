@@ -84,7 +84,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		log.info("Done calling makeAllDashboardCharts");
 		
 		//This setting determines whether the last row of the statistics table will show
-		boolean populateUSTotals = false;
+		boolean populateUSTotals = true;
 		dashMeta.setRegionType("us");
 		if(rawRegionString.length() == 3 && !rawRegionString.equalsIgnoreCase("USA")) {
 			dashMeta.setRegionType("world");
@@ -104,6 +104,8 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		dashStats.setCasesPercentOfPop(dashStats.getCasesTotal() * 100.0 / regionPopulation);
 		dashStats.setDeathsPerCapita(dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
 		dashStats.setDeathsPercentOfPop(dashStats.getDeathsTotal() * 100.0 / regionPopulation);
+		dashStats.setVaccPerCapita(dashStats.getTotalVaccCompleted() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
+		dashStats.setVaccPercentOfPop(dashStats.getTotalVaccCompleted() * 100.0 / regionPopulation);
 		
 		map.addAttribute("dashmeta", dashMeta);
 		map.addAttribute("dashheader", dashHeader);

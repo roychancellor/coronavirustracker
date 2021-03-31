@@ -12,6 +12,7 @@ public class DashboardStatistics {
 	private double casesMovingSumSecondary;
 	private double rateOfCasesToday;
 	private double accelOfCasesToday;
+	
 	private int deathsTotal;
 	private int deathsToday;
 	private double deathsPerCapita;
@@ -22,18 +23,33 @@ public class DashboardStatistics {
 	private double rateOfCasesPerCasesToday;
 	private double rateOfDeathsPerDeathsToday;
 	private double accelOfDeathsToday;
+	
 	private int totalTestsConducted;
 	private int totalTestsConductedLastN;
+	
+	private int totalVaccCompleted;
+	private int vaccToday;
+	private double vaccPerCapita;
+	private double vaccPercentOfPop;
+	private double vaccMovingSumPrimary;
+	private double vaccMovingSumSecondary;
+	
 	private double proportionOfPopulationTested;
+	private double proportionOfPopulationVaccinated;
 	private double proportionOfPositiveTests;
 	private double proportionOfPositiveTestsMovingAverage;
 	private double proportionOfDeathsFromPositives;
 	private double proportionOfDeathsFromTested;
 	private double proportionOfDeathsOfExtrapolatedCases;
+	
 	private double totalUsCases;
-	private double proportionOfRegionCasesToUsCases;
 	private double totalUsDeaths;
+	private double totalUsVacc;
+	
+	private double proportionOfRegionCasesToUsCases;
 	private double proportionOfRegionDeathsToUsDeaths;
+	private double proportionOfRegionVaccToUsVacc;
+	
 	private double proportionOfRegionPopToUsPop;
 	
 	public DashboardStatistics() {
@@ -199,6 +215,14 @@ public class DashboardStatistics {
 		this.totalTestsConductedLastN = totalTestsConductedLastN;
 	}
 
+	public int getTotalVaccCompleted() {
+		return totalVaccCompleted;
+	}
+
+	public void setTotalVaccCompleted(int totalVaccCompleted) {
+		this.totalVaccCompleted = totalVaccCompleted;
+	}
+
 	public double getProportionOfPopulationTested() {
 		return proportionOfPopulationTested;
 	}
@@ -279,11 +303,75 @@ public class DashboardStatistics {
 		this.proportionOfRegionDeathsToUsDeaths = proportionOfRegionDeathsToUsDeaths;
 	}
 
+	public double getProportionOfRegionVaccToUsVacc() {
+		return proportionOfRegionVaccToUsVacc;
+	}
+
+	public void setProportionOfRegionVaccToUsVacc(double proportionOfRegionVaccToUsVacc) {
+		this.proportionOfRegionVaccToUsVacc = proportionOfRegionVaccToUsVacc;
+	}
+
 	public double getProportionOfRegionPopToUsPop() {
 		return proportionOfRegionPopToUsPop;
 	}
 
 	public void setProportionOfRegionPopToUsPop(double proportionOfRegionPopToUsPop) {
 		this.proportionOfRegionPopToUsPop = proportionOfRegionPopToUsPop;
+	}
+
+	public double getProportionOfPopulationVaccinated() {
+		return proportionOfPopulationVaccinated;
+	}
+
+	public void setProportionOfPopulationVaccinated(double proportionOfPopulationVaccinated) {
+		this.proportionOfPopulationVaccinated = proportionOfPopulationVaccinated;
+	}
+
+	public double getTotalUsVacc() {
+		return totalUsVacc;
+	}
+
+	public void setTotalUsVacc(double totalUsVacc) {
+		this.totalUsVacc = totalUsVacc;
+	}
+
+	public int getVaccToday() {
+		return vaccToday;
+	}
+
+	public void setVaccToday(int vaccToday) {
+		this.vaccToday = vaccToday;
+	}
+
+	public double getVaccPerCapita() {
+		return vaccPerCapita;
+	}
+
+	public void setVaccPerCapita(double vaccPerCapita) {
+		this.vaccPerCapita = vaccPerCapita;
+	}
+
+	public double getVaccPercentOfPop() {
+		return vaccPercentOfPop;
+	}
+
+	public void setVaccPercentOfPop(double vaccPercentOfPop) {
+		this.vaccPercentOfPop = vaccPercentOfPop;
+	}
+
+	public double getVaccMovingSumPrimary() {
+		return vaccMovingSumPrimary;
+	}
+
+	public void setVaccMovingSumPrimary(double vaccMovingSumPrimary) {
+		this.vaccMovingSumPrimary = vaccMovingSumPrimary;
+	}
+
+	public double getVaccMovingSumSecondary() {
+		return vaccMovingSumSecondary;
+	}
+
+	public void setVaccMovingSumSecondary(double vaccMovingSumSecondary) {
+		this.vaccMovingSumSecondary = vaccMovingSumSecondary;
 	}
 }

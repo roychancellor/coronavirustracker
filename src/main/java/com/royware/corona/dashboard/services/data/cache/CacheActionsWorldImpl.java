@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data;
+package com.royware.corona.dashboard.services.data.cache;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +13,8 @@ import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ICacheActions;
 import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
-import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.world.WorldData;
+import com.royware.corona.dashboard.services.data.world.ExternalDataServiceWorldImpl;
 
 @Component("ca_world")
 public class CacheActionsWorldImpl implements ICacheActions {

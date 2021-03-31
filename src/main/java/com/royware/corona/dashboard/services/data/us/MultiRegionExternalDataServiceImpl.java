@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data;
+package com.royware.corona.dashboard.services.data.us;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
 public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalDataService {
@@ -97,5 +97,4 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		log.info("Finished getting the multi-region data from an external source");
 		return multiRegionDataList;
 	}
-
 }

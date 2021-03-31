@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model.data;
+package com.royware.corona.dashboard.model.data.us;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,7 +15,7 @@ public class CaseDeathDataCDC {
 	@JsonProperty("tot_cases") private int totalPositiveCases;
 	@JsonProperty("tot_death") private int totalDeaths;
 	
-	@JsonIgnore private DatesCDC datesCDC = new DatesCDC();	
+	@JsonIgnore private DatesCDC_CAN datesCDC = new DatesCDC_CAN();	
 	
 	public CaseDeathDataCDC() {
 		super();
@@ -31,7 +31,6 @@ public class CaseDeathDataCDC {
 	}
 	public void setDateTimeString(String dateTimeString) {
 		this.dateTimeString = dateTimeString;
-		//datesCDC.setDateFields(dateTimeString);
 	}
 	public int getTotalPositiveCases() {
 		return totalPositiveCases;
@@ -45,7 +44,7 @@ public class CaseDeathDataCDC {
 	public void setTotalDeaths(int totalDeaths) {
 		this.totalDeaths = totalDeaths;
 	}
-	public DatesCDC getDatesCDC() {
+	public DatesCDC_CAN getDatesCDC() {
 		return datesCDC;
 	}
 	@Override

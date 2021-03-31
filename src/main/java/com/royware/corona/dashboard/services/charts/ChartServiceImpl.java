@@ -63,8 +63,7 @@ public class ChartServiceImpl implements ChartService {
 	}
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyTestsTotalTestsVersusTime(
-			List<T> regionCaseList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyTestsTotalTestsVersusTime(List<T> regionCaseList) {
 		return serviceDao.getDailyTestsTotalTestsVersusTimeList(regionCaseList);
 	}
 	 
@@ -93,5 +92,10 @@ public class ChartServiceImpl implements ChartService {
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getCurrentTotalDeathsWithPercentOfPopulation(
 			List<T> regionDataList, Integer regionPopulation) {
 		return serviceDao.getCurrentTotalDeathsWithPercentOfPopulationList(regionDataList, regionPopulation);
+	}
+
+	@Override
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyVaccTotalVaccVersusTime(List<T> regionDataList) {
+		return serviceDao.getDailyVaccTotalVaccVersusTimeList(regionDataList);
 	}
 }

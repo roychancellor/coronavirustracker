@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model.data;
+package com.royware.corona.dashboard.model.data.common;
 
 import com.royware.corona.dashboard.enums.regions.RegionTypes;
 

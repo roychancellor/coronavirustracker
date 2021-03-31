@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.world.WorldData;
 
 @Service
 public interface WorldDataServiceCaller {

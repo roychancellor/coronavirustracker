@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data;
+package com.royware.corona.dashboard.services.data.us;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
@@ -25,9 +25,9 @@ public class ExternalDataServiceMultiStateImpl implements ExternalDataService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String multiRegionState) {
-		log.info("***** MULTI_REGION: ABOUT TO HIT ENDPOINT FOR STATE DATA FOR: " + multiRegionState);
+		log.debug("MULTI_REGION: ABOUT TO HIT ENDPOINT FOR STATE DATA FOR: " + multiRegionState);
 		List<UnitedStatesData> stateDataList = singleStateDataService.makeDataListFromExternalSource(multiRegionState);
-		log.info("***** FINISHED GETTING DATA FOR STATE: " + multiRegionState + " ****");
+		log.debug("FINISHED GETTING DATA FOR STATE: " + multiRegionState);
 		
 		return stateDataList;
 	}

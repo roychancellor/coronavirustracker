@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
-import com.royware.corona.dashboard.model.data.RegionData;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
-import com.royware.corona.dashboard.model.data.WorldData;
+import com.royware.corona.dashboard.model.data.common.RegionData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.world.WorldData;
 
 @Service
 public enum RegionsData {

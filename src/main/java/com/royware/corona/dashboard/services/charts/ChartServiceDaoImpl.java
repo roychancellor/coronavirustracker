@@ -90,4 +90,9 @@ public class ChartServiceDaoImpl implements ChartServiceDao {
 			List<T> regionDataList, Integer regionPopulation) {
 		return chartListService.makeCurrentTotalDeathsWithPercentOfPopulationList(regionDataList, regionPopulation);
 	}
+
+	@Override
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> getDailyVaccTotalVaccVersusTimeList(List<T> regionDataList) {
+		return chartListService.makeDailyVaccTotalVaccVersusTimeList(regionDataList);
+	}
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Service
 public interface IMultiRegionExternalDataService {

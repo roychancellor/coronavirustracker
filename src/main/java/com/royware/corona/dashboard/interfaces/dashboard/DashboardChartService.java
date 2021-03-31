@@ -14,16 +14,15 @@ import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 public interface DashboardChartService {
 	public <T extends CanonicalCaseDeathData> List<DashboardChart> makeAllDashboardCharts(
 			List<T> caseList, String region, Integer regionPopulation, DashboardStatistics dashStats);
+	
 	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats);
-	public void makeDashboardStatsForRegion(DashboardStatistics dashStats,
+	
+	public void makeDashboardStatsForRegion(DashboardStatistics dashStats, int regionPopulation,
 			List<List<Map<Object, Object>>> chartDataCasesByTime,
 			List<List<Map<Object, Object>>> chartDataCasesMovingSum,
-			List<List<Map<Object, Object>>> chartDataRateOfCasesByTime,
-			List<List<Map<Object, Object>>> chartDataAccelOfCasesByTime,
 			List<List<Map<Object, Object>>> chartDataDeathsByTime,
-			List<List<Map<Object, Object>>> chartDataDeathsMovingSum,
-			List<List<Map<Object, Object>>> chartDataRateOfDeathsByTime,
-			List<List<Map<Object, Object>>> chartDataAccelOfDeathsByTime);
+			List<List<Map<Object, Object>>> chartDataVaccByTime);
+	
 	public <T extends CanonicalCaseDeathData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats);
 	
 	public DashboardChartConfig chartConfigCasesByTime(String region, List<List<Map<Object, Object>>> chartDataCasesByTime);
@@ -42,4 +41,6 @@ public interface DashboardChartService {
 	
 	public DashboardChartConfig chartConfigCurrentHospitalizationsByTime(String region, List<List<Map<Object, Object>>> chartDataCurrentHospitalizationsByTime);
 	public DashboardChartConfig chartConfigCumulativeHospitalizationsByTime(String region, List<List<Map<Object, Object>>> chartDataCumulativeHospitalizationsByTime);
+	
+	public DashboardChartConfig chartConfigVaccByTime(String region, List<List<Map<Object, Object>>> chartDataVaccByTime);
 }

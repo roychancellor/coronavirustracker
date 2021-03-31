@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data;
+package com.royware.corona.dashboard.services.data.us;
 
 import java.util.List;
 
@@ -13,7 +13,8 @@ import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
-import com.royware.corona.dashboard.model.data.UnitedStatesData;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
+import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
 @Component("us")
 public class ExternalDataServiceUSAImpl implements ExternalDataService {

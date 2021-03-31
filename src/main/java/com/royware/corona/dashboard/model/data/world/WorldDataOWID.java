@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.model.data;
+package com.royware.corona.dashboard.model.data.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
