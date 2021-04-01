@@ -15,7 +15,7 @@ public class CaseDeathDataCDC {
 	@JsonProperty("tot_cases") private int totalPositiveCases;
 	@JsonProperty("tot_death") private int totalDeaths;
 	
-	@JsonIgnore private DatesCDC_CAN datesCDC = new DatesCDC_CAN();	
+	@JsonIgnore private DatesCDC_CovActNow datesCDC = new DatesCDC_CovActNow();	
 	
 	public CaseDeathDataCDC() {
 		super();
@@ -44,7 +44,7 @@ public class CaseDeathDataCDC {
 	public void setTotalDeaths(int totalDeaths) {
 		this.totalDeaths = totalDeaths;
 	}
-	public DatesCDC_CAN getDatesCDC() {
+	public DatesCDC_CovActNow getDatesCDC() {
 		return datesCDC;
 	}
 	@Override

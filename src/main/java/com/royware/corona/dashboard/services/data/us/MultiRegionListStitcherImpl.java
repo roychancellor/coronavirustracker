@@ -106,8 +106,10 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 		
 		//Make a map where the key is the state and the value is the list of data for the state
 		log.debug("The array of states for getting data is:");
+		int i = 1;
 		for(String state : states) {
-			log.info(state);
+			log.info("(" + i + ") " + state);
+			i++;
 			stateDataLists.put(state, dataService.makeDataListFromExternalSource(state));
 		}
 		log.debug("Made the map containing all state data lists");

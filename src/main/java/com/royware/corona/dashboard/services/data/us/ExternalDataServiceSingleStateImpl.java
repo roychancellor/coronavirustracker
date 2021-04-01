@@ -15,9 +15,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.model.data.us.CaseDeathDataCDC;
-import com.royware.corona.dashboard.model.data.us.VaccinationDataCAN;
-import com.royware.corona.dashboard.model.data.us.VaccinationTimeSeriesCAN;
+import com.royware.corona.dashboard.model.data.us.CaseDeathVaccData_CovidActNow;
+import com.royware.corona.dashboard.model.data.us.CaseDeathVaccTimeSeries_CovActNow;
 import com.royware.corona.dashboard.model.data.us.HospitalDataCDC;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
@@ -34,29 +33,13 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateAbbreviation) {
-		CaseDeathDataCDC[] stateCaseDeathDataArray;
+		
+		HospitalDataCDC[] hospitalizationDataArray;
 		int tries = 0;
 		do {
 			try {
-				String urlCaseDeath = DataUrls.STATE_DATA_URL_CASES_DEATHS_START.getText()
-						+ DataUrls.STATE_DATA_URL_CASES_DEATHS.getText() + DataUrls.STATE_DATA_URL_END.getText()
-						+ stateAbbreviation.toUpperCase();
-				log.debug("CASE/DEATH DATA AT " + urlCaseDeath + " FOR " + stateAbbreviation);
-				stateCaseDeathDataArray = restTemplate.getForObject(urlCaseDeath, CaseDeathDataCDC[].class);
-			} catch (RestClientException e) {
-				log.error("RestClientException is: " + e.getMessage());
-				log.info("ERROR CONNECTING TO CASE/DEATH DATA: RETRYING: TRY #" + (tries+1));
-				tries++;
-				stateCaseDeathDataArray = null;
-			} 
-		} while (tries <= 3 && stateCaseDeathDataArray == null);
-		
-		HospitalDataCDC[] hospitalizationDataArray;
-		tries = 0;
-		do {
-			try {
 				String urlHospitalization = DataUrls.STATE_DATA_URL_HOSPITAL_LOAD_START.getText()
-						+ DataUrls.STATE_DATA_URL_HOSPITAL_LOAD.getText() + DataUrls.STATE_DATA_URL_END.getText()
+						+ DataUrls.STATE_DATA_URL_HOSPITAL_LOAD_CDC.getText() + DataUrls.STATE_DATA_URL_END.getText()
 						+ stateAbbreviation.toUpperCase();
 				log.debug("HOSPITALIZATION DATA AT " + urlHospitalization + " FOR " + stateAbbreviation);
 				hospitalizationDataArray = restTemplate.getForObject(urlHospitalization, HospitalDataCDC[].class);
@@ -68,32 +51,32 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 			} 
 		} while (tries <= 3 && hospitalizationDataArray == null);
 		
-		VaccinationTimeSeriesCAN vaccArray;
+		CaseDeathVaccTimeSeries_CovActNow caseDeathVaccArray;
 		tries = 0;
 		do {
 			try {
-				StringBuilder urlVacc = new StringBuilder();
-				urlVacc
-					.append(DataUrls.STATE_DATA_URL_VACCINATIONS_START.getText())
+				StringBuilder urlCaseDeathVacc = new StringBuilder();
+				urlCaseDeathVacc
+					.append(DataUrls.STATE_DATA_URL_CASE_DEATH_VACC_START.getText())
 					.append(stateAbbreviation.toUpperCase())
-					.append(DataUrls.STATE_DATA_URL_VACCINATIONS_FILE.getText())
-					.append(DataUrls.STATE_DATA_URL_VACCINATIONS_END.getText());
-				log.debug("VACCINATION DATA AT " + urlVacc.toString() + " FOR " + stateAbbreviation);
-				vaccArray = restTemplate.getForObject(urlVacc.toString(), VaccinationTimeSeriesCAN.class);
+					.append(DataUrls.STATE_DATA_URL_CASE_DEATH_VACC_FILE.getText())
+					.append(DataUrls.STATE_DATA_URL_CASE_DEATH_VACC_END.getText());
+				log.debug("CASE/DEATH/VACCINATION DATA AT " + urlCaseDeathVacc.toString() + " FOR " + stateAbbreviation);
+				caseDeathVaccArray = restTemplate.getForObject(urlCaseDeathVacc.toString(), CaseDeathVaccTimeSeries_CovActNow.class);
 			} catch (RestClientException e) {
 				log.error("RestClientException is: " + e.getMessage());
-				log.info("ERROR CONNECTING VACCINATION DATA SOURCE: RETRYING: TRY #" + (tries+1));
+				log.info("ERROR CONNECTING CASE/DEATH/VACCINATION DATA SOURCE: RETRYING: TRY #" + (tries+1));
 				tries++;
-				vaccArray = null;
+				caseDeathVaccArray = null;
 			} 
-		} while (tries <= 3 && hospitalizationDataArray == null);
+		} while (tries <= 3 && caseDeathVaccArray == null);
 		
-		if(stateCaseDeathDataArray == null || hospitalizationDataArray == null || vaccArray == null) {
-			log.error("The returned stateCaseDeathDataArray, hospitalizationDataArray, or vaccArray is null!!!");
+		if(hospitalizationDataArray == null || caseDeathVaccArray == null) {
+			log.error("One of the returned arrays is null!!!");
 			return new ArrayList<UnitedStatesData>();
 		}
 		
-		List<UnitedStatesData> stateDataList = buildUnitedStatesDataList(stateCaseDeathDataArray, hospitalizationDataArray, vaccArray);
+		List<UnitedStatesData> stateDataList = buildUnitedStatesDataList(stateAbbreviation, hospitalizationDataArray, caseDeathVaccArray);
 		log.debug("The size of the pre-filtered state data list for " + stateAbbreviation + " is: " + stateDataList.size());
 		
 		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
@@ -104,17 +87,16 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 	}
 	
 	private List<UnitedStatesData> buildUnitedStatesDataList(
-			CaseDeathDataCDC[] stateCaseDeathDataArray,
+			String stateAbbrev,
 			HospitalDataCDC[] hospitalizationDataArray,
-			VaccinationTimeSeriesCAN vaccArray) {
+			CaseDeathVaccTimeSeries_CovActNow caseDeathVaccArray) {
 		
-		Map<Integer, CaseDeathDataCDC> casesAndDeaths = new HashMap<Integer, CaseDeathDataCDC>();
+		Map<Integer, CaseDeathVaccData_CovidActNow> caseDeathVacc = new HashMap<Integer, CaseDeathVaccData_CovidActNow>();
 		Map<Integer, HospitalDataCDC> hospitalizations = new HashMap<Integer, HospitalDataCDC>();
-		Map<Integer, VaccinationDataCAN> vaccinations = new HashMap<Integer, VaccinationDataCAN>();
 		
-		for(CaseDeathDataCDC cd : stateCaseDeathDataArray) {
-			cd.getDatesCDC().setDateFields(cd.getDateTimeString());
-			casesAndDeaths.put(cd.getDatesCDC().getDateAsIntegerYYYYMMDD(), cd);
+		for(CaseDeathVaccData_CovidActNow cdv : caseDeathVaccArray.getActualsTimeSeries()) {
+			cdv.getDatesCDC().setDateFields(cdv.getDateYYYY_MM_DD());
+			caseDeathVacc.put(cdv.getDatesCDC().getDateAsIntegerYYYYMMDD(), cdv);
 		}
 		
 		for(HospitalDataCDC h : hospitalizationDataArray) {
@@ -122,47 +104,45 @@ public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
 			hospitalizations.put(h.getDatesCDC().getDateAsIntegerYYYYMMDD(), h);
 		}
 		
-		for(VaccinationDataCAN v : vaccArray.getActualsTimeSeries()) {
-			v.getDatesCDC().setDateFields(v.getDateYYYY_MM_DD());
-			vaccinations.put(v.getDatesCDC().getDateAsIntegerYYYYMMDD(), v);
-		}
-		
-		return transformIntoUnitedStatesData(casesAndDeaths, hospitalizations, vaccinations);
+		return transformIntoUnitedStatesData(stateAbbrev, hospitalizations, caseDeathVacc);
 	}
 
 	/**
 	 * Transforms data from disparate sources into United States Data objects
 	 * @param casesAndDeaths
 	 * @param hospitalizations
-	 * @param vaccinations
+	 * @param caseDeathVacc
 	 * @return List of UnitedStatesData objects
 	 */
 	private List<UnitedStatesData> transformIntoUnitedStatesData(
-			Map<Integer, CaseDeathDataCDC> casesAndDeaths,
+			String stateAbbrev,
 			Map<Integer, HospitalDataCDC> hospitalizations,
-			Map<Integer, VaccinationDataCAN> vaccinations) {
+			Map<Integer, CaseDeathVaccData_CovidActNow> caseDeathVacc) {
 		
 		List<UnitedStatesData> toReturn = new ArrayList<>();
 		
 		//Make a list of dates from the cases and deaths data sources as the master dates
-		Integer[] datesArray = casesAndDeaths.keySet().toArray(new Integer[0]);
+		Integer[] datesArray = caseDeathVacc.keySet().toArray(new Integer[0]);
 		Arrays.parallelSort(datesArray);
 		List<Integer> allCaseDates = Arrays.asList(datesArray);
 		
 		//Transform the data from the maps into the desired object		
 		for(Integer caseDate : allCaseDates) {
+			if(caseDeathVacc.get(caseDate).getTotalCases() < 100) {
+				continue;
+			}
 			UnitedStatesData usd = new UnitedStatesData();
-			usd.setDateChecked(casesAndDeaths.get(caseDate).getDatesCDC().getDateAsLocalDate());
+			usd.setDateChecked(caseDeathVacc.get(caseDate).getDatesCDC().getDateAsLocalDate());
 			usd.setDateInteger(caseDate);
-			usd.setDateTimeString(casesAndDeaths.get(caseDate).getDatesCDC().getDateAsStringYYYYMMDD());
-			usd.setRegionString(casesAndDeaths.get(caseDate).getRegionString());
-			usd.setTotalPositiveCases(casesAndDeaths.get(caseDate).getTotalPositiveCases());
-			usd.setTotalDeaths(casesAndDeaths.get(caseDate).getTotalDeaths());
+			usd.setDateTimeString(caseDeathVacc.get(caseDate).getDatesCDC().getDateAsStringYYYYMMDD());
+			usd.setRegionString(stateAbbrev);
+			usd.setTotalPositiveCases(caseDeathVacc.get(caseDate).getTotalCases());
+			usd.setTotalDeaths(caseDeathVacc.get(caseDate).getTotalDeaths());
+			if(caseDeathVacc.get(caseDate).getVaccComp() >= 100) {
+				usd.setTotalVaccCompleted(caseDeathVacc.get(caseDate).getVaccComp());
+			}
 			if(hospitalizations.containsKey(caseDate)) {
 				usd.setHospitalizedCurrently(hospitalizations.get(caseDate).getTotalBedsCovidCurrently());
-			}
-			if(vaccinations.containsKey(caseDate)) {
-				usd.setTotalVaccCompleted(vaccinations.get(caseDate).getVaccComp());
 			}
 			toReturn.add(usd);
 		}
