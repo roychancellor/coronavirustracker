@@ -8,18 +8,36 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-public class VaccinationDataCAN {
+public class CaseDeathVaccData_CovidActNow {
 
+	@JsonProperty("cases") private int totalCases;
+	@JsonProperty("deaths") private int totalDeaths;
 	@JsonProperty("vaccinesDistributed") private int vaccDist;
 	@JsonProperty("vaccinationsInitiated") private int vaccInit;
 	@JsonProperty("vaccinationsCompleted") private int vaccComp;
 	@JsonProperty("vaccinesAdministered") private int vaccAdmin;
 	@JsonProperty("date") private String dateYYYY_MM_DD;
 	
-	@JsonIgnore private DatesCDC_CAN datesCDC = new DatesCDC_CAN();
+	@JsonIgnore private DatesCDC_CovActNow datesCDC = new DatesCDC_CovActNow();
 
-	public VaccinationDataCAN() {
+	public CaseDeathVaccData_CovidActNow() {
 		super();
+	}
+
+	public int getTotalCases() {
+		return totalCases;
+	}
+
+	public void setTotalCases(int totalCases) {
+		this.totalCases = totalCases;
+	}
+
+	public int getTotalDeaths() {
+		return totalDeaths;
+	}
+
+	public void setTotalDeaths(int totalDeaths) {
+		this.totalDeaths = totalDeaths;
 	}
 
 	public int getVaccDist() {
@@ -62,18 +80,19 @@ public class VaccinationDataCAN {
 		this.dateYYYY_MM_DD = dateYYYY_MM_DD;
 	}
 
-	public DatesCDC_CAN getDatesCDC() {
+	public DatesCDC_CovActNow getDatesCDC() {
 		return datesCDC;
 	}
 
-	public void setDatesCDC(DatesCDC_CAN datesCDC) {
+	public void setDatesCDC(DatesCDC_CovActNow datesCDC) {
 		this.datesCDC = datesCDC;
 	}
 
 	@Override
 	public String toString() {
-		return "CovidActNowActual [vaccDist=" + vaccDist + ", vaccInit=" + vaccInit + ", vaccComp=" + vaccComp
-				+ ", vaccAdmin=" + vaccAdmin + ", dateYYYY_MM_DD=" + dateYYYY_MM_DD + ", datesCDC=" + datesCDC + "]";
+		return "CaseDeathVaccData_CovidActNow [totalCases=" + totalCases + ", totalDeaths=" + totalDeaths
+				+ ", vaccDist=" + vaccDist + ", vaccInit=" + vaccInit + ", vaccComp=" + vaccComp + ", vaccAdmin="
+				+ vaccAdmin + ", dateYYYY_MM_DD=" + dateYYYY_MM_DD + ", datesCDC=" + datesCDC + "]";
 	}
 
 	@Override
@@ -82,6 +101,8 @@ public class VaccinationDataCAN {
 		int result = 1;
 		result = prime * result + ((dateYYYY_MM_DD == null) ? 0 : dateYYYY_MM_DD.hashCode());
 		result = prime * result + ((datesCDC == null) ? 0 : datesCDC.hashCode());
+		result = prime * result + totalCases;
+		result = prime * result + totalDeaths;
 		result = prime * result + vaccAdmin;
 		result = prime * result + vaccComp;
 		result = prime * result + vaccDist;
@@ -97,7 +118,7 @@ public class VaccinationDataCAN {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		VaccinationDataCAN other = (VaccinationDataCAN) obj;
+		CaseDeathVaccData_CovidActNow other = (CaseDeathVaccData_CovidActNow) obj;
 		if (dateYYYY_MM_DD == null) {
 			if (other.dateYYYY_MM_DD != null)
 				return false;
@@ -108,6 +129,10 @@ public class VaccinationDataCAN {
 				return false;
 		} else if (!datesCDC.equals(other.datesCDC))
 			return false;
+		if (totalCases != other.totalCases)
+			return false;
+		if (totalDeaths != other.totalDeaths)
+			return false;
 		if (vaccAdmin != other.vaccAdmin)
 			return false;
 		if (vaccComp != other.vaccComp)
@@ -117,5 +142,5 @@ public class VaccinationDataCAN {
 		if (vaccInit != other.vaccInit)
 			return false;
 		return true;
-	}	
+	}
 }
