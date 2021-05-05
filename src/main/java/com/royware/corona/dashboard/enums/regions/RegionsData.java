@@ -112,6 +112,18 @@ public enum RegionsData {
 			return eds.makeDataListFromExternalSource(this.name());
 		}
 	},
+	IND {
+		public RegionData getRegionData() {
+			return new RegionData(1390885000, RegionTypes.COUNTRY, "India");
+		}
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<WorldData> getCoronaVirusDataFromExternalSource(ExternalDataService eds) {
+			Logger log = LoggerFactory.getLogger(RegionsData.class);
+			log.info("In the Regions enum for " + this.name() + " about to call makeDataListFromExternalSource with " + eds.toString());
+			return eds.makeDataListFromExternalSource(this.name());
+		}
+	},
 	ITA {
 		public RegionData getRegionData() {
 			return new RegionData(60360000, RegionTypes.COUNTRY, "Italy");
