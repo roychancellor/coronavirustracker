@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlists;
+package com.royware.corona.dashboard.services.chartlistmakers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,46 +15,43 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class DailyHospitalizedNowWithMovingAverageChartList implements IChartList {
-	private static final Logger log = LoggerFactory.getLogger(DailyHospitalizedNowWithMovingAverageChartList.class);
-	private Map<Integer, Double> dailyHospitalizations = new HashMap<>();
+public class DailyHospitalizedTotalWithMovingAverageChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(DailyHospitalizedTotalWithMovingAverageChartList.class);
+	private Map<Integer, Double> cumulHospitalizations = new HashMap<>();
 
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
-		log.debug("MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS VERSUS TIME");
+		log.debug("MAKING CUMULATIVE AND DAILY NEW HOSPITALIZATIONS (FROM CUMULATIVE) VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
-		//Find the first object having a current hospitalizations > 0 for two consecutive days
-		log.debug("Making time history of CURRENT hospitalizations");
-		log.debug("Making time history of DAILY NEW hospitalizations");
-		
-		//First day with positive hospitalizations
-		int startDayIndex = ChartListMakerUtilities.findFirstDayIndexWithPositiveCurrentHospitalizations(regionDataList);
+
+		log.debug("Making time history of CUMULATIVE hospitalizations");
+		log.debug("Making time history of DAILY NEW hospitalizations (from Cumulative)");
+		int startDayIndex = ChartListMakerUtilities.findFirstDayIndexWithPositiveCumulativeHospitalizations(regionDataList);
 		xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(startDayIndex,
-				regionDataList.get(startDayIndex).getHospitalizedCurrently(),
+				regionDataList.get(startDayIndex).getHospitalizedCumulative(),
 				regionDataList.get(startDayIndex).getDateChecked().toString());
 		dataList.add(xyPair);
 		
-		//All remaining days
-		int dayIndex = startDayIndex + 1;
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
+		int dayIndex = startDayIndex + 1;
 		while(dayIndex < regionDataList.size()) {
-			//CURRENT
+			//TOTAL
 			xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(dayIndex,
-					regionDataList.get(dayIndex).getHospitalizedCurrently(),
+					regionDataList.get(dayIndex).getHospitalizedCumulative(),
 					regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 			
 			//NEW
-			totalYesterday = regionDataList.get(dayIndex - 1).getHospitalizedCurrently();
-			totalToday = regionDataList.get(dayIndex).getHospitalizedCurrently();
+			totalYesterday = regionDataList.get(dayIndex - 1).getHospitalizedCumulative();
+			totalToday = regionDataList.get(dayIndex).getHospitalizedCumulative();
 			dailyChange = totalToday - totalYesterday;
-			dailyHospitalizations.put(dayIndex, dailyChange * 1.0);
-
+			cumulHospitalizations.put(dayIndex, dailyChange * 1.0);
+			
 			dayIndex++;
 		}
 		scatterChartDataLists.add(dataList);
@@ -63,12 +60,11 @@ public class DailyHospitalizedNowWithMovingAverageChartList implements IChartLis
 		log.debug("Making moving average of DAILY NEW hospitalizations");
 		scatterChartDataLists.add(
 				ChartListMakerUtilities.makeMovingAverageList(
-					dailyHospitalizations,
-					startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
+					cumulHospitalizations, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
 					regionDataList.size()
 				));
 		
-		log.debug("DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS VERSUS TIME");
+		log.debug("DONE MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS (FROM CUMULATIVE) VERSUS TIME");
 
 		return scatterChartDataLists;
 	}

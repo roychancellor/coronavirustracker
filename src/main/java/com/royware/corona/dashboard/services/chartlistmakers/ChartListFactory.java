@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlists;
+package com.royware.corona.dashboard.services.chartlistmakers;
 
 import org.springframework.stereotype.Component;
 

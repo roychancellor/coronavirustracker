@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlists;
+package com.royware.corona.dashboard.services.chartlistmakers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.interfaces.charts.IChartList;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
-import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class CurrentTotalDeathsWithPercentOfPopulationChartList implements IChartList {
-	private static final Logger log = LoggerFactory.getLogger(CurrentTotalDeathsWithPercentOfPopulationChartList.class);
+public class CurrentTotalPositivesWithPercentOfPopulationChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(CurrentTotalPositivesWithPercentOfPopulationChartList.class);
 	private int regionPopulation;
-
+	
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList,
 			Integer regionPopulation) {
 		this.regionPopulation = regionPopulation;
@@ -29,7 +28,7 @@ public class CurrentTotalDeathsWithPercentOfPopulationChartList implements IChar
 	
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
-		log.debug("MAKING CURRENT TOTAL DEATHS VERSUS TIME");
+		log.debug("MAKING CURRENT TOTAL POSITIVES VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		Map<Object, Object> xyPairSec;
@@ -37,39 +36,38 @@ public class CurrentTotalDeathsWithPercentOfPopulationChartList implements IChar
 		List<Map<Object, Object>> dataListSecondary = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		
-		//Makes a list of total current deaths for each day on a rolling basis
-		int startDayIndex = ChartListMakerUtilities.findFirstDayIndexWithPositiveDeaths(regionDataList);
-		Queue<Integer> dailyChangeInDeathsPrimary = new LinkedList<>();
-		Queue<Integer> dailyChangeInDeathsSecondary = new LinkedList<>();
-		dailyChangeInDeathsPrimary.add(regionDataList.get(startDayIndex).getTotalDeaths());
-		dailyChangeInDeathsSecondary.add(regionDataList.get(startDayIndex).getTotalDeaths());
+		//Makes a list of total current cases for each day on a rolling basis
+		Queue<Integer> dailyChangeInPositivesPrimary = new LinkedList<>();
+		Queue<Integer> dailyChangeInPositivesSecondary = new LinkedList<>();
+		dailyChangeInPositivesPrimary.add(regionDataList.get(0).getTotalPositiveCases());
+		dailyChangeInPositivesSecondary.add(regionDataList.get(0).getTotalPositiveCases());
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
-		int rollingSumPrimary = 0;
-		int rollingSumSecondary = 0;
-		int dayIndex = startDayIndex + 1;
+		long rollingSumPrimary = 0;
+		long rollingSumSecondary = 0;
+		int dayIndex = 1;
 		while(dayIndex < regionDataList.size()) {
-			totalYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
-			totalToday = regionDataList.get(dayIndex).getTotalDeaths();
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
+			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 
-			if(dayIndex < startDayIndex + MovingAverageSizes.CURRENT_DEATHS_QUEUE_SIZE_PRIMARY.getValue()) {
+			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue()) {
 				rollingSumPrimary = totalToday;
 			} else {
-				rollingSumPrimary += dailyChange - dailyChangeInDeathsPrimary.peek();
-				dailyChangeInDeathsPrimary.remove();
+				rollingSumPrimary += dailyChange - dailyChangeInPositivesPrimary.peek();
+				dailyChangeInPositivesPrimary.remove();
 			}
-			dailyChangeInDeathsPrimary.add(dailyChange);
+			dailyChangeInPositivesPrimary.add(dailyChange);
 			
-			if(dayIndex < startDayIndex + MovingAverageSizes.CURRENT_DEATHS_QUEUE_SIZE_SECONDARY.getValue()) {
+			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue()) {
 				rollingSumSecondary = totalToday;
 			} else {
-				rollingSumSecondary += dailyChange - dailyChangeInDeathsSecondary.peek();
-				dailyChangeInDeathsSecondary.remove();
+				rollingSumSecondary += dailyChange - dailyChangeInPositivesSecondary.peek();
+				dailyChangeInPositivesSecondary.remove();
 			}
-			dailyChangeInDeathsSecondary.add(dailyChange);
+			dailyChangeInPositivesSecondary.add(dailyChange);
 			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
@@ -86,7 +84,7 @@ public class CurrentTotalDeathsWithPercentOfPopulationChartList implements IChar
 		scatterChartDataLists.add(dataListPrimary);
 		scatterChartDataLists.add(dataListSecondary);
 				
-		log.debug("DONE MAKING CURRENT TOTAL DEATHS VERSUS TIME");
+		log.debug("DONE MAKING CURRENT TOTAL POSITIVES VERSUS TIME");
 
 		return scatterChartDataLists;
 	}

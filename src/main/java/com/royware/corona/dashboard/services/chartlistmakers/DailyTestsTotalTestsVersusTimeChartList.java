@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlists;
+package com.royware.corona.dashboard.services.chartlistmakers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,61 +15,55 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class TotalDeathsVersusTimeWithExponentialFitChartList implements IChartList {
-	private static final Logger log = LoggerFactory.getLogger(TotalDeathsVersusTimeWithExponentialFitChartList.class);
-	private Map<Integer, Double> dailyDeaths = new HashMap<>();
+public class DailyTestsTotalTestsVersusTimeChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(DailyTestsTotalTestsVersusTimeChartList.class);
+	private Map<Integer, Double> dailyTests = new HashMap<>();
 
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
-		log.debug("MAKING TOTAL AND DAILY DEATHS VERSUS TIME");
+		log.debug("MAKING TOTAL AND DAILY TESTS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
-
-		log.debug("Making time history of TOTAL deaths");
-		log.debug("Making time history of DAILY deaths");
-		int startDayIndex = ChartListMakerUtilities.findFirstDayIndexWithPositiveDeaths(regionDataList);
-		xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(startDayIndex,
-				regionDataList.get(startDayIndex).getTotalDeaths(),
-				regionDataList.get(startDayIndex).getDateChecked().toString());
+		
+		xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(0,
+				regionDataList.get(0).getTotalPositiveCases() + regionDataList.get(0).getTotalNegativeCases(),
+				regionDataList.get(0).getDateChecked().toString());
 		dataList.add(xyPair);
 		
-		int dayIndex = startDayIndex + 1;
+		int dayIndex = 1;
 		int totalYesterday = 0;
 		int totalToday = 0;
 		int dailyChange = 0;
 		while(dayIndex < regionDataList.size()) {
 			//TOTAL
-			xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(
-					dayIndex,
-					regionDataList.get(dayIndex).getTotalDeaths(),
+			xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(dayIndex,
+					regionDataList.get(dayIndex).getTotalPositiveCases() + regionDataList.get(dayIndex).getTotalNegativeCases(),
 					regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 			
 			//NEW
-			totalYesterday = regionDataList.get(dayIndex - 1).getTotalDeaths();
-			totalToday = regionDataList.get(dayIndex).getTotalDeaths();
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases() + regionDataList.get(dayIndex - 1).getTotalNegativeCases();
+			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases() + regionDataList.get(dayIndex).getTotalNegativeCases();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
-			dailyDeaths.put(dayIndex, dailyChange * 1.0);
-
+			dailyTests.put(dayIndex, dailyChange * 1.0);
+			
 			dayIndex++;
 		}
 		scatterChartDataLists.add(dataList);
 
-		//make the MOVING AVERAGE of daily deaths to smooth out some of the noise
-		log.debug("Making moving average of DAILY deaths");
+		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
 		scatterChartDataLists.add(
 			ChartListMakerUtilities.makeMovingAverageList(
-				dailyDeaths,
-				startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
+				dailyTests,
+				MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
 				regionDataList.size()
 			));
 		
-		log.debug("DONE MAKING TOTAL AND DAILY DEATHS VERSUS TIME");
+		log.debug("DONE MAKING TOTAL AND DAILY TESTS VERSUS TIME");
 
 		return scatterChartDataLists;
 	}
-
 }

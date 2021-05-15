@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlists;
+package com.royware.corona.dashboard.services.chartlistmakers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,20 +15,20 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class DailyTestsTotalTestsVersusTimeChartList implements IChartList {
-	private static final Logger log = LoggerFactory.getLogger(DailyTestsTotalTestsVersusTimeChartList.class);
-	private Map<Integer, Double> dailyTests = new HashMap<>();
+public class DailyVaccTotalVaccVersusTimeChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(DailyVaccTotalVaccVersusTimeChartList.class);
+	private Map<Integer, Double> dailyVacc = new HashMap<>();
 
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
-		log.debug("MAKING TOTAL AND DAILY TESTS VERSUS TIME");
+		log.debug("MAKING TOTAL AND DAILY VACCINATIONS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
 		
 		xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(0,
-				regionDataList.get(0).getTotalPositiveCases() + regionDataList.get(0).getTotalNegativeCases(),
+				regionDataList.get(0).getTotalVaccCompleted(),
 				regionDataList.get(0).getDateChecked().toString());
 		dataList.add(xyPair);
 		
@@ -39,16 +39,16 @@ public class DailyTestsTotalTestsVersusTimeChartList implements IChartList {
 		while(dayIndex < regionDataList.size()) {
 			//TOTAL
 			xyPair = ChartListMakerUtilities.makeXYPairWithDateStamp(dayIndex,
-					regionDataList.get(dayIndex).getTotalPositiveCases() + regionDataList.get(dayIndex).getTotalNegativeCases(),
+					regionDataList.get(dayIndex).getTotalVaccCompleted(),
 					regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 			
 			//NEW
-			totalYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases() + regionDataList.get(dayIndex - 1).getTotalNegativeCases();
-			totalToday = regionDataList.get(dayIndex).getTotalPositiveCases() + regionDataList.get(dayIndex).getTotalNegativeCases();
+			totalYesterday = regionDataList.get(dayIndex - 1).getTotalVaccCompleted();
+			totalToday = regionDataList.get(dayIndex).getTotalVaccCompleted();
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
-			dailyTests.put(dayIndex, dailyChange * 1.0);
+			dailyVacc.put(dayIndex, dailyChange * 1.0);
 			
 			dayIndex++;
 		}
@@ -56,13 +56,13 @@ public class DailyTestsTotalTestsVersusTimeChartList implements IChartList {
 
 		//make the MOVING AVERAGE of daily quantity to smooth out some of the noise
 		scatterChartDataLists.add(
-			ChartListMakerUtilities.makeMovingAverageList(
-				dailyTests,
-				MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
-				regionDataList.size()
-			));
+				ChartListMakerUtilities.makeMovingAverageList(
+					dailyVacc,
+					MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
+					regionDataList.size()
+				));
 		
-		log.debug("DONE MAKING TOTAL AND DAILY TESTS VERSUS TIME");
+		log.debug("DONE MAKING TOTAL AND DAILY VACCINATIONS VERSUS TIME");
 
 		return scatterChartDataLists;
 	}
