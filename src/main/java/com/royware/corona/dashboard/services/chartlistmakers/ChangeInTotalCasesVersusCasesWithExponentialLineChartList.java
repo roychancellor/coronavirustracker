@@ -9,11 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.interfaces.charts.IChartList;
+import com.royware.corona.dashboard.interfaces.charts.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 
 @Component
-public class ChangeInTotalCasesVersusCasesWithExponentialLineChartList implements IChartList {
+public class ChangeInTotalCasesVersusCasesWithExponentialLineChartList implements IChartListMaker {
 	private static final Logger log = LoggerFactory.getLogger(ChangeInTotalCasesVersusCasesWithExponentialLineChartList.class);
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 

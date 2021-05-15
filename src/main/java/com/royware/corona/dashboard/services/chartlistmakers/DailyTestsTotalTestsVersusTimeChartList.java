@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.interfaces.charts.IChartList;
+import com.royware.corona.dashboard.interfaces.charts.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 
 @Component
-public class DailyTestsTotalTestsVersusTimeChartList implements IChartList {
+public class DailyTestsTotalTestsVersusTimeChartList implements IChartListMaker {
 	private static final Logger log = LoggerFactory.getLogger(DailyTestsTotalTestsVersusTimeChartList.class);
 	private Map<Integer, Double> dailyTests = new HashMap<>();
 
