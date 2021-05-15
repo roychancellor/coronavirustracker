@@ -1,10 +1,24 @@
-package com.royware.corona.dashboard.services.chartlistmakers;
+package com.royware.corona.dashboard.services.chartlistfactory;
 
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.interfaces.charts.IChartList;
 import com.royware.corona.dashboard.interfaces.charts.IChartListFactory;
+import com.royware.corona.dashboard.services.chartlistmakers.ChangeInTotalCasesVersusCasesWithExponentialLineChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.ChangeInTotalDeathsVersusDeathsWithExponentialLineChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.CurrentTotalDeathsWithPercentOfPopulationChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.CurrentTotalPositivesWithPercentOfPopulationChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyAccelerationOfCasesWithMovingAverageChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyAccelerationOfDeathsWithMovingAverageChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyAndTotalCasesVersusTimeChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyHospitalizedNowWithMovingAverageChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyHospitalizedTotalWithMovingAverageChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyRateOfChangeOfCasesWithMovingAverageChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyRateOfChangeOfDeathsWithMovingAverageChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyTestsTotalTestsVersusTimeChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.DailyVaccTotalVaccVersusTimeChartList;
+import com.royware.corona.dashboard.services.chartlistmakers.TotalDeathsVersusTimeWithExponentialFitChartList;
 
 @Component
 public class ChartListFactory implements IChartListFactory {		

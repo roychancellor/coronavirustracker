@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.interfaces.charts.IChartList;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
-import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
 public class DailyRateOfChangeOfDeathsWithMovingAverageChartList implements IChartList {
