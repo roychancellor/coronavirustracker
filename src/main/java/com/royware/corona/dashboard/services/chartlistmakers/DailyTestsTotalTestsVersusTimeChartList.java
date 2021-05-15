@@ -19,7 +19,7 @@ public class DailyTestsTotalTestsVersusTimeChartList implements IChartListMaker 
 	private Map<Integer, Double> dailyTests = new HashMap<>();
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
 		log.debug("MAKING TOTAL AND DAILY TESTS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

@@ -18,16 +18,9 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 @Component
 public class CurrentTotalDeathsWithPercentOfPopulationChartList implements IChartListMaker {
 	private static final Logger log = LoggerFactory.getLogger(CurrentTotalDeathsWithPercentOfPopulationChartList.class);
-	private int regionPopulation;
 
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList,
-			Integer regionPopulation) {
-		this.regionPopulation = regionPopulation;
-		return makeListFrom(regionDataList);
-	}
-	
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int regionPopulation) {
 		log.debug("MAKING CURRENT TOTAL DEATHS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

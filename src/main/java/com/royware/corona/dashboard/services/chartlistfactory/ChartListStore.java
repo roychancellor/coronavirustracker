@@ -19,8 +19,9 @@ public class ChartListStore implements IChartListStore {
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> produceChartListFromRegionData(
 			ChartTypes chartType,
-			List<T> regionData) {
+			List<T> regionData,
+			int regionPopulation) {
 		
-		return chartListFactory.create(chartType).makeListFrom(regionData);
-	}
+		return chartListFactory.create(chartType).makeListFrom(regionData, regionPopulation);
+	}	
 }

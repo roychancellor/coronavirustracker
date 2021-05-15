@@ -14,5 +14,5 @@ public interface IChartListMaker {
 	//TESTS WILL ALWAYS START WITH INDEX = 0 --> DAY = 0
 	//HOSPITALIZATIONS WILL HAVE A VARIABLE-INDEX --> DAY = 0 (DATA NOT ALWAYS AVAILABLE AMONG REGIONS)
 	
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList);
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int regionPopulation);
 }

@@ -19,7 +19,7 @@ public class DailyRatioCasesToTestsWithMovingAverageChartList implements IChartL
 	private Map<Integer, Double> dailyRatioOfTests = new HashMap<>();
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
 		log.debug("MAKING RATIO OF CASES TO TESTS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

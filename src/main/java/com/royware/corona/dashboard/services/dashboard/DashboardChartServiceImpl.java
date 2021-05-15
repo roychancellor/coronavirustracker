@@ -12,9 +12,12 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartCsvHeaders;
 import com.royware.corona.dashboard.enums.charts.ChartScalingConstants;
+import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
+import com.royware.corona.dashboard.interfaces.charts.IChartListFactory;
+import com.royware.corona.dashboard.interfaces.charts.IChartListStore;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
@@ -26,6 +29,9 @@ import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
 public class DashboardChartServiceImpl implements DashboardChartService {
+	@Autowired
+	private IChartListStore chartListStore;
+	
 	@Autowired
 	private ChartService chartService;
 	
@@ -47,7 +53,14 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.info("Making all chart data lists");
 		////////// CHART DATA LISTS - CASES //////////
 		log.debug("Making all the chart data lists for CASES");
-		List<List<Map<Object, Object>>> chartDataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(dataList);
+		
+		List<List<Map<Object, Object>>> chartDataCasesByTime = chartListStore
+				.produceChartListFromRegionData(ChartTypes.CASES_DAILY_AND_TOTAL_VERSUS_TIME, dataList, regionPopulation);
+		
+		//TODO: Test this with the factory making the list, then update all the rest below
+		//TODO: Refactor this class in a major way to separate concerns
+		
+		//List<List<Map<Object, Object>>> chartDataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
 		List<List<Map<Object, Object>>> chartDataTotalCurrentCases = chartService.getCurrentTotalPositivesWithPercentOfPopulation(dataList, regionPopulation);
 		

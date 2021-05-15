@@ -11,5 +11,7 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 @Service
 public interface IChartListStore {
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> produceChartListFromRegionData(
-			ChartTypes type, List<T> regionDataList);
+			ChartTypes type,
+			List<T> regionDataList,
+			int regionPopulation);
 }

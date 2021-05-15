@@ -19,7 +19,7 @@ public class DailyHospitalizedNowWithMovingAverageChartList implements IChartLis
 	private Map<Integer, Double> dailyHospitalizations = new HashMap<>();
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
 		log.debug("MAKING CURRENT AND DAILY NEW HOSPITALIZATIONS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
