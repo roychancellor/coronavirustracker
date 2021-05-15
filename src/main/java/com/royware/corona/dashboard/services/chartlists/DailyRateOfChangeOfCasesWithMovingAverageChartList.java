@@ -20,7 +20,7 @@ public class DailyRateOfChangeOfCasesWithMovingAverageChartList implements IChar
 	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
 		log.debug("MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

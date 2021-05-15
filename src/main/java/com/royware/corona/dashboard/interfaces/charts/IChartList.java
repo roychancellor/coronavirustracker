@@ -9,5 +9,5 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 
 @Service
 public interface IChartList {
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList);
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList);
 }

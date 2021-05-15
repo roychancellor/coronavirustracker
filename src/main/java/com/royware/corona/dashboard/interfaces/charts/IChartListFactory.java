@@ -5,5 +5,5 @@ import com.royware.corona.dashboard.enums.charts.ChartTypes;
 
 @Service
 public interface IChartListFactory {
-	public IChartList createChartList(ChartTypes chartType);
+	public IChartList create(ChartTypes chartType);
 }

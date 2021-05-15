@@ -20,7 +20,7 @@ public class ChangeInTotalDeathsVersusDeathsWithExponentialLineChartList impleme
 	private Map<Integer, Double> dailyChgDeaths = new LinkedHashMap<>();
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
 		log.debug("MAKING CHANGE IN DAILY DEATHS VERSUS TOTAL DEATHS");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

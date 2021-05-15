@@ -23,11 +23,11 @@ public class CurrentTotalPositivesWithPercentOfPopulationChartList implements IC
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList,
 			Integer regionPopulation) {
 		this.regionPopulation = regionPopulation;
-		return makeList(regionDataList);
+		return makeListFrom(regionDataList);
 	}
 	
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
 		log.debug("MAKING CURRENT TOTAL POSITIVES VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

@@ -9,7 +9,7 @@ import com.royware.corona.dashboard.interfaces.charts.IChartListFactory;
 @Component
 public class ChartListFactory implements IChartListFactory {		
 	@Override
-	public IChartList createChartList(ChartTypes chartType) {		
+	public IChartList create(ChartTypes chartType) {		
 		switch(chartType) {
 			case CASES_DAILY_AND_TOTAL_VERSUS_TIME: return new DailyAndTotalCasesVersusTimeChartList();
 			case CASES_RATE_OF_CHANGE_VERSUS_TIME: return new DailyRateOfChangeOfCasesWithMovingAverageChartList();

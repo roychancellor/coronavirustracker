@@ -19,7 +19,7 @@ public class DailyAccelerationOfCasesWithMovingAverageChartList implements IChar
 	private static final Logger log = LoggerFactory.getLogger(DailyAccelerationOfCasesWithMovingAverageChartList.class);
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList) {
+	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList) {
 		log.debug("MAKING ACCELERATION OF DAILY CASES VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
