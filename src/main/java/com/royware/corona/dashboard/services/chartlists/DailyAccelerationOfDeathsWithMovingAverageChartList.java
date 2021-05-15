@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlistmakers;
+package com.royware.corona.dashboard.services.chartlists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.interfaces.charts.ChartListMaker;
+import com.royware.corona.dashboard.interfaces.charts.IChartList;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class DailyAccelerationOfDeathsWithMovingAverageListMaker implements ChartListMaker {
-	private static final Logger log = LoggerFactory.getLogger(DailyAccelerationOfDeathsWithMovingAverageListMaker.class);
+public class DailyAccelerationOfDeathsWithMovingAverageChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(DailyAccelerationOfDeathsWithMovingAverageChartList.class);
 
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList) {

@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlistmakers;
+package com.royware.corona.dashboard.services.chartlists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,13 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.interfaces.charts.ChartListMaker;
+import com.royware.corona.dashboard.interfaces.charts.IChartList;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class ChangeInTotalCasesVersusCasesWithExponentialLineListMaker implements ChartListMaker {
-	private static final Logger log = LoggerFactory.getLogger(ChangeInTotalCasesVersusCasesWithExponentialLineListMaker.class);
+public class ChangeInTotalCasesVersusCasesWithExponentialLineChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(ChangeInTotalCasesVersusCasesWithExponentialLineChartList.class);
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 
 	@Override

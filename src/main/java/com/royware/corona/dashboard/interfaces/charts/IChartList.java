@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 
 @Service
-public interface ChartListMaker {
+public interface IChartList {
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList);
 }

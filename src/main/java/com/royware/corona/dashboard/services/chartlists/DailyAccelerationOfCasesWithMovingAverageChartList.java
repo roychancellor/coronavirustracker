@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlistmakers;
+package com.royware.corona.dashboard.services.chartlists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,38 +10,39 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.interfaces.charts.ChartListMaker;
+import com.royware.corona.dashboard.interfaces.charts.IChartList;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.services.charts.ChartListMakerUtilities;
 
 @Component
-public class DailyRateOfChangeOfCasesWithMovingAverageListMaker implements ChartListMaker {
-	private static final Logger log = LoggerFactory.getLogger(DailyRateOfChangeOfCasesWithMovingAverageListMaker.class);
-	private Map<Integer, Double> dailyPctChgCases = new HashMap<>();
+public class DailyAccelerationOfCasesWithMovingAverageChartList implements IChartList {
+	private static final Logger log = LoggerFactory.getLogger(DailyAccelerationOfCasesWithMovingAverageChartList.class);
 
 	@Override
 	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeList(List<T> regionDataList) {
-		log.debug("MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME");
+		log.debug("MAKING ACCELERATION OF DAILY CASES VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;
 		List<Map<Object, Object>> dataList = new ArrayList<>();
 		List<List<Map<Object, Object>>> scatterChartDataLists = new ArrayList<>();
+		Map<Integer, Double> dailyAccelCases = new HashMap<>();
 		
-		int valueToday;
-		int valueYesterday;
-		double percentChange = 0;
-		this.dailyPctChgCases.clear();
-		int startIndexForRateOfChangeOfCases = 1; //day 1 in list
-		for(int dayIndex = startIndexForRateOfChangeOfCases; dayIndex < regionDataList.size(); dayIndex++) {
+		double valueToday;
+		double valueYesterday;
+		double valueDayBeforeYesterday;
+		double accelerationOfCases = 0;
+		int startIndexForAccelerationOfCases = 2;  //day 2 in list
+		for(int dayIndex = startIndexForAccelerationOfCases; dayIndex < regionDataList.size(); dayIndex++) {
+			valueDayBeforeYesterday = regionDataList.get(dayIndex - 2).getTotalPositiveCases();
 			valueYesterday = regionDataList.get(dayIndex - 1).getTotalPositiveCases();
 			valueToday = regionDataList.get(dayIndex).getTotalPositiveCases();
-			percentChange = (valueToday - valueYesterday) * 100.0 / valueYesterday;
+			accelerationOfCases = ((valueToday - valueYesterday) - (valueYesterday - valueDayBeforeYesterday)) * 100.0 / (valueToday - valueYesterday);
 			
-			dailyPctChgCases.put(dayIndex, percentChange);
+			dailyAccelCases.put(dayIndex, accelerationOfCases);
 			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", percentChange);
+			xyPair.put("y", accelerationOfCases);
 			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataList.add(xyPair);
 		}
@@ -50,14 +51,13 @@ public class DailyRateOfChangeOfCasesWithMovingAverageListMaker implements Chart
 		//make the MOVING AVERAGE
 		scatterChartDataLists.add(
 			ChartListMakerUtilities.makeMovingAverageList(
-					dailyPctChgCases,
-					MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
+					dailyAccelCases,
+					MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + 1,
 					regionDataList.size()
 			));
 
-		log.debug("DONE MAKING RATE OF CHANGE OF DAILY CASES VERSUS TIME");
+		log.debug("DONE MAKING ACCELERATION OF DAILY CASES VERSUS TIME");
 
 		return scatterChartDataLists;
 	}
-
 }
