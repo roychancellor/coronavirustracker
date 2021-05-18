@@ -16,7 +16,6 @@ import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.charts.ChartService;
-import com.royware.corona.dashboard.interfaces.charts.IChartListFactory;
 import com.royware.corona.dashboard.interfaces.charts.IChartListStore;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
@@ -59,6 +58,10 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		
 		//TODO: Test this with the factory making the list, then update all the rest below
 		//TODO: Refactor this class in a major way to separate concerns
+		//TODO: Move all chartConfig methods into a simple factory pattern
+		//TODO: Move makeDashboardRowByUsTotals into its own class
+		//TODO: Move makeDashboardStats... methods into separate class(es)
+		//TODO: Move helper methods from this class into chart config factory utility class
 		
 		//List<List<Map<Object, Object>>> chartDataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(dataList);
 		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
@@ -187,6 +190,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 
 	@Override
 	public void makeDashboardRowByUsTotals(int regionPopulation, DashboardStatistics dashStats) {
+		/////// CALLED FROM DashboardConfigServiceImpl ///////
 		log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
 		log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
 		List<UnitedStatesData> usaData = RegionsData.USA.getCoronaVirusDataFromExternalSource(dataFactory.getExternalDataService(RegionsData.USA.name()));
@@ -210,13 +214,13 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	//makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataTotalCurrentCases, chartDataDeathsByTime, chartDataVaccByTime);
+	////// CALLED FROM ABOVE //////
 	@Override
 	public void makeDashboardStatsForRegion(DashboardStatistics dashStats, int regionPopulation,
 			List<List<Map<Object, Object>>> chartDataCasesByTime,
 			List<List<Map<Object, Object>>> chartDataCasesMovingSum,
 			List<List<Map<Object, Object>>> chartDataDeathsByTime,
 			List<List<Map<Object, Object>>> chartDataVaccByTime) {
-		
 		log.info("Making all the GENERAL DASHBOARD STATISTICS FOR REGION");
 		///////// CASES /////////
 		dashStats.setCasesTotal((int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("y"));
@@ -253,6 +257,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	}
 
 	@Override
+	////// CALLED FROM ABOVE //////
 	public <T extends CanonicalCaseDeathData> void makeDashboardStatsForUSRegionsByTesting(List<T> dataList, DashboardStatistics dashStats) {
 		log.debug("Getting the region population from the Regions enum");
 		int usaPop = RegionsData.USA.getRegionData().getPopulation();
