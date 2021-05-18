@@ -55,6 +55,10 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		
 		List<List<Map<Object, Object>>> chartDataCasesByTime = chartListStore
 				.produceChartListFromRegionData(ChartTypes.CASES_DAILY_AND_TOTAL_VERSUS_TIME, dataList, regionPopulation);
+		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartListStore
+				.produceChartListFromRegionData(ChartTypes.CASES_CHANGE_VERSUS_CASES, dataList, regionPopulation);
+		List<List<Map<Object, Object>>> chartDataTotalCurrentCases = chartListStore
+				.produceChartListFromRegionData(ChartTypes.CASES_AS_FRAC_OF_POP_VERSUS_TIME, dataList, regionPopulation);
 		
 		//TODO: Test this with the factory making the list, then update all the rest below
 		//TODO: Refactor this class in a major way to separate concerns
@@ -62,10 +66,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		//TODO: Move makeDashboardRowByUsTotals into its own class
 		//TODO: Move makeDashboardStats... methods into separate class(es)
 		//TODO: Move helper methods from this class into chart config factory utility class
-		
-		//List<List<Map<Object, Object>>> chartDataCasesByTime = chartService.getTotalCasesVersusTimeWithExponentialFit(dataList);
-		List<List<Map<Object, Object>>> chartDataChangeOfCasesByCases = chartService.getChangeInTotalCasesVersusCaseswithExponentialLine(dataList);
-		List<List<Map<Object, Object>>> chartDataTotalCurrentCases = chartService.getCurrentTotalPositivesWithPercentOfPopulation(dataList, regionPopulation);
 		
 		////////// CHART DATA LISTS - DEATHS /////////
 		log.debug("Making all the chart data lists for DEATHS");
