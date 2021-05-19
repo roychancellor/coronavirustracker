@@ -9,5 +9,5 @@ import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
 @Service
 public interface IChartConfigMaker {
-	public DashboardChartConfig makeConfigFrom(List<List<Map<Object, Object>>> chartList, String forRegion);
+	public DashboardChartConfig makeConfigFrom(List<List<Map<Object, Object>>> chartList, String region);
 }
