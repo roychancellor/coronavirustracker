@@ -15,7 +15,6 @@ import com.royware.corona.dashboard.enums.charts.ChartScalingConstants;
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
-import com.royware.corona.dashboard.interfaces.charts.ChartService;
 import com.royware.corona.dashboard.interfaces.charts.IChartListStore;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
@@ -32,9 +31,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	private IChartListStore chartListStore;
 	
 	@Autowired
-	private ChartService chartService;
-	
-	@Autowired
 	private ExternalDataServiceFactory dataFactory;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardChartServiceImpl.class);
@@ -49,6 +45,11 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 			isNotWorld = false;
 		}
 		
+		//TODO: Move all chartConfig methods into a simple factory pattern
+		//TODO: Move makeDashboardRowByUsTotals into its own class
+		//TODO: Move makeDashboardStats... methods into separate class(es)
+		//TODO: Move helper methods from this class into chart config factory utility class
+		
 		log.info("Making all chart data lists");
 		////////// CHART DATA LISTS - CASES //////////
 		log.debug("Making all the chart data lists for CASES");
@@ -60,29 +61,25 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		List<List<Map<Object, Object>>> chartDataTotalCurrentCases = chartListStore
 				.produceChartListFromRegionData(ChartTypes.CASES_AS_FRAC_OF_POP_VERSUS_TIME, dataList, regionPopulation);
 		
-		//TODO: Test this with the factory making the list, then update all the rest below
-		//TODO: Refactor this class in a major way to separate concerns
-		//TODO: Move all chartConfig methods into a simple factory pattern
-		//TODO: Move makeDashboardRowByUsTotals into its own class
-		//TODO: Move makeDashboardStats... methods into separate class(es)
-		//TODO: Move helper methods from this class into chart config factory utility class
-		
 		////////// CHART DATA LISTS - DEATHS /////////
 		log.debug("Making all the chart data lists for DEATHS");
-		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartService.getTotalDeathsVersusTimeWithExponentialFit(dataList);
+		List<List<Map<Object, Object>>> chartDataDeathsByTime = chartListStore
+				.produceChartListFromRegionData(ChartTypes.DEATHS_DAILY_AND_TOTAL_VERSUS_TIME, dataList, regionPopulation);
 
 		////////// CHART DATA LISTS - VACCINATIONS /////////
 		List<List<Map<Object, Object>>> chartDataVaccByTime = null;
 		if(isNotWorld) {
 			log.debug("Making all the chart data lists for VACCINATIONS");
-			chartDataVaccByTime = chartService.getDailyVaccTotalVaccVersusTime(dataList);
+			chartDataVaccByTime = chartListStore
+				.produceChartListFromRegionData(ChartTypes.VACC_DAILY_AND_TOTAL_VERSUS_TIME, dataList, regionPopulation);
 		}
 
 		////////// CHART DATA LISTS - HOSPITALIZATIONS /////////
 		List<List<Map<Object, Object>>> chartDataCurrentHospitalizationsByTime = null;
 		if(isNotWorld) {
 			log.debug("Making all the chart data lists for HOSPITALIZATIONS");
-			chartDataCurrentHospitalizationsByTime = chartService.getDailyHospitalizedNowWithMovingAverage(dataList);
+			chartDataCurrentHospitalizationsByTime = chartListStore
+				.produceChartListFromRegionData(ChartTypes.HOSP_NOW_VERSUS_TIME, dataList, regionPopulation);
 		}
 
 		////////// DASHBOARD TABLE STATISTICS ///////////
