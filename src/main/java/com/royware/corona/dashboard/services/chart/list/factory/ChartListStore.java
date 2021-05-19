@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.chartlistfactory;
+package com.royware.corona.dashboard.services.chart.list.factory;
 
 import java.util.List;
 import java.util.Map;

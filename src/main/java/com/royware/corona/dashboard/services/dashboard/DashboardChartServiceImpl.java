@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartCsvHeaders;
-import com.royware.corona.dashboard.enums.charts.ChartScalingConstants;
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
@@ -24,6 +23,7 @@ import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
+import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigMakerUtilities;
 
 @Component
 public class DashboardChartServiceImpl implements DashboardChartService {
@@ -48,7 +48,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		//TODO: Move all chartConfig methods into a simple factory pattern
 		//TODO: Move makeDashboardRowByUsTotals into its own class
 		//TODO: Move makeDashboardStats... methods into separate class(es)
-		//TODO: Move helper methods from this class into chart config factory utility class
 		
 		log.info("Making all chart data lists");
 		////////// CHART DATA LISTS - CASES //////////
@@ -231,11 +230,11 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashStats.setDeathsToday((int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("y")
 				- (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 2).get("y"));
 		dashStats.setDeathsMovingSumPrimary(
-				(double) computeTotalQuantityLastN(chartDataDeathsByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
+				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataDeathsByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
 				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
 				/ regionPopulation);
 		dashStats.setDeathsMovingSumSecondary(
-				(double) computeTotalQuantityLastN(chartDataDeathsByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
+				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataDeathsByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
 				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
 				/ regionPopulation);
 		
@@ -244,11 +243,11 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashStats.setVaccToday((int) chartDataVaccByTime.get(0).get(chartDataVaccByTime.get(0).size() - 1).get("y")
 				- (int) chartDataVaccByTime.get(0).get(chartDataVaccByTime.get(0).size() - 2).get("y"));
 		dashStats.setVaccMovingSumPrimary(
-				(double) computeTotalQuantityLastN(chartDataVaccByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
+				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataVaccByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
 				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
 				/ regionPopulation);
 		dashStats.setVaccMovingSumSecondary(
-				(double) computeTotalQuantityLastN(chartDataVaccByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
+				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataVaccByTime.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
 				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
 				/ regionPopulation);
 	}
@@ -308,7 +307,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
+		int maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
 		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -347,7 +346,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataRateOfCasesByTime.get(0).get(chartDataRateOfCasesByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfCasesByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataRateOfCasesByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
@@ -386,10 +385,10 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setxAxisMin(0);
 		maxX = (int) chartDataAccelOfCasesByTime.get(0).get(chartDataAccelOfCasesByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		int minY = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
-		int minYMovAvg = getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(1));
+		int minY = ChartConfigMakerUtilities.getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
+		int minYMovAvg = ChartConfigMakerUtilities.getMinValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(1));
 		minY = (minY < minYMovAvg) ? minY : minYMovAvg;
-		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataAccelOfCasesByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
 		minY = minY <= -100 ? -99 : minY;
 		factor = (int) Math.pow(10, (int) Math.log10(minY));
@@ -435,8 +434,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		int maxX = (int) chartDataCasesByTime.get(0).get(chartDataCasesByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		int maxY = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
-		int maxY2 = getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(1));
+		int maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(0));
+		int maxY2 = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataCasesByTime.get(1));
 		maxY = maxY > maxY2 ? maxY : maxY2;
 		int factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
@@ -516,7 +515,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataDeathsByTime.get(0).get(chartDataDeathsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataDeathsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataDeathsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -556,7 +555,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataRateOfDeathsByTime.get(0).get(chartDataRateOfDeathsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataRateOfDeathsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataRateOfDeathsByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
@@ -597,8 +596,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setxAxisMin(0);
 		maxX = (int) chartDataAccelOfDeathsByTime.get(0).get(chartDataAccelOfDeathsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
-		minY = getMinValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
-		maxY = getMaxValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
+		minY = ChartConfigMakerUtilities.getMinValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataAccelOfDeathsByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
 		minY = minY <= -100 ? -99 : minY;
 		factor = (int) Math.pow(10, (int) Math.log10(minY));
@@ -649,7 +648,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		cases = (cases <= 0) ? 1 : cases;
 		exp = (int) Math.log10(cases);
 		chartConfig.setxAxisMax((int) Math.pow(10, 1 + exp));
-		minValue = Double.valueOf(getMinValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(0)));
+		minValue = Double.valueOf(ChartConfigMakerUtilities.getMinValueFromListOfXYMaps(chartDataChangeOfDeathsByDeaths.get(0)));
 		exp = minValue > 0 ? (int) Math.log10(minValue) : 0;
 		chartConfig.setyAxisMin((int) Math.pow(10, exp));
 		double maxValue = (double) chartDataChangeOfDeathsByDeaths.get(1).get(1).get("y");
@@ -688,7 +687,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataRatioOfCasesToTestsByTime.get(0).get(chartDataRatioOfCasesToTestsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataRatioOfCasesToTestsByTime.get(0));
 		maxY = maxY >= 100 ? 99 : maxY;
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
@@ -729,7 +728,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataTestsByTime.get(0).get(chartDataTestsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataTestsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -769,7 +768,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataVaccByTime.get(0).get(chartDataVaccByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataVaccByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataVaccByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -809,7 +808,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataCurrentHospitalizationsByTime.get(0).get(chartDataCurrentHospitalizationsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataCurrentHospitalizationsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataCurrentHospitalizationsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -850,7 +849,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		maxX = (int) chartDataCumulativeHospitalizationsByTime.get(0).get(chartDataCumulativeHospitalizationsByTime.get(0).size() - 1).get("x");
 		chartConfig.setxAxisMax(maxX / 10 * 10 + (int) Math.pow(10, (int)Math.log10(maxX) - 1));
 		chartConfig.setyAxisMin(0);
-		maxY = getMaxValueFromListOfXYMaps(chartDataCumulativeHospitalizationsByTime.get(0));
+		maxY = ChartConfigMakerUtilities.getMaxValueFromListOfXYMaps(chartDataCumulativeHospitalizationsByTime.get(0));
 		factor = (int) Math.pow(10, (int) Math.log10(maxY));
 		if (factor == 0) {
 			factor = 10;
@@ -861,76 +860,5 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		chartConfig.setLegendHorizonalAlign("left");
 		chartConfig.setLegendVerticalAlign("top");
 		return chartConfig;
-	}
-
-	////// HELPER METHODS /////////
-	private int computeTotalQuantityLastN(List<Map<Object, Object>> dataList, int lastN) {
-		if(dataList.size() < lastN + 1) {
-			return 0;
-		}
-		
-		int sum = 0;
-		int qtyToday = 0;
-		int qtyYesterday = 0;
-		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
-			qtyToday = (int)dataList.get(n).get("y");
-			qtyYesterday = (int)dataList.get(n - 1).get("y");
-			sum += qtyToday - qtyYesterday;
-		}
-		return sum;
-	}
-	
-//	private <T extends CanonicalCaseDeathData> int computeTotalPositivesLastN(List<T> dataList, int lastN) {
-//		if(dataList.size() < lastN + 1) {
-//			return 0;
-//		}
-//		
-//		int sum = 0;
-//		int posToday = 0;
-//		int posYesterday = 0;
-//		for(int n = dataList.size() - 1; n > dataList.size() - lastN - 1; n--) {
-//			posToday = dataList.get(n).getTotalPositiveCases();
-//			posYesterday = dataList.get(n - 1).getTotalPositiveCases();
-//			sum += posToday - posYesterday;
-//		}
-//		return sum;
-//	}
-
-	private int getMinValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		int dayThreshold = ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue();
-		if(dataList.size() < dayThreshold) {
-			dayThreshold = dataList.size() / 5;
-		}
-		
-		Double min = Double.valueOf(dataList.get(dayThreshold).get("y").toString());
-
-		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("x").toString()) > dayThreshold && Double.valueOf(xy.get("y").toString()) < min) {
-				min = Double.valueOf(xy.get("y").toString());
-			}
-		}
-		if (min.isNaN() || min.isInfinite()) {
-			min = 0.0;
-		}
-		return min.intValue();
-	}
-
-	private int getMaxValueFromListOfXYMaps(List<Map<Object, Object>> dataList) {
-		int dayThreshold = ChartScalingConstants.DAYS_THRESHOLD_FOR_Y_MAX.getValue();
-		if(dataList.size() < dayThreshold) {
-			dayThreshold = dataList.size() / 5;
-		}
-		
-		Double max = Double.valueOf(dataList.get(dayThreshold).get("y").toString());
-
-		for (Map<Object, Object> xy : dataList) {
-			if (Double.valueOf(xy.get("x").toString()) > dayThreshold && Double.valueOf(xy.get("y").toString()) > max) {
-				max = Double.valueOf(xy.get("y").toString());
-			}
-		}
-		if (max.isNaN() || max.isInfinite()) {
-			max = 99.0;
-		}
-		return max.intValue();
 	}
 }
