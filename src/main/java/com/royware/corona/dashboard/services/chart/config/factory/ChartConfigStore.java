@@ -7,21 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
-import com.royware.corona.dashboard.interfaces.charts.IChartListFactory;
-import com.royware.corona.dashboard.interfaces.charts.IChartListStore;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.charts.IChartConfigFactory;
+import com.royware.corona.dashboard.interfaces.charts.IChartConfigStore;
+import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
 @Component
-public class ChartConfigStore implements IChartListStore {
+public class ChartConfigStore implements IChartConfigStore {
 	@Autowired
-	private IChartListFactory chartListFactory;
+	private IChartConfigFactory chartConfigFactory;
 	
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> produceChartListFromRegionData(
-			ChartTypes chartType,
-			List<T> regionData,
-			int regionPopulation) {
+	public DashboardChartConfig produceChartConfigFromList(
+			ChartTypes type,
+			List<List<Map<Object, Object>>> chartList,
+			String region) {
 		
-		return chartListFactory.create(chartType).makeListFrom(regionData, regionPopulation);
+		return chartConfigFactory.create(type).makeConfigFrom(chartList, region);
 	}	
 }
