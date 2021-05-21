@@ -97,7 +97,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		log.debug("Configuring all the charts for CASES...");
 		DashboardChartConfig chartConfigCasesByTime = chartConfigStore
 				.produceChartConfigFromList(ChartTypes.CASES_DAILY_AND_TOTAL_VERSUS_TIME, chartDataCasesByTime, region);
-		//DashboardChartConfig chartConfigCasesByTime = chartConfigCasesByTime(region, chartDataCasesByTime);
 		DashboardChartConfig chartConfigTotalCurrentCases = chartConfigStore
 				.produceChartConfigFromList(ChartTypes.CASES_AS_FRAC_OF_POP_VERSUS_TIME, chartDataTotalCurrentCases, region);
 		DashboardChartConfig chartConfigRateOfCasesVersusCases = chartConfigStore
@@ -124,7 +123,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 					.produceChartConfigFromList(ChartTypes.HOSP_NOW_VERSUS_TIME, chartDataCurrentHospitalizationsByTime, region);
 		}
 		
-		//////// WRITE TO DASHBOARD CONFIGURATION LIST ////////
+		//////// WRITE TO LIST OF DASHBOARD CONFIGURATION OBJECTS ////////
 		log.debug("Writing all the configurations to the dashboardList...");
 		///// CASES /////
 		dashboardList.add(new DashboardChart.Builder()
@@ -218,7 +217,6 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 		dashStats.setProportionOfRegionVaccToUsVacc(dashStats.getTotalVaccCompleted() * 100.0 / totalUSVacc);
 	}
 
-	//makeDashboardStatsForRegion(dashStats, chartDataCasesByTime, chartDataTotalCurrentCases, chartDataDeathsByTime, chartDataVaccByTime);
 	////// CALLED FROM ABOVE //////
 	@Override
 	public void makeDashboardStatsForRegion(DashboardStatistics dashStats, int regionPopulation,
