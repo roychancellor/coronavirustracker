@@ -18,6 +18,10 @@ public class DashStatsByUSTotalsMaker implements IDashStatsMaker {
 	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
+		if(dashStats == null) {
+			dashStats = new DashboardStatistics();
+		}
+		
 		int totalUSCases = dataList.get(dataList.size() - 1).getTotalPositiveCases();
 		log.debug("Making totalUSCases");
 		dashStats.setTotalUsCases(totalUSCases);

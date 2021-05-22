@@ -16,6 +16,10 @@ public class DashStatsForRegionVaccMaker implements IDashStatsMaker {
 	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
+		if(dashStats == null) {
+			dashStats = new DashboardStatistics();
+		}
+		
 		List<Map<Object, Object>> chartDataList = (List<Map<Object, Object>>) chartData.get(0);
 		dashStats.setTotalVaccCompleted((int) chartData.get(0).get(chartData.get(0).size() - 1).get("y"));
 		dashStats.setVaccToday((int) chartData.get(0).get(chartData.get(0).size() - 1).get("y")

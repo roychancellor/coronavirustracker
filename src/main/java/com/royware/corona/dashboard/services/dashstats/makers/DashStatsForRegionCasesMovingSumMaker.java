@@ -13,6 +13,10 @@ public class DashStatsForRegionCasesMovingSumMaker implements IDashStatsMaker {
 	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
+		if(dashStats == null) {
+			dashStats = new DashboardStatistics();
+		}
+		
 		dashStats.setCasesMovingSumPrimary((double) chartData.get(0).get(chartData.get(0).size() - 1).get("y"));
 		dashStats.setCasesMovingSumSecondary((double) chartData.get(1).get(chartData.get(1).size() - 1).get("y"));
 		

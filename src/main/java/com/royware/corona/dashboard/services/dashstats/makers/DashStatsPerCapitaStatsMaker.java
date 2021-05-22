@@ -14,6 +14,10 @@ public class DashStatsPerCapitaStatsMaker implements IDashStatsMaker {
 	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
+		if(dashStats == null) {
+			dashStats = new DashboardStatistics();
+		}
+		
 		dashStats.setCasesPerCapita(dashStats.getCasesTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPop);
 		dashStats.setCasesPercentOfPop(dashStats.getCasesTotal() * 100.0 / regionPop);
 		dashStats.setDeathsPerCapita(dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPop);

@@ -16,6 +16,10 @@ public class DashStatsForRegionDeathsMovingSumMaker implements IDashStatsMaker {
 	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
+		if(dashStats == null) {
+			dashStats = new DashboardStatistics();
+		}
+		
 		List<Map<Object, Object>> chartDataList = (List<Map<Object, Object>>) chartData.get(0);
 		dashStats.setDeathsMovingSumPrimary(
 				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
