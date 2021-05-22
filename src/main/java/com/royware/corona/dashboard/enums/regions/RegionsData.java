@@ -12,7 +12,7 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.common.RegionData;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 import com.royware.corona.dashboard.model.data.world.WorldData;
-
+//TODO: Refactor this class to a factory pattern instead of an Enum
 @Service
 public enum RegionsData {
 	USA {

@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
+import com.royware.corona.dashboard.enums.dashstats.DashStatsTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsStore;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
@@ -20,26 +22,17 @@ import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
 import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
+import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
 public class DashboardConfigServiceImpl implements DashboardConfigService {
-	@Autowired
-	private ExternalDataServiceFactory dataFactory;
-	
-	@Autowired
-	private DashboardStatistics dashStats;
-	
-	@Autowired
-	private DashboardMeta dashMeta;
-	
-	@Autowired
-	private DashboardHeader dashHeader;
-	
-	@Autowired
-	private DashboardChartService dashboardChartService;
-	
-	@Autowired
-	private IMultiRegionExternalDataService dashboardMultiRegionService;
+	@Autowired private IDashStatsStore dashStatsStore;
+	@Autowired private ExternalDataServiceFactory dataFactory;
+	@Autowired private DashboardMeta dashMeta;
+	@Autowired private DashboardHeader dashHeader;
+	@Autowired private DashboardStatistics dashStats;
+	@Autowired private DashboardChartService dashboardChartService;
+	@Autowired private IMultiRegionExternalDataService dashboardMultiRegionService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardConfigServiceImpl.class);
 	
@@ -58,6 +51,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			return false;
 		}
 		
+		//////// GET ALL DATA FROM EXTERNAL SOURCE(S) ////////
 		//Need to get the data differently for a multi-region selection 
 		//As of 03/07/2021, there is no longer a single source of data available for the U.S., so need to treat it like a multi-region
 		if(isMultiRegion) {
@@ -79,8 +73,9 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			return false;
 		}
 		
+		//////// MAKE ALL DASHBOARD CHART DATA LISTS, CONFIGS, and STATS ////////
 		log.info("About to call makeAllDashboardCharts with region = " + fullRegionString);
-		map.addAttribute("allDashboardCharts", dashboardChartService.makeAllDashboardCharts(dataList, fullRegionString, regionPopulation, dashStats));
+		map.addAttribute("allDashboardCharts", dashboardChartService.makeAllDashboardChartsAndStats(dataList, fullRegionString, regionPopulation, dashStats));
 		log.info("Done calling makeAllDashboardCharts");
 		
 		//This setting determines whether the last row of the statistics table will show
@@ -90,23 +85,26 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			dashMeta.setRegionType("world");
 		} else if((rawRegionString.length() == 2 || isMultiRegion) && populateUSTotals) {
 			dashMeta.setRegionType("state");
-			dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
+			//dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
+			log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
+			log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
+			List<UnitedStatesData> usaData = RegionsData.USA
+				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
+			dashStats = dashStatsStore.produceDashboardStatsForType(DashStatsTypes.DASHSTATS_BY_US_TOTALS, dashStats, usaData, null, regionPopulation);
 		}
+		
+		dashStats = dashStatsStore.produceDashboardStatsForType(
+				DashStatsTypes.DASHSTATS_PER_CAPITA_STATS, dashStats, null, null, regionPopulation);
+		
+		//////// SET ALL DASHBOARD META DATA AND HEADER DATA ////////
 		dashMeta.setPerCapitaBasis(MovingAverageSizes.PER_CAPITA_BASIS.getValue());
-
 		dashHeader.setFullRegion(fullRegionString);
 		if(fullRegionString.length() > MAX_REGION_LENGTH_TO_DISPLAY) {
 			dashHeader.setFullRegion(fullRegionString.substring(0, MAX_REGION_LENGTH_TO_DISPLAY + 1) + "...");
 		}
 		dashHeader.setPopulation(regionPopulation);
-		
-		dashStats.setCasesPerCapita(dashStats.getCasesTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
-		dashStats.setCasesPercentOfPop(dashStats.getCasesTotal() * 100.0 / regionPopulation);
-		dashStats.setDeathsPerCapita(dashStats.getDeathsTotal() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
-		dashStats.setDeathsPercentOfPop(dashStats.getDeathsTotal() * 100.0 / regionPopulation);
-		dashStats.setVaccPerCapita(dashStats.getTotalVaccCompleted() * 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue() / regionPopulation);
-		dashStats.setVaccPercentOfPop(dashStats.getTotalVaccCompleted() * 100.0 / regionPopulation);
-		
+
+		//////// WRITE META DATA, HEADER DATA, AND STATS TO ModelMap ////////
 		map.addAttribute("dashmeta", dashMeta);
 		map.addAttribute("dashheader", dashHeader);
 		map.addAttribute("dashstats", dashStats);
