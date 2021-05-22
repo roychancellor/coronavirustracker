@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.dashstats.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.interfaces.charts.IDashStatsMaker;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 

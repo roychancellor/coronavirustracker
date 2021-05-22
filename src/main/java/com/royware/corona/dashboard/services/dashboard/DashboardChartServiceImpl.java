@@ -48,8 +48,8 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 			isNotWorld = false;
 		}
 		
-		//TODO: Move makeDashboardRowByUsTotals into its own class
-		//TODO: Move makeDashboardStats... methods into separate class(es)
+		//TODO: Make the dashstats factory classes (factory and store)
+		//TODO: Wire in the factory method calls in the different places
 		
 		log.info("Making all chart data lists");
 		////////// CHART DATA LISTS - CASES //////////

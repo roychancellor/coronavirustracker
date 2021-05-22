@@ -15,11 +15,11 @@ import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigMakerUtilities;
 
-public class DashboardStatisticsBuilder {
+public class DashboardStatisticsBuilder_DELETE_ME {
 	@Autowired
 	private ExternalDataServiceFactory dataFactory;
 	
-	private static final Logger log = LoggerFactory.getLogger(DashboardStatisticsBuilder.class);
+	private static final Logger log = LoggerFactory.getLogger(DashboardStatisticsBuilder_DELETE_ME.class);
 	
 	public DashboardStatistics makeDashboardStatsForRegion(DashboardStatistics dashStats, int regionPopulation,
 			List<List<Map<Object, Object>>> chartDataCasesByTime,

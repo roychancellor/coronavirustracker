@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsData;
-import com.royware.corona.dashboard.interfaces.charts.IDashStatsMaker;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigMakerUtilities;
