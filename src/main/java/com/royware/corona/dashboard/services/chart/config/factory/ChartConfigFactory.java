@@ -3,6 +3,8 @@ package com.royware.corona.dashboard.services.chart.config.factory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
+import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigFactory;
+import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigAccelerationOfCases;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigAccelerationOfDeaths;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigCasesByTime;
@@ -17,8 +19,6 @@ import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigRati
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigTestsByTime;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigTotalCurrentCases;
 import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigVaccByTime;
-import com.royware.corona.dashboard.interfaces.charts.IChartConfigFactory;
-import com.royware.corona.dashboard.interfaces.charts.IChartConfigMaker;
 
 @Component
 public class ChartConfigFactory implements IChartConfigFactory {		

@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.interfaces.charts;
+package com.royware.corona.dashboard.interfaces.chartlist;
 
 import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.enums.charts.ChartTypes;

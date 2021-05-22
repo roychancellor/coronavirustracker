@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.chart.config.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.interfaces.charts.IChartConfigMaker;
+import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
 public class ChartConfigRateOfCasesVersusCases implements IChartConfigMaker {

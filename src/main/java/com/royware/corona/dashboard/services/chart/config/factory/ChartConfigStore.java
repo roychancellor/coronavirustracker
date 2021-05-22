@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
-import com.royware.corona.dashboard.interfaces.charts.IChartConfigFactory;
-import com.royware.corona.dashboard.interfaces.charts.IChartConfigStore;
+import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigFactory;
+import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigStore;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
 @Component

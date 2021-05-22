@@ -3,7 +3,8 @@ package com.royware.corona.dashboard.services.chart.list.factory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
-import com.royware.corona.dashboard.interfaces.charts.IChartListMaker;
+import com.royware.corona.dashboard.interfaces.chartlist.IChartListFactory;
+import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
 import com.royware.corona.dashboard.services.chart.list.makers.ChangeInTotalCasesVersusCasesWithExponentialLineChartList;
 import com.royware.corona.dashboard.services.chart.list.makers.ChangeInTotalDeathsVersusDeathsWithExponentialLineChartList;
 import com.royware.corona.dashboard.services.chart.list.makers.CurrentTotalDeathsWithPercentOfPopulationChartList;
@@ -18,7 +19,6 @@ import com.royware.corona.dashboard.services.chart.list.makers.DailyRateOfChange
 import com.royware.corona.dashboard.services.chart.list.makers.DailyTestsTotalTestsVersusTimeChartList;
 import com.royware.corona.dashboard.services.chart.list.makers.DailyVaccTotalVaccVersusTimeChartList;
 import com.royware.corona.dashboard.services.chart.list.makers.TotalDeathsVersusTimeWithExponentialFitChartList;
-import com.royware.corona.dashboard.interfaces.charts.IChartListFactory;
 
 @Component
 public class ChartListFactory implements IChartListFactory {		

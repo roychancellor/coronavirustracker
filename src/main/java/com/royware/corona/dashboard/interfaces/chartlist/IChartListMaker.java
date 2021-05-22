@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.interfaces.charts;
+package com.royware.corona.dashboard.interfaces.chartlist;
 
 import java.util.List;
 import java.util.Map;
