@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.ICacheActions;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 import com.royware.corona.dashboard.services.data.world.ExternalDataServiceWorldImpl;
 
@@ -24,7 +24,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	
 	@Autowired
 	@Qualifier(value = "us")
-	private ExternalDataService usaDataService;
+	private IExternalDataConnectionService usaDataService;
 		
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period.usa}", fixedDelayString = "${spring.cache.refresh.period.usa}")
@@ -56,7 +56,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	}	
 
 	@Override
-	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
+	public <T extends ICanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
 		log.debug("In the populateCacheFromExistingData method: " + LocalDateTime.now());
 		putDataIntoCache(cacheKey, newCacheData);
 	}
@@ -72,7 +72,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 		return usaDataService.makeDataListFromExternalSource(CACHE_KEY);
 	}
 
-	private <T extends CanonicalCaseDeathData> void putDataIntoCache(String cacheKey, List<T> newCacheData) {
+	private <T extends ICanonicalCaseDeathData> void putDataIntoCache(String cacheKey, List<T> newCacheData) {
 		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
 	}
 }

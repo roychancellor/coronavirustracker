@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.DataFields;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
@@ -101,7 +101,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 	}
 
 	@Override
-	public Map<String, List<UnitedStatesData>> makeMapOfStateDataLists(ExternalDataService dataService, String[] states) {
+	public Map<String, List<UnitedStatesData>> makeMapOfStateDataLists(IExternalDataConnectionService dataService, String[] states) {
 		Map<String, List<UnitedStatesData>> stateDataLists = new HashMap<>();
 		
 		//Make a map where the key is the state and the value is the list of data for the state

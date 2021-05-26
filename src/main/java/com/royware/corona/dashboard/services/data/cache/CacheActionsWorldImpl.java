@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
 import com.royware.corona.dashboard.interfaces.data.ICacheActions;
-import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.data.IWorldDataServiceCaller;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.world.WorldData;
 import com.royware.corona.dashboard.services.data.world.ExternalDataServiceWorldImpl;
 
@@ -22,7 +22,7 @@ public class CacheActionsWorldImpl implements ICacheActions {
 	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_WORLD.getName();
 	
 	@Autowired
-	private WorldDataServiceCaller worldDataServiceCaller;
+	private IWorldDataServiceCaller worldDataServiceCaller;
 	
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period.world}", fixedDelayString = "${spring.cache.refresh.period.world}")
@@ -55,7 +55,7 @@ public class CacheActionsWorldImpl implements ICacheActions {
 	}	
 
 	@Override
-	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
+	public <T extends ICanonicalCaseDeathData> void populateCacheFromDataList(String cacheKey, List<T> newCacheData) {
 		log.debug("In the populateCacheFromExistingData method: " + LocalDateTime.now());
 		CacheManagerProvider.getManager().put(cacheKey, newCacheData);
 	}

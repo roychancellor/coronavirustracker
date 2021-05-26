@@ -9,15 +9,15 @@ import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
 @Component("us")
-public class ExternalDataServiceUSAImpl implements ExternalDataService {
+public class ExternalDataServiceUSAImpl implements IExternalDataConnectionService {
 	
 	private ConcurrentMapCache cacheManager;
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAImpl.class);
@@ -26,7 +26,7 @@ public class ExternalDataServiceUSAImpl implements ExternalDataService {
 	private IMultiRegionExternalDataService multiRegionDataService;
 	
 	@Autowired
-	private ExternalDataServiceFactory dataService;
+	private IExternalDataServiceFactory dataService;
 
 	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public class ExternalDataServiceUSAImpl implements ExternalDataService {
 		if(usaData == null || usaData.isEmpty()) {
 			log.info("US Data not in cache. Getting the USA data from its source (via multi-region).");
 			usaData = multiRegionDataService.getMultiRegionDataFromExternalSource(
-					DashboardConfigService.ALL_STATES_AS_CSV,
+					IDashboardConfigService.ALL_STATES_AS_CSV,
 					dataService.getExternalDataService("MULTI")
 			);
 		} else {

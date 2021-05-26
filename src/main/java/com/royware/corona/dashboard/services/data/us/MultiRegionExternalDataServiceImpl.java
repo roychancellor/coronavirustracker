@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.regions.UsGeoRegions;
-import com.royware.corona.dashboard.enums.regions.RegionsData;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
@@ -69,7 +69,7 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		//Split the full region name into individual states, then iterate through the states and sum their populations
 		int sumPop = 0;
 		for(String state : arrayOfStates) {
-			sumPop += RegionsData.valueOf(state).getRegionData().getPopulation();
+			sumPop += RegionsInDashboard.valueOf(state).getPopulation();
 		}
 		return sumPop;
 	}
@@ -83,7 +83,7 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 	}
 	
 	@Override
-	public List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService) {
+	public List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, IExternalDataConnectionService dataService) {
 		List<UnitedStatesData> multiRegionDataList = new ArrayList<>();
 		Map<String, List<UnitedStatesData>> mapOfStateDataLists = new HashMap<String, List<UnitedStatesData>>();
 		

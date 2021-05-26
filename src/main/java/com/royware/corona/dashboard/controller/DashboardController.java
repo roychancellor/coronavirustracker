@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
-import com.royware.corona.dashboard.enums.regions.RegionsData;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.enums.regions.RegionsData_OLD_DEL_ME;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
 import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.services.dashboard.DownloadChartData;
 
@@ -30,7 +31,7 @@ import com.royware.corona.dashboard.services.dashboard.DownloadChartData;
 @Controller
 public class DashboardController {
 	@Autowired
-	private DashboardConfigService dashboardConfigService;
+	private IDashboardConfigService dashboardConfigService;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
 	private List<DashboardChart> dashboardCharts;
@@ -44,7 +45,7 @@ public class DashboardController {
 	public String showHomePage(@ModelAttribute("region") String region, ModelMap map) {
 		map.addAttribute("region", region);
 
-		for(RegionsData regionEnum : RegionsData.values()) {
+		for(RegionsInDashboard regionEnum : RegionsInDashboard.values()) {
 			map.addAttribute(regionEnum.name(), regionEnum.name());
 		}
 

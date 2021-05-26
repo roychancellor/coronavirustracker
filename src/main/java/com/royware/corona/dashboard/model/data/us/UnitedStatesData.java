@@ -2,11 +2,11 @@ package com.royware.corona.dashboard.model.data.us;
 
 import java.time.LocalDate;
 
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
-import com.royware.corona.dashboard.interfaces.model.CanonicalHospitalData;
-import com.royware.corona.dashboard.interfaces.model.CanonicalVaccinationData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalHospitalData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalVaccinationData;
 
-public class UnitedStatesData implements CanonicalCaseDeathData, CanonicalHospitalData, CanonicalVaccinationData {
+public class UnitedStatesData implements ICanonicalCaseDeathData, ICanonicalHospitalData, ICanonicalVaccinationData {
 	private int dateInteger;
 	private String dateTimeString;
 	private int totalPositiveCases;

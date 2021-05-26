@@ -6,43 +6,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.enums.regions.RegionsData;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataServiceFactory;
 
 @Service
-public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactory {
+public class ExternalDataServiceFactoryImpl implements IExternalDataServiceFactory {
 	@Autowired
 	@Qualifier(value = "us")
-	private ExternalDataService usDataService;
+	private IExternalDataConnectionService usDataService;
 	
 	@Autowired
 	@Qualifier(value = "singleState")
-	private ExternalDataService singleStateDataService;
+	private IExternalDataConnectionService singleStateDataService;
 	
 	@Autowired
 	@Qualifier(value = "multiState")
-	private ExternalDataService multiStateDataService;
+	private IExternalDataConnectionService multiStateDataService;
 	
 	@Autowired
 	@Qualifier(value = "usExcludingState")
-	private ExternalDataService usExcludingStateDataService;
+	private IExternalDataConnectionService usExcludingStateDataService;
 	
 	@Autowired
 	@Qualifier(value = "singleCountry")
-	private ExternalDataService singleCountryDataService;
+	private IExternalDataConnectionService singleCountryDataService;
 	
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceFactoryImpl.class);
 	
 	@Override
-	public ExternalDataService getExternalDataService(String regionOfService) {
-		ExternalDataService dataService;
+	public IExternalDataConnectionService getExternalDataService(String regionOfService) {
+		IExternalDataConnectionService dataService;
 		
 		log.debug("getExternalDataService trying to make dataService for " + regionOfService);
-		if(regionOfService.equalsIgnoreCase(RegionsData.USA.name())) {
-			log.debug("Making dataService for " + RegionsData.USA.name());
+		if(regionOfService.equalsIgnoreCase(RegionsInDashboard.USA.name())) {
+			log.debug("Making dataService for " + RegionsInDashboard.USA.name());
 			dataService = usDataService;
-		} else if(regionOfService.equalsIgnoreCase(RegionsData.USA_NO_NY.name())) {
+		} else if(regionOfService.equalsIgnoreCase(RegionsInDashboard.USA_NO_NY.name())) {
 			dataService = usExcludingStateDataService;
 		} else if(regionOfService.length() == 2) {
 			dataService = singleStateDataService;
@@ -57,5 +57,4 @@ public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactor
 		
 		return dataService;
 	}
-
 }

@@ -14,16 +14,16 @@ import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.enums.dashstats.DashStatsTypes;
 import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigStore;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListStore;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsStore;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardChart;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 @Component
-public class DashboardChartServiceImpl implements DashboardChartService {
+public class DashboardChartServiceImpl implements IDashboardChartService {
 	@Autowired private IChartListStore chartListStore;
 	@Autowired private IChartConfigStore chartConfigStore;
 	@Autowired private IDashStatsStore dashStatsStore;
@@ -31,7 +31,7 @@ public class DashboardChartServiceImpl implements DashboardChartService {
 	private static final Logger log = LoggerFactory.getLogger(DashboardChartServiceImpl.class);
 	
 	@Override
-	public <T extends CanonicalCaseDeathData> List<DashboardChart> makeAllDashboardChartsAndStats(
+	public <T extends ICanonicalCaseDeathData> List<DashboardChart> makeAllDashboardChartsAndStats(
 			List<T> dataList, String region, Integer regionPopulation, DashboardStatistics dashStats) {
 		
 		List<DashboardChart> dashboardList = new ArrayList<>();

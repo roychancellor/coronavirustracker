@@ -6,16 +6,16 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.royware.corona.dashboard.enums.regions.RegionsData;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 public class DashStatsByUSTotalsMaker implements IDashStatsMaker {
 	private static final Logger log = LoggerFactory.getLogger(DashStatsByUSTotalsMaker.class);
 	
 	@Override
-	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
+	public <T extends ICanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
 		if(dashStats == null) {
@@ -33,7 +33,7 @@ public class DashStatsByUSTotalsMaker implements IDashStatsMaker {
 		log.debug("Making proportionOfRegionDeathsToUsCases");
 		dashStats.setProportionOfRegionDeathsToUsDeaths(dashStats.getDeathsTotal() * 100.0 / totalUSDeaths);
 		log.debug("Making proportionOfRegionPopToUsPop");
-		dashStats.setProportionOfRegionPopToUsPop(regionPop * 100.0 / RegionsData.USA.getRegionData().getPopulation());
+		dashStats.setProportionOfRegionPopToUsPop(regionPop * 100.0 / RegionsInDashboard.USA.getPopulation());
 		int totalUSVacc = dataList.get(dataList.size() - 1).getTotalVaccCompleted();
 		log.debug("Making totalUSVacc");
 		dashStats.setTotalUsVacc(totalUSVacc);
@@ -42,5 +42,4 @@ public class DashStatsByUSTotalsMaker implements IDashStatsMaker {
 		
 		return dashStats;
 	}
-
 }

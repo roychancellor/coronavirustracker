@@ -22,7 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.services.data.world.ExternalDataServiceWorldImpl;
 
 @Configuration
@@ -34,7 +34,7 @@ public class ApplicationConfig {
 	@Bean("worldDataService")
 	@Qualifier("world")
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public ExternalDataService worldDataService() {
+	public IExternalDataConnectionService worldDataService() {
 		return new ExternalDataServiceWorldImpl();
 	}
 	

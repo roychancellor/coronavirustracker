@@ -11,41 +11,45 @@ import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.enums.dashstats.DashStatsTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.enums.regions.RegionsData;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardChartService;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsStore;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.data.external.IExternalDataGetterStore;
+import com.royware.corona.dashboard.interfaces.data.external.IRegionDemographicDataGetterStore;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
 import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
-public class DashboardConfigServiceImpl implements DashboardConfigService {
+public class DashboardConfigServiceImpl implements IDashboardConfigService {
 	@Autowired private IDashStatsStore dashStatsStore;
-	@Autowired private ExternalDataServiceFactory dataFactory;
+	@Autowired private IExternalDataServiceFactory dataFactory;
 	@Autowired private DashboardMeta dashMeta;
 	@Autowired private DashboardHeader dashHeader;
 	@Autowired private DashboardStatistics dashStats;
-	@Autowired private DashboardChartService dashboardChartService;
+	@Autowired private IDashboardChartService dashboardChartService;
 	@Autowired private IMultiRegionExternalDataService dashboardMultiRegionService;
+	@Autowired private IRegionDemographicDataGetterStore regionDemoDataStore;
+	@Autowired private IExternalDataGetterStore externalDataGetterStore;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardConfigServiceImpl.class);
 	
 	@Override
 	public boolean populateDashboardModelMap(String rawRegionString, ModelMap map) {
-		List<? extends CanonicalCaseDeathData> dataList = new ArrayList<>();
+		List<? extends ICanonicalCaseDeathData> dataList = new ArrayList<>();
 		String fullRegionString;
 		int regionPopulation;
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;
 		final int MAX_REGION_LENGTH_TO_DISPLAY = 28;
 		
 		//Check for null data service or an empty multi-region
-		ExternalDataService dataService = getExternalDataServiceFromFactory(rawRegionString);
+		IExternalDataConnectionService dataService = getExternalDataServiceFromFactory(rawRegionString);
 		if(dataService == null || (isMultiRegion && rawRegionString.substring(6).length() < 2)) {
 			log.error("In populateDashboardModelMap: Unable to getExternalDataServiceFromFactory");
 			return false;
@@ -60,9 +64,14 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			regionPopulation = dashboardMultiRegionService.getMultiRegionPopulation(regionsOnlyCsvString);
 			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(regionsOnlyCsvString, dataService);
 		} else {
-			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
-			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
-			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
+			RegionsInDashboard region = RegionsInDashboard.valueOfEnum(rawRegionString);
+			fullRegionString = regionDemoDataStore.getRegionFullNameFor(region);
+			regionPopulation = regionDemoDataStore.getRegionPopulationFor(region);
+			dataList = externalDataGetterStore.getDataFor(region, dataService);
+			
+//			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
+//			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
+//			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
 		}
 		log.debug("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
 		log.info("Finished making the data list...");
@@ -88,8 +97,13 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			//dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
 			log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
 			log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
-			List<UnitedStatesData> usaData = RegionsData.USA
-				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
+			
+			List<UnitedStatesData> usaData = externalDataGetterStore.getDataFor(RegionsInDashboard.USA,
+					getExternalDataServiceFromFactory(RegionsInDashboard.USA.name()));
+
+//			List<UnitedStatesData> usaData = RegionsData.USA
+//				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
+			
 			dashStats = dashStatsStore.produceDashboardStatsForType(DashStatsTypes.DASHSTATS_BY_US_TOTALS, dashStats, usaData, null, regionPopulation);
 		}
 		
@@ -112,9 +126,9 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 		return true;
 	}
 
-	private ExternalDataService getExternalDataServiceFromFactory(String region) {
+	private IExternalDataConnectionService getExternalDataServiceFromFactory(String region) {
 		try {
-			ExternalDataService dataService = dataFactory.getExternalDataService(region);
+			IExternalDataConnectionService dataService = dataFactory.getExternalDataService(region);
 			log.debug("Success, got the dataService: " + dataService.toString());
 			return dataService;
 		} catch (IllegalArgumentException e) {

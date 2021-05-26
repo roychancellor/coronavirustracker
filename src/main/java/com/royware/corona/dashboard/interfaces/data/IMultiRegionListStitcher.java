@@ -12,6 +12,6 @@ public interface IMultiRegionListStitcher {
 
 	List<UnitedStatesData> stitchMultiStateListsIntoOneList(Map<String, List<UnitedStatesData>> mapOfStateDataLists, String[] states);
 
-	Map<String, List<UnitedStatesData>> makeMapOfStateDataLists(ExternalDataService dataService, String[] states);
+	Map<String, List<UnitedStatesData>> makeMapOfStateDataLists(IExternalDataConnectionService dataService, String[] states);
 
 }

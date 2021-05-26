@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
 @Component("multiState")
-public class ExternalDataServiceMultiStateImpl implements ExternalDataService {
+public class ExternalDataServiceMultiStateImpl implements IExternalDataConnectionService {
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceMultiStateImpl.class);
 	
 	@Autowired
 	@Qualifier(value = "singleState")
-	private ExternalDataService singleStateDataService;
+	private IExternalDataConnectionService singleStateDataService;
 	
 	@SuppressWarnings("unchecked")
 	@Override

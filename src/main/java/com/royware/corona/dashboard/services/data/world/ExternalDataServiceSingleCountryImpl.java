@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.model.data.world.WorldData;
 
 /**
@@ -21,10 +21,10 @@ import com.royware.corona.dashboard.model.data.world.WorldData;
  */
 
 @Component("singleCountry")
-public class ExternalDataServiceSingleCountryImpl implements ExternalDataService {
+public class ExternalDataServiceSingleCountryImpl implements IExternalDataConnectionService {
 	@Autowired
 	@Qualifier(value = "world")
-	private ExternalDataService worldDataService;
+	private IExternalDataConnectionService worldDataService;
 	
 	private static final int MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION = 10;
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;

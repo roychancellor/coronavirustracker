@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.royware.corona.dashboard.enums.charts.ChartTypes;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListFactory;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListStore;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @Component
 public class ChartListStore implements IChartListStore {
@@ -17,7 +17,7 @@ public class ChartListStore implements IChartListStore {
 	private IChartListFactory chartListFactory;
 	
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> produceChartListFromRegionData(
+	public <T extends ICanonicalCaseDeathData> List<List<Map<Object, Object>>> produceChartListFromRegionData(
 			ChartTypes chartType,
 			List<T> regionData,
 			int regionPopulation) {

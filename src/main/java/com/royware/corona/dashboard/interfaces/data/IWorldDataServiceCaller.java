@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 import com.royware.corona.dashboard.model.data.world.WorldData;
 
 @Service
-public interface WorldDataServiceCaller {
+public interface IWorldDataServiceCaller {
 	public List<WorldData> getDataFromWorldSource();
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @Service
 public interface ICacheActions {
@@ -12,6 +12,6 @@ public interface ICacheActions {
 	
 	public void cacheEvictAndRepopulate();
 	public void evictCache();
-	public <T extends CanonicalCaseDeathData> void populateCacheFromDataList(String cacheName, List<T> newCacheData);
+	public <T extends ICanonicalCaseDeathData> void populateCacheFromDataList(String cacheName, List<T> newCacheData);
 	public void populateCacheFromSource(String cacheName);
 }
