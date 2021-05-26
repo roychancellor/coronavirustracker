@@ -11,12 +11,12 @@ import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 @Service
 public interface IDashStatsStore {
-	public <T extends ICanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics
+	public <T extends ICanonicalCaseDeathData> DashboardStatistics
 	produceDashboardStatsForType(
 		DashStatsTypes statsType,
 		DashboardStatistics dashStats,
 		List<T> dataList,
-		List<C> chartData,
+		List<List<Map<Object, Object>>> chartData,
 		int regionPop
 	);
 }

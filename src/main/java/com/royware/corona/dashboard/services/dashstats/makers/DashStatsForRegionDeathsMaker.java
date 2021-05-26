@@ -10,8 +10,8 @@ import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 public class DashStatsForRegionDeathsMaker implements IDashStatsMaker {
 
 	@Override
-	public <T extends ICanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
-			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
+	public <T extends ICanonicalCaseDeathData> DashboardStatistics makeStats(
+			DashboardStatistics dashStats, List<T> dataList, List<List<Map<Object, Object>>> chartData, int regionPop) {
 		
 		if(dashStats == null) {
 			dashStats = new DashboardStatistics();

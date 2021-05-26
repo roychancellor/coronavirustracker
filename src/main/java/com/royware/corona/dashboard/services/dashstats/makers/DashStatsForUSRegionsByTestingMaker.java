@@ -16,10 +16,9 @@ import com.royware.corona.dashboard.services.chart.config.makers.ChartConfigMake
 public class DashStatsForUSRegionsByTestingMaker implements IDashStatsMaker {
 	private static final Logger log = LoggerFactory.getLogger(DashStatsForUSRegionsByTestingMaker.class);
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends ICanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
-			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
+	public <T extends ICanonicalCaseDeathData> DashboardStatistics makeStats(
+			DashboardStatistics dashStats, List<T> dataList, List<List<Map<Object, Object>>> chartData, int regionPop) {
 		
 		if(dashStats == null) {
 			dashStats = new DashboardStatistics();
@@ -33,10 +32,10 @@ public class DashStatsForUSRegionsByTestingMaker implements IDashStatsMaker {
 		log.debug("Making ProportionOfPositiveTests and ProportionOfPositiveTestsMovingAverage");
 		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				* 100.0 / dashStats.getTotalTestsConducted());
-		int totalTestsLastN = ChartConfigMakerUtilities.computeTotalQuantityLastN((List<Map<Object, Object>>) chartData, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue());
+		int totalTestsLastN = ChartConfigMakerUtilities.computeTotalQuantityLastN(chartData.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue());
 		dashStats.setTotalTestsConductedLastN(totalTestsLastN);
 		dashStats.setProportionOfPositiveTestsMovingAverage(
-				ChartConfigMakerUtilities.computeTotalQuantityLastN((List<Map<Object, Object>>) chartData, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())* 100.0 / totalTestsLastN);
+				ChartConfigMakerUtilities.computeTotalQuantityLastN(chartData.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())* 100.0 / totalTestsLastN);
 		log.debug("Making ProportionOfPopulationTested");
 		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
 				* 100.0 / usaPop);

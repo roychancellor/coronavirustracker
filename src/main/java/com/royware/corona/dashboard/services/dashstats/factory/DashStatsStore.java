@@ -18,12 +18,12 @@ public class DashStatsStore implements IDashStatsStore {
 	private IDashStatsFactory dashStatsFactory;
 	
 	@Override
-	public <T extends ICanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics
+	public <T extends ICanonicalCaseDeathData> DashboardStatistics
 		produceDashboardStatsForType(
 			DashStatsTypes statsType,
 			DashboardStatistics dashStats,
 			List<T> dataList,
-			List<C> chartData,
+			List<List<Map<Object, Object>>> chartData,
 			int regionPop) {
 		
 		return dashStatsFactory.create(statsType).makeStats(dashStats, dataList, chartData, regionPop);
