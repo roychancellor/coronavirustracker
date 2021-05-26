@@ -100,4 +100,13 @@ public enum RegionsInDashboard {
 		}
 		return null;
 	}
+	
+	public static RegionsInDashboard valueOfEnum(String enumAsString) {
+		for(RegionsInDashboard e : values()) {
+			if(enumAsString.equalsIgnoreCase(e.name())) {
+				return e;
+			}
+		}
+		return null;
+	}
 }

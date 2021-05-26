@@ -64,7 +64,7 @@ public class DashboardConfigServiceImpl implements IDashboardConfigService {
 			regionPopulation = dashboardMultiRegionService.getMultiRegionPopulation(regionsOnlyCsvString);
 			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(regionsOnlyCsvString, dataService);
 		} else {
-			RegionsInDashboard region = RegionsInDashboard.valueOfLabel(rawRegionString);
+			RegionsInDashboard region = RegionsInDashboard.valueOfEnum(rawRegionString);
 			fullRegionString = regionDemoDataStore.getRegionFullNameFor(region);
 			regionPopulation = regionDemoDataStore.getRegionPopulationFor(region);
 			dataList = externalDataGetterStore.getDataFor(region, dataService);
@@ -98,7 +98,8 @@ public class DashboardConfigServiceImpl implements IDashboardConfigService {
 			log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
 			log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
 			
-			List<UnitedStatesData> usaData = externalDataGetterStore.getDataFor(RegionsInDashboard.USA, dataService);
+			List<UnitedStatesData> usaData = externalDataGetterStore.getDataFor(RegionsInDashboard.USA,
+					getExternalDataServiceFromFactory(RegionsInDashboard.USA.name()));
 
 //			List<UnitedStatesData> usaData = RegionsData.USA
 //				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
