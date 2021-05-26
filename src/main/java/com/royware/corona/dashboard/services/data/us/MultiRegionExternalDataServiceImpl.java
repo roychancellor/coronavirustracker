@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.regions.UsGeoRegions;
-import com.royware.corona.dashboard.enums.regions.RegionsData;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
@@ -69,7 +69,7 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		//Split the full region name into individual states, then iterate through the states and sum their populations
 		int sumPop = 0;
 		for(String state : arrayOfStates) {
-			sumPop += RegionsData.valueOf(state).getRegionData().getPopulation();
+			sumPop += RegionsInDashboard.valueOf(state).getPopulation();
 		}
 		return sumPop;
 	}

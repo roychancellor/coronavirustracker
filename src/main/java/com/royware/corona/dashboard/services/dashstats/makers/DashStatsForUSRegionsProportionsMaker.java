@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.royware.corona.dashboard.enums.regions.RegionsData;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
@@ -23,7 +23,7 @@ public class DashStatsForUSRegionsProportionsMaker implements IDashStatsMaker {
 		}
 		
 		log.debug("Getting the region population from the Regions enum");
-		int usaPop = RegionsData.USA.getRegionData().getPopulation();
+		int usaPop = RegionsInDashboard.USA.getPopulation();
 		log.debug("Making ProportionOfDeathsFromPositives");
 		dashStats.setProportionOfDeathsFromPositives(dataList.get(dataList.size() - 1).getTotalDeaths()
 				* 100.0 / dataList.get(dataList.size() - 1).getTotalPositiveCases());

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.enums.regions.RegionsData;
+import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
@@ -26,7 +26,7 @@ public class DashStatsForUSRegionsByTestingMaker implements IDashStatsMaker {
 		}
 		
 		log.debug("Getting the region population from the Regions enum");
-		int usaPop = RegionsData.USA.getRegionData().getPopulation();
+		int usaPop = RegionsInDashboard.USA.getPopulation();
 		log.debug("Making total tests conducted");
 		dashStats.setTotalTestsConducted(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				+ dataList.get(dataList.size() - 1).getTotalNegativeCases());

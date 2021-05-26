@@ -11,7 +11,6 @@ import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.enums.dashstats.DashStatsTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.enums.regions.RegionsData;
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
@@ -20,7 +19,6 @@ import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionServi
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.external.IExternalDataGetterStore;
-import com.royware.corona.dashboard.interfaces.data.external.IRegionDemographicDataGetterFactory;
 import com.royware.corona.dashboard.interfaces.data.external.IRegionDemographicDataGetterStore;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
@@ -99,8 +97,12 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 			//dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
 			log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
 			log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
-			List<UnitedStatesData> usaData = RegionsData.USA
-				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
+			
+			List<UnitedStatesData> usaData = externalDataGetterStore.getDataFor(RegionsInDashboard.USA, dataService);
+
+//			List<UnitedStatesData> usaData = RegionsData.USA
+//				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
+			
 			dashStats = dashStatsStore.produceDashboardStatsForType(DashStatsTypes.DASHSTATS_BY_US_TOTALS, dashStats, usaData, null, regionPopulation);
 		}
 		
