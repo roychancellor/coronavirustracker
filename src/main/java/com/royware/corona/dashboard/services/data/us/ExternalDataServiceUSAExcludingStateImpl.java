@@ -9,21 +9,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
 @Component("usExcludingState")
-public class ExternalDataServiceUSAExcludingStateImpl implements ExternalDataService {
+public class ExternalDataServiceUSAExcludingStateImpl implements IExternalDataConnectionService {
 	@Autowired
 	@Qualifier(value = "us")
-	private ExternalDataService usDataService;
+	private IExternalDataConnectionService usDataService;
 	
 	@Autowired
 	@Qualifier(value = "singleState")
-	private ExternalDataService stateDataService;
+	private IExternalDataConnectionService stateDataService;
 	
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAExcludingStateImpl.class);
 	

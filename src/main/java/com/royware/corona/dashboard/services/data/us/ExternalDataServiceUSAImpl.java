@@ -10,14 +10,14 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
 @Component("us")
-public class ExternalDataServiceUSAImpl implements ExternalDataService {
+public class ExternalDataServiceUSAImpl implements IExternalDataConnectionService {
 	
 	private ConcurrentMapCache cacheManager;
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAImpl.class);

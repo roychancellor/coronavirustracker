@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.data.DataUrls;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.model.data.us.CaseDeathVaccData_CovidActNow;
 import com.royware.corona.dashboard.model.data.us.CaseDeathVaccTimeSeries_CovActNow;
 import com.royware.corona.dashboard.model.data.us.HospitalDataCDC;
@@ -24,7 +24,7 @@ import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
  * Provides service methods for getting dashboard data from external sources
  */
 @Component("singleState")
-public class ExternalDataServiceSingleStateImpl implements ExternalDataService {
+public class ExternalDataServiceSingleStateImpl implements IExternalDataConnectionService {
 	@Autowired
 	private RestTemplate restTemplate;
 	

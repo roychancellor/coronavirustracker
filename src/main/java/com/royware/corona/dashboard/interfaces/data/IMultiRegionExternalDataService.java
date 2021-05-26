@@ -10,5 +10,5 @@ import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 public interface IMultiRegionExternalDataService {
 	public String getStatesFromMultiRegionString(String region);
 	public int getMultiRegionPopulation(String fullRegionName);
-	public List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, ExternalDataService dataService);
+	public List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, IExternalDataConnectionService dataService);
 }

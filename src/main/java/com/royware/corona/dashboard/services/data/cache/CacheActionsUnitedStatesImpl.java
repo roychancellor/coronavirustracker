@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.ICacheActions;
 import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
@@ -24,7 +24,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	
 	@Autowired
 	@Qualifier(value = "us")
-	private ExternalDataService usaDataService;
+	private IExternalDataConnectionService usaDataService;
 		
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period.usa}", fixedDelayString = "${spring.cache.refresh.period.usa}")
