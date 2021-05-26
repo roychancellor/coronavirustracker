@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @Component
 public class ChangeInTotalCasesVersusCasesWithExponentialLineChartList implements IChartListMaker {
@@ -18,7 +18,7 @@ public class ChangeInTotalCasesVersusCasesWithExponentialLineChartList implement
 	private Map<Integer, Double> dailyChgCases = new HashMap<>();
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
+	public <T extends ICanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
 		log.debug("MAKING CHANGE IN DAILY CASES VERSUS TOTAL CASES");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

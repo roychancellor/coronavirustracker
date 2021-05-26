@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 public class ChartListMakerUtilities {
 	private static final Logger log = LoggerFactory.getLogger(ChartListMakerUtilities.class);
@@ -23,7 +23,7 @@ public class ChartListMakerUtilities {
 		return xyPair;
 	}
 
-	public static <T extends CanonicalCaseDeathData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
+	public static <T extends ICanonicalCaseDeathData> int findFirstDayIndexWithPositiveDeaths(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getTotalDeaths() > 0) {
 				log.debug("first day index with positive deaths: " + dayIndex
@@ -34,7 +34,7 @@ public class ChartListMakerUtilities {
 		return 0;
 	}
 	
-	public static <T extends CanonicalCaseDeathData> int findFirstDayIndexWithPositiveCurrentHospitalizations(List<T> regionDataList) {
+	public static <T extends ICanonicalCaseDeathData> int findFirstDayIndexWithPositiveCurrentHospitalizations(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getHospitalizedCurrently() > 0) {
 				log.debug("first day index with positive current hospitalizations: " + dayIndex
@@ -45,7 +45,7 @@ public class ChartListMakerUtilities {
 		return 0;
 	}
 	
-	public static <T extends CanonicalCaseDeathData> int findFirstDayIndexWithPositiveCumulativeHospitalizations(List<T> regionDataList) {
+	public static <T extends ICanonicalCaseDeathData> int findFirstDayIndexWithPositiveCumulativeHospitalizations(List<T> regionDataList) {
 		for(int dayIndex = 0; dayIndex < regionDataList.size(); dayIndex++) {
 			if(regionDataList.get(dayIndex).getHospitalizedCumulative() > 0) {
 				log.debug("first day index with positive cumulative hospitalizations: " + dayIndex

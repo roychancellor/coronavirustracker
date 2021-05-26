@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataServiceFactory;
 
 @Service
-public class ExternalDataServiceFactoryImpl implements ExternalDataServiceFactory {
+public class ExternalDataServiceFactoryImpl implements IExternalDataServiceFactory {
 	@Autowired
 	@Qualifier(value = "us")
 	private IExternalDataConnectionService usDataService;

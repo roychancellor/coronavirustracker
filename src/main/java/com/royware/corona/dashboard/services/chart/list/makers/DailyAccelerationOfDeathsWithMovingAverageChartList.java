@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @Component
 public class DailyAccelerationOfDeathsWithMovingAverageChartList implements IChartListMaker {
 	private static final Logger log = LoggerFactory.getLogger(DailyAccelerationOfDeathsWithMovingAverageChartList.class);
 
 	@Override
-	public <T extends CanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
+	public <T extends ICanonicalCaseDeathData> List<List<Map<Object, Object>>> makeListFrom(List<T> regionDataList, int pop) {
 		log.debug("MAKING ACCELERATION OF DAILY DEATHS VERSUS TIME");
 		//Transform the data into ChartJS-ready lists
 		Map<Object, Object> xyPair;

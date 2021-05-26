@@ -12,28 +12,28 @@ import org.springframework.ui.ModelMap;
 import com.royware.corona.dashboard.enums.dashstats.DashStatsTypes;
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardChartService;
-import com.royware.corona.dashboard.interfaces.dashboard.DashboardConfigService;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardChartService;
+import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsStore;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.data.ExternalDataServiceFactory;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataServiceFactory;
 import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
 import com.royware.corona.dashboard.interfaces.data.external.IExternalDataGetterStore;
 import com.royware.corona.dashboard.interfaces.data.external.IRegionDemographicDataGetterStore;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardHeader;
 import com.royware.corona.dashboard.model.dashboard.DashboardMeta;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
-public class DashboardConfigServiceImpl implements DashboardConfigService {
+public class DashboardConfigServiceImpl implements IDashboardConfigService {
 	@Autowired private IDashStatsStore dashStatsStore;
-	@Autowired private ExternalDataServiceFactory dataFactory;
+	@Autowired private IExternalDataServiceFactory dataFactory;
 	@Autowired private DashboardMeta dashMeta;
 	@Autowired private DashboardHeader dashHeader;
 	@Autowired private DashboardStatistics dashStats;
-	@Autowired private DashboardChartService dashboardChartService;
+	@Autowired private IDashboardChartService dashboardChartService;
 	@Autowired private IMultiRegionExternalDataService dashboardMultiRegionService;
 	@Autowired private IRegionDemographicDataGetterStore regionDemoDataStore;
 	@Autowired private IExternalDataGetterStore externalDataGetterStore;
@@ -42,7 +42,7 @@ public class DashboardConfigServiceImpl implements DashboardConfigService {
 	
 	@Override
 	public boolean populateDashboardModelMap(String rawRegionString, ModelMap map) {
-		List<? extends CanonicalCaseDeathData> dataList = new ArrayList<>();
+		List<? extends ICanonicalCaseDeathData> dataList = new ArrayList<>();
 		String fullRegionString;
 		int regionPopulation;
 		boolean isMultiRegion = rawRegionString.length() > 3 ? rawRegionString.substring(0,5).equalsIgnoreCase("MULTI") : false;

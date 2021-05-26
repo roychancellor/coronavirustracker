@@ -5,13 +5,13 @@ import java.util.Map;
 
 import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
 
 public class DashStatsPerCapitaStatsMaker implements IDashStatsMaker {
 	
 	@Override
-	public <T extends CanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
+	public <T extends ICanonicalCaseDeathData, C extends List<M>, M extends Map<Object, Object>> DashboardStatistics makeStats(
 			DashboardStatistics dashStats, List<T> dataList, List<C> chartData, int regionPop) {
 		
 		if(dashStats == null) {

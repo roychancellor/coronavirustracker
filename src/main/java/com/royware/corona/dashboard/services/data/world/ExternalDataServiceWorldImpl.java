@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.data.WorldDataServiceCaller;
+import com.royware.corona.dashboard.interfaces.data.IWorldDataServiceCaller;
 import com.royware.corona.dashboard.model.data.world.WorldData;
 import com.royware.corona.dashboard.model.data.world.WorldDataOWID;
 import com.royware.corona.dashboard.model.data.world.WorldDataSourceEuroCDC;
@@ -33,7 +33,7 @@ import com.royware.corona.dashboard.model.data.world.WorldDataSourceOurWorldInDa
 import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
 @Component
-public class ExternalDataServiceWorldImpl implements IExternalDataConnectionService, WorldDataServiceCaller {
+public class ExternalDataServiceWorldImpl implements IExternalDataConnectionService, IWorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
 	

@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WorldData implements CanonicalCaseDeathData {
+public class WorldData implements ICanonicalCaseDeathData {
 	@JsonProperty("dateRep") private String stringDate;
 	@JsonProperty("year") private int year;
 	@JsonProperty("month") private int month;

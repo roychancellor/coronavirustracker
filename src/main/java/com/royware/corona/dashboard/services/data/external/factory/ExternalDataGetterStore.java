@@ -9,14 +9,14 @@ import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
 import com.royware.corona.dashboard.interfaces.data.external.IExternalDataGetterFactory;
 import com.royware.corona.dashboard.interfaces.data.external.IExternalDataGetterStore;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @Component
 public class ExternalDataGetterStore implements IExternalDataGetterStore {
 	@Autowired private IExternalDataGetterFactory dataGetterFactory;
 	
 	@Override
-	public <T extends CanonicalCaseDeathData> List<T> getDataFor(
+	public <T extends ICanonicalCaseDeathData> List<T> getDataFor(
 			RegionsInDashboard region,
 			IExternalDataConnectionService externalDataService) {
 		

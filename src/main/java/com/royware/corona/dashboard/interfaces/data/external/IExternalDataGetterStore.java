@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.model.CanonicalCaseDeathData;
+import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 @Service
 public interface IExternalDataGetterStore {
-	public <T extends CanonicalCaseDeathData> List<T> getDataFor(
+	public <T extends ICanonicalCaseDeathData> List<T> getDataFor(
 			RegionsInDashboard region,
 			IExternalDataConnectionService externalDataService);
 }
