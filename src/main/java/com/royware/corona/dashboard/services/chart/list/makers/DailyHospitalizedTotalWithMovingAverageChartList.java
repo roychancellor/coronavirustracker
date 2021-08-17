@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
@@ -59,7 +59,7 @@ public class DailyHospitalizedTotalWithMovingAverageChartList implements IChartL
 		log.debug("Making moving average of DAILY NEW hospitalizations");
 		scatterChartDataLists.add(
 				ChartListMakerUtilities.makeMovingAverageList(
-					cumulHospitalizations, startDayIndex + MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
+					cumulHospitalizations, startDayIndex + ChartListConstants.MOVING_AVERAGE_SIZE.getValue(),
 					regionDataList.size()
 				));
 		

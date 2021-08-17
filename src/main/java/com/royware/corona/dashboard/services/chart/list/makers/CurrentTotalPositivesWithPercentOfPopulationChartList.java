@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
@@ -46,7 +46,7 @@ public class CurrentTotalPositivesWithPercentOfPopulationChartList implements IC
 			dailyChange = totalToday - totalYesterday;
 			dailyChange = dailyChange > 0 ? dailyChange : 0;
 
-			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue()) {
+			if(dayIndex < ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue()) {
 				rollingSumPrimary = totalToday;
 			} else {
 				rollingSumPrimary += dailyChange - dailyChangeInPositivesPrimary.peek();
@@ -54,7 +54,7 @@ public class CurrentTotalPositivesWithPercentOfPopulationChartList implements IC
 			}
 			dailyChangeInPositivesPrimary.add(dailyChange);
 			
-			if(dayIndex < MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue()) {
+			if(dayIndex < ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue()) {
 				rollingSumSecondary = totalToday;
 			} else {
 				rollingSumSecondary += dailyChange - dailyChangeInPositivesSecondary.peek();
@@ -64,13 +64,13 @@ public class CurrentTotalPositivesWithPercentOfPopulationChartList implements IC
 			
 			xyPair = new HashMap<>();
 			xyPair.put("x", dayIndex);
-			xyPair.put("y", rollingSumPrimary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
+			xyPair.put("y", rollingSumPrimary * ChartListConstants.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			xyPair.put("dateChecked", regionDataList.get(dayIndex).getDateChecked().toString());
 			dataListPrimary.add(xyPair);
 			
 			xyPairSec = new HashMap<>();
 			xyPairSec.put("x", dayIndex);
-			xyPairSec.put("y", rollingSumSecondary * MovingAverageSizes.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
+			xyPairSec.put("y", rollingSumSecondary * ChartListConstants.PER_CAPITA_BASIS.getValue() * 1.0 / regionPopulation);
 			dataListSecondary.add(xyPairSec);
 			dayIndex++;
 		}

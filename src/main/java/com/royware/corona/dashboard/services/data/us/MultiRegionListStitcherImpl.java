@@ -9,6 +9,8 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.DataFields;
@@ -18,11 +20,16 @@ import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
 public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
-	private static final Logger log = LoggerFactory.getLogger(MultiRegionExternalDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(MultiRegionListStitcherImpl.class);
+	
+//	@Autowired
+//	private Environment appConfig;
+	
+	//private boolean cleanNegativeChangesFromTotals = Boolean.parseBoolean(appConfig.getProperty("corona.filter.data"));
+	private boolean cleanNegativeChangesFromTotals = true;
 	
 	@Override
 	public List<UnitedStatesData> stitchMultiStateListsIntoOneList(Map<String, List<UnitedStatesData>> mapOfStateDataLists, String[] states) {
-		List<UnitedStatesData> multiRegionDataListToReturn = new ArrayList<>();
 		Map<Integer, Integer> sumPositiveCases = new TreeMap<>();
 		Map<Integer, Integer> sumNegativeCases = new TreeMap<>();
 		Map<Integer, Integer> sumPosNegCases = new TreeMap<>();
@@ -71,33 +78,124 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 		}
 		log.debug("Made all the DATA FIELD maps containing the SUMS for all states in the multi-region");
 		
-		//NOW, iterate through the keys from the latest case date through the current day as an integer
+		return mapDataSourceListsToUnitedStatesData(sumPositiveCases, sumNegativeCases,
+				sumPosNegCases, sumVaccinations, sumDeaths);
+	}
+
+	private List<UnitedStatesData> mapDataSourceListsToUnitedStatesData(
+			Map<Integer, Integer> sumPositiveCases,
+			Map<Integer, Integer> sumNegativeCases,
+			Map<Integer, Integer> sumPosNegCases,
+			Map<Integer, Integer> sumVaccinations,
+			Map<Integer, Integer> sumDeaths) {
+		
+		//Iterate through the keys from the latest case date through the current day as an integer
 		//and construct a list of UnitedStatesData objects that will contain the sum for the whole region for each day
 		//Get all available date strings and create a list of UnitedStatesData objects from the various maps
-		for(Integer dateInteger : sumPositiveCases.keySet()) {
-			multiRegionDataListToReturn.add(new UnitedStatesData());
-			UnitedStatesData thisDateForRegion = multiRegionDataListToReturn.get(multiRegionDataListToReturn.size() - 1);
-			LocalDate localDate = localDateFromStringDate(dateInteger + "");
-			thisDateForRegion.setDateTimeString(localDate.toString());
-			thisDateForRegion.setDateChecked(localDate);
-			thisDateForRegion.setDateInteger(dateInteger);
-			thisDateForRegion.setTotalPositiveCases(sumPositiveCases.get(dateInteger));
-			thisDateForRegion.setTotalNegativeCases(sumNegativeCases.get(dateInteger));
-			thisDateForRegion.setTotalPositivePlusNegative(sumPosNegCases.get(dateInteger));
-			if(sumDeaths.containsKey(dateInteger)) {
-				thisDateForRegion.setTotalVaccCompleted(sumVaccinations.get(dateInteger));
-			} else {
-				thisDateForRegion.setTotalVaccCompleted(0);
-			}
-			if(sumDeaths.containsKey(dateInteger)) {
-				thisDateForRegion.setTotalDeaths(sumDeaths.get(dateInteger));
-			} else {
-				thisDateForRegion.setTotalDeaths(0);
-			}
+		List<UnitedStatesData> multiRegionDataListToReturn = new ArrayList<>();
+		
+		Integer[] caseDates = sumPositiveCases.keySet().toArray(new Integer[sumPositiveCases.size()]);
+		
+		UnitedStatesData thisDateForRegion = makeUSDataObject(
+				sumPositiveCases,
+				sumNegativeCases,
+				sumPosNegCases,
+				sumVaccinations,
+				sumDeaths,
+				caseDates[0]);
+		
+		int totalCasesYesterday = thisDateForRegion.getTotalPositiveCases();
+		int totalDeathsYesterday = thisDateForRegion.getTotalDeaths();
+		int totalVaccYesterday = thisDateForRegion.getTotalVaccCompleted();
+		
+		int anchorCases = 0;
+		int anchorDeaths = 0;
+		int anchorVacc = 0;
+		boolean compareToAnchorCases = false;
+		boolean compareToAnchorDeaths = false;
+		boolean compareToAnchorVacc = false;
+		
+		for(int i = 1; i < caseDates.length; i++) {
+			thisDateForRegion = makeUSDataObject(
+					sumPositiveCases,
+					sumNegativeCases,
+					sumPosNegCases,
+					sumVaccinations,
+					sumDeaths,
+					caseDates[i]);
+			
+			// This works by setting the anchor value to the last good value, then continuing
+			// through the loop until the daily change in total value becomes positive.
+			if(cleanNegativeChangesFromTotals) {
+				int totalCasesToday = thisDateForRegion.getTotalPositiveCases();
+				int totalDeathsToday = thisDateForRegion.getTotalDeaths();
+				int totalVaccToday = thisDateForRegion.getTotalVaccCompleted();
+				int changeInCases = totalCasesToday - (compareToAnchorCases ? anchorCases : totalCasesYesterday);
+				int changeInDeaths = totalDeathsToday - (compareToAnchorDeaths ? anchorDeaths : totalDeathsYesterday);
+				int changeInVacc = totalVaccToday - (compareToAnchorVacc ? anchorVacc : totalVaccYesterday);
+				
+				// Only add to the list if all three changes are positive
+				if(changeInCases < 0) {
+					anchorCases = compareToAnchorCases ? anchorCases : totalCasesYesterday;
+					compareToAnchorCases = true;
+					continue;
+				}
+				else {
+					compareToAnchorCases = false;
+					totalCasesYesterday = totalCasesToday;
+				}
+				
+				if(changeInDeaths < 0) {
+					anchorDeaths = compareToAnchorDeaths ? anchorDeaths : totalDeathsYesterday;
+					compareToAnchorDeaths = true;
+					continue;
+				}
+				else {
+					compareToAnchorDeaths = false;
+					totalDeathsYesterday = totalDeathsToday;
+				}
+				
+				if(changeInVacc < 0) {
+					anchorVacc = compareToAnchorVacc ? anchorVacc : totalVaccYesterday;
+					compareToAnchorVacc = true;
+					continue;
+				}
+				else {
+					compareToAnchorVacc = false;
+					totalVaccYesterday = totalVaccToday;
+				}
+			}			
+			
+			multiRegionDataListToReturn.add(thisDateForRegion);
 		}
-		log.debug("Finished making the region data list and ready to return it.");
+		log.debug("Finished making the " + (cleanNegativeChangesFromTotals ? "CLEANED" : "ORIGINAL") + " region data list and ready to return it.");
 		
 		return multiRegionDataListToReturn;
+	}
+
+	private UnitedStatesData makeUSDataObject(Map<Integer, Integer> sumPositiveCases,
+			Map<Integer, Integer> sumNegativeCases, Map<Integer, Integer> sumPosNegCases,
+			Map<Integer, Integer> sumVaccinations, Map<Integer, Integer> sumDeaths, Integer dateInteger) {
+		
+		UnitedStatesData thisDateForRegion = new UnitedStatesData();
+		LocalDate localDate = localDateFromStringDate(dateInteger + "");
+		thisDateForRegion.setDateTimeString(localDate.toString());
+		thisDateForRegion.setDateChecked(localDate);
+		thisDateForRegion.setDateInteger(dateInteger);
+		thisDateForRegion.setTotalPositiveCases(sumPositiveCases.get(dateInteger));
+		thisDateForRegion.setTotalNegativeCases(sumNegativeCases.get(dateInteger));
+		thisDateForRegion.setTotalPositivePlusNegative(sumPosNegCases.get(dateInteger));
+		if(sumVaccinations.containsKey(dateInteger)) {
+			thisDateForRegion.setTotalVaccCompleted(sumVaccinations.get(dateInteger));
+		} else {
+			thisDateForRegion.setTotalVaccCompleted(0);
+		}
+		if(sumDeaths.containsKey(dateInteger)) {
+			thisDateForRegion.setTotalDeaths(sumDeaths.get(dateInteger));
+		} else {
+			thisDateForRegion.setTotalDeaths(0);
+		}
+		return thisDateForRegion;
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.chart.config.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
@@ -22,7 +22,7 @@ public class ChartConfigDeathsByTime implements IChartConfigMaker {
 		chartConfig.setxAxisTitle("Days Since Deaths > 0");
 		chartConfig.setyAxisTitle("Total Deaths");
 		chartConfig.setDataSeries1Name("Total Deaths");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Deaths");
+		chartConfig.setDataSeries2Name(ChartListConstants.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Deaths");
 		
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");

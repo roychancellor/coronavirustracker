@@ -27,7 +27,7 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 	
 	@Autowired
 	private IMultiRegionListStitcher listStitcher;
-
+	
 	@Override
 	public String getStatesFromMultiRegionString(String region) {
 		String regionsOnly = region.substring(region.indexOf(':') + 1);
@@ -93,7 +93,7 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		mapOfStateDataLists = listStitcher.makeMapOfStateDataLists(dataService, states);
 		
 		multiRegionDataList = listStitcher.stitchMultiStateListsIntoOneList(mapOfStateDataLists, states);
-		
+				
 		log.info("Finished getting the multi-region data from an external source");
 		return multiRegionDataList;
 	}

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
 import com.royware.corona.dashboard.enums.dashstats.DashStatsTypes;
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashboardChartService;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
@@ -111,7 +111,7 @@ public class DashboardConfigServiceImpl implements IDashboardConfigService {
 				DashStatsTypes.DASHSTATS_PER_CAPITA_STATS, dashStats, null, null, regionPopulation);
 		
 		//////// SET ALL DASHBOARD META DATA AND HEADER DATA ////////
-		dashMeta.setPerCapitaBasis(MovingAverageSizes.PER_CAPITA_BASIS.getValue());
+		dashMeta.setPerCapitaBasis(ChartListConstants.PER_CAPITA_BASIS.getValue());
 		dashHeader.setFullRegion(fullRegionString);
 		if(fullRegionString.length() > MAX_REGION_LENGTH_TO_DISPLAY) {
 			dashHeader.setFullRegion(fullRegionString.substring(0, MAX_REGION_LENGTH_TO_DISPLAY + 1) + "...");

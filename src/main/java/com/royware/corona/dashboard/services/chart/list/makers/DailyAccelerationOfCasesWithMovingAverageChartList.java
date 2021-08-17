@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
@@ -51,7 +51,7 @@ public class DailyAccelerationOfCasesWithMovingAverageChartList implements IChar
 		scatterChartDataLists.add(
 			ChartListMakerUtilities.makeMovingAverageList(
 					dailyAccelCases,
-					MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + 1,
+					ChartListConstants.MOVING_AVERAGE_SIZE.getValue() + 1,
 					regionDataList.size()
 			));
 
