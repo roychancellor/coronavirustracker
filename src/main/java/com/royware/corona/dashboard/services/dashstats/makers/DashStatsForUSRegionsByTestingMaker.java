@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
@@ -32,10 +32,10 @@ public class DashStatsForUSRegionsByTestingMaker implements IDashStatsMaker {
 		log.debug("Making ProportionOfPositiveTests and ProportionOfPositiveTestsMovingAverage");
 		dashStats.setProportionOfPositiveTests(dataList.get(dataList.size() - 1).getTotalPositiveCases()
 				* 100.0 / dashStats.getTotalTestsConducted());
-		int totalTestsLastN = ChartConfigMakerUtilities.computeTotalQuantityLastN(chartData.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue());
+		int totalTestsLastN = ChartConfigMakerUtilities.computeTotalQuantityLastN(chartData.get(0), ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue());
 		dashStats.setTotalTestsConductedLastN(totalTestsLastN);
 		dashStats.setProportionOfPositiveTestsMovingAverage(
-				ChartConfigMakerUtilities.computeTotalQuantityLastN(chartData.get(0), MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())* 100.0 / totalTestsLastN);
+				ChartConfigMakerUtilities.computeTotalQuantityLastN(chartData.get(0), ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())* 100.0 / totalTestsLastN);
 		log.debug("Making ProportionOfPopulationTested");
 		dashStats.setProportionOfPopulationTested(dashStats.getTotalTestsConducted()
 				* 100.0 / usaPop);

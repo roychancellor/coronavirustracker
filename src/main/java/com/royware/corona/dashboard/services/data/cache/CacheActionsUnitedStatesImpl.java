@@ -22,6 +22,13 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_US.getName();
 	
+	private boolean cleanData;
+	
+	@Override
+	public void setCleanData(boolean cleanData) {
+		this.cleanData = cleanData;
+	}
+
 	@Autowired
 	@Qualifier(value = "us")
 	private IExternalDataConnectionService usaDataService;
@@ -69,6 +76,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	}
 	
 	private List<UnitedStatesData> getNewCacheDataFromSource() {
+		usaDataService.setCleanNegativeChangesFromTotals(cleanData);
 		return usaDataService.makeDataListFromExternalSource(CACHE_KEY);
 	}
 

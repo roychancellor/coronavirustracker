@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.chart.config.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
@@ -20,7 +20,7 @@ public class ChartConfigAccelerationOfCases implements IChartConfigMaker {
 		chartConfig.setxAxisTitle("Days Since Cases > 0");
 		chartConfig.setyAxisTitle("Percent Change in Rate of New Positives");
 		chartConfig.setDataSeries1Name("Acceleration of Positives");
-		chartConfig.setDataSeries2Name(MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+		chartConfig.setDataSeries2Name(ChartListConstants.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 
 		chartConfig.setChartType("scatter");
 		chartConfig.setyAxisNumberSuffix("%");

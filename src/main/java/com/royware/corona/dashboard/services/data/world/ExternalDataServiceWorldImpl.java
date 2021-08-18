@@ -43,6 +43,13 @@ public class ExternalDataServiceWorldImpl implements IExternalDataConnectionServ
 	private ConcurrentMapCache cacheManager;
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
 
+	private boolean toCleanNegativeChangesFromTotals = false;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
 	@Override

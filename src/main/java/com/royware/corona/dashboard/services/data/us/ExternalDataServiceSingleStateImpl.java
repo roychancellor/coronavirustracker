@@ -30,6 +30,13 @@ public class ExternalDataServiceSingleStateImpl implements IExternalDataConnecti
 	
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleStateImpl.class);
 	
+	private boolean toCleanNegativeChangesFromTotals;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateAbbreviation) {
@@ -127,26 +134,94 @@ public class ExternalDataServiceSingleStateImpl implements IExternalDataConnecti
 		List<Integer> allCaseDates = Arrays.asList(datesArray);
 		
 		//Transform the data from the maps into the desired object		
+		UnitedStatesData usd = makeUSDataObject(stateAbbrev, hospitalizations, caseDeathVacc, allCaseDates.get(0));
+		int totalCasesYesterday = usd.getTotalPositiveCases();
+		int totalDeathsYesterday = usd.getTotalDeaths();
+		int totalVaccYesterday = usd.getTotalVaccCompleted();
+		
+		int anchorCases = 0;
+		int anchorDeaths = 0;
+		int anchorVacc = 0;
+		boolean compareToAnchorCases = false;
+		boolean compareToAnchorDeaths = false;
+		boolean compareToAnchorVacc = false;
+				
 		for(Integer caseDate : allCaseDates) {
 			if(caseDeathVacc.get(caseDate).getTotalCases() < 100) {
 				continue;
 			}
-			UnitedStatesData usd = new UnitedStatesData();
-			usd.setDateChecked(caseDeathVacc.get(caseDate).getDatesCDC().getDateAsLocalDate());
-			usd.setDateInteger(caseDate);
-			usd.setDateTimeString(caseDeathVacc.get(caseDate).getDatesCDC().getDateAsStringYYYYMMDD());
-			usd.setRegionString(stateAbbrev);
-			usd.setTotalPositiveCases(caseDeathVacc.get(caseDate).getTotalCases());
-			usd.setTotalDeaths(caseDeathVacc.get(caseDate).getTotalDeaths());
-			if(caseDeathVacc.get(caseDate).getVaccComp() >= 100) {
-				usd.setTotalVaccCompleted(caseDeathVacc.get(caseDate).getVaccComp());
-			}
-			if(hospitalizations.containsKey(caseDate)) {
-				usd.setHospitalizedCurrently(hospitalizations.get(caseDate).getTotalBedsCovidCurrently());
-			}
+			usd = makeUSDataObject(stateAbbrev, hospitalizations, caseDeathVacc, caseDate);
+			
+			// CLEAN NEGATIVE CHANGES IN TOTALS FOR CASES, DEATHS, VACC, AND HOSP
+			// This works by setting the anchor value to the last good value, then continuing
+			// through the loop until the daily change in total value becomes positive.
+			if(toCleanNegativeChangesFromTotals) {
+				int totalCasesToday = usd.getTotalPositiveCases();
+				int totalDeathsToday = usd.getTotalDeaths();
+				int totalVaccToday = usd.getTotalVaccCompleted();
+				int changeInCases = totalCasesToday - (compareToAnchorCases ? anchorCases : totalCasesYesterday);
+				int changeInDeaths = totalDeathsToday - (compareToAnchorDeaths ? anchorDeaths : totalDeathsYesterday);
+				int changeInVacc = totalVaccToday - (compareToAnchorVacc ? anchorVacc : totalVaccYesterday);
+				
+				// Only add to the list if all three changes are positive
+				if(changeInCases < 0) {
+					anchorCases = compareToAnchorCases ? anchorCases : totalCasesYesterday;
+					compareToAnchorCases = true;
+					continue;
+				}
+				else {
+					compareToAnchorCases = false;
+					totalCasesYesterday = totalCasesToday;
+				}
+				
+				if(changeInDeaths < 0) {
+					anchorDeaths = compareToAnchorDeaths ? anchorDeaths : totalDeathsYesterday;
+					compareToAnchorDeaths = true;
+					continue;
+				}
+				else {
+					compareToAnchorDeaths = false;
+					totalDeathsYesterday = totalDeathsToday;
+				}
+				
+				if(changeInVacc < 0) {
+					anchorVacc = compareToAnchorVacc ? anchorVacc : totalVaccYesterday;
+					compareToAnchorVacc = true;
+					continue;
+				}
+				else {
+					compareToAnchorVacc = false;
+					totalVaccYesterday = totalVaccToday;
+				}
+			}			
+			
+			
 			toReturn.add(usd);
 		}
 		
 		return toReturn;
 	}
+
+	private UnitedStatesData makeUSDataObject(
+			String stateAbbrev,
+			Map<Integer, HospitalDataCDC> hospitalizations,
+			Map<Integer, CaseDeathVaccData_CovidActNow> caseDeathVacc,
+			Integer caseDate) {
+		UnitedStatesData usd = new UnitedStatesData();
+		usd.setDateChecked(caseDeathVacc.get(caseDate).getDatesCDC().getDateAsLocalDate());
+		usd.setDateInteger(caseDate);
+		usd.setDateTimeString(caseDeathVacc.get(caseDate).getDatesCDC().getDateAsStringYYYYMMDD());
+		usd.setRegionString(stateAbbrev);
+		usd.setTotalPositiveCases(caseDeathVacc.get(caseDate).getTotalCases());
+		usd.setTotalDeaths(caseDeathVacc.get(caseDate).getTotalDeaths());
+		if(caseDeathVacc.get(caseDate).getVaccComp() >= 100) {
+			usd.setTotalVaccCompleted(caseDeathVacc.get(caseDate).getVaccComp());
+		}
+		if(hospitalizations.containsKey(caseDate)) {
+			usd.setHospitalizedCurrently(hospitalizations.get(caseDate).getTotalBedsCovidCurrently());
+		}
+		return usd;
+	}
+
+	
 }

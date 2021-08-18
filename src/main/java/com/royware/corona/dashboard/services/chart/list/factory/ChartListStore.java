@@ -22,6 +22,8 @@ public class ChartListStore implements IChartListStore {
 			List<T> regionData,
 			int regionPopulation) {
 		
-		return chartListFactory.create(chartType).makeListFrom(regionData, regionPopulation);
+		List<List<Map<Object, Object>>> toReturn = chartListFactory.create(chartType).makeListFrom(regionData, regionPopulation);
+		
+		return toReturn;
 	}	
 }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
@@ -58,7 +58,7 @@ public class DailyAndTotalCasesVersusTimeChartList implements IChartListMaker {
 		scatterChartDataLists.add(
 			ChartListMakerUtilities.makeMovingAverageList(
 					dailyNewCases,
-					MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(),
+					ChartListConstants.MOVING_AVERAGE_SIZE.getValue(),
 					regionDataList.size()
 			));
 		

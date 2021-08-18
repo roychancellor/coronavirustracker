@@ -24,6 +24,13 @@ public class CacheActionsWorldImpl implements ICacheActions {
 	@Autowired
 	private IWorldDataServiceCaller worldDataServiceCaller;
 	
+	private boolean cleanData;
+	
+	@Override
+	public void setCleanData(boolean cleanData) {
+		this.cleanData = cleanData;
+	}
+
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period.world}", fixedDelayString = "${spring.cache.refresh.period.world}")
 	public void cacheEvictAndRepopulate() {
@@ -50,7 +57,6 @@ public class CacheActionsWorldImpl implements ICacheActions {
 		log.debug("In the evictCache method: " + LocalDateTime.now());
 		log.debug("EVICTING...");
 		CacheManagerProvider.getManager().put(CACHE_KEY, null);
-		//CacheManagerProvider.getManager().clear();
 		log.debug("...DONE");
 	}	
 

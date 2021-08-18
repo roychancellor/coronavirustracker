@@ -22,11 +22,21 @@ public class ExternalDataServiceMultiStateImpl implements IExternalDataConnectio
 	@Qualifier(value = "singleState")
 	private IExternalDataConnectionService singleStateDataService;
 	
+	private boolean toCleanNegativeChangesFromTotals = false;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String multiRegionState) {
 		log.debug("MULTI_REGION: ABOUT TO HIT ENDPOINT FOR STATE DATA FOR: " + multiRegionState);
+		
+		singleStateDataService.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
 		List<UnitedStatesData> stateDataList = singleStateDataService.makeDataListFromExternalSource(multiRegionState);
+		
 		log.debug("FINISHED GETTING DATA FOR STATE: " + multiRegionState);
 		
 		return stateDataList;

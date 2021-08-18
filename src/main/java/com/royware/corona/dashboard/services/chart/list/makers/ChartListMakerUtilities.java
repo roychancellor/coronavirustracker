@@ -8,7 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
 public class ChartListMakerUtilities {
@@ -82,14 +82,14 @@ public class ChartListMakerUtilities {
 		log.debug("Making the moving average...");
 		for(int dayIndex = startDayIndex; dayIndex < endDayIndex; dayIndex++) {
 			movingAverage = 0;
-			for(int d = dayIndex; d > dayIndex - MovingAverageSizes.MOVING_AVERAGE_SIZE.getValue(); d--) {
+			for(int d = dayIndex; d > dayIndex - ChartListConstants.MOVING_AVERAGE_SIZE.getValue(); d--) {
 				amountToAdd = dataMap.get(d);
-				if(!(Double.isNaN(amountToAdd) || Double.isInfinite(amountToAdd) || (int)amountToAdd == 100)) {
-					movingAverage += amountToAdd;
-					divisor++;
-				} else {
+				if(Double.isNaN(amountToAdd) || Double.isInfinite(amountToAdd) || (int)amountToAdd == 100) {
 					log.trace("Oops...amountToAdd is not a real number, it is " + amountToAdd + ", so it will NOT be in the moving average.");
+					continue;
 				}
+				movingAverage += amountToAdd;
+				divisor++;
 			}
 			if(divisor > 0) {
 				movingAverage /= divisor;
@@ -104,5 +104,4 @@ public class ChartListMakerUtilities {
 		
 		return movingAverageList;
 	}
-
 }

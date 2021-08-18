@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.dashstats.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.enums.data.MovingAverageSizes;
+import com.royware.corona.dashboard.enums.data.ChartListConstants;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashStatsMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.dashboard.DashboardStatistics;
@@ -24,12 +24,12 @@ public class DashStatsForRegionVaccMaker implements IDashStatsMaker {
 		dashStats.setVaccToday((int) chartData.get(0).get(chartData.get(0).size() - 1).get("y")
 				- (int) chartData.get(0).get(chartData.get(0).size() - 2).get("y"));
 		dashStats.setVaccMovingSumPrimary(
-				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
-				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataList, ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue())
+				* 1.0 * ChartListConstants.PER_CAPITA_BASIS.getValue()
 				/ regionPop);
 		dashStats.setVaccMovingSumSecondary(
-				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataList, MovingAverageSizes.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
-				* 1.0 * MovingAverageSizes.PER_CAPITA_BASIS.getValue()
+				(double) ChartConfigMakerUtilities.computeTotalQuantityLastN(chartDataList, ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue())
+				* 1.0 * ChartListConstants.PER_CAPITA_BASIS.getValue()
 				/ regionPop);
 		
 		return dashStats;
