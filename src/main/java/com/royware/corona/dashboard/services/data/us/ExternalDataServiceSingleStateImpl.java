@@ -30,6 +30,13 @@ public class ExternalDataServiceSingleStateImpl implements IExternalDataConnecti
 	
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleStateImpl.class);
 	
+	private boolean toCleanNegativeChangesFromTotals;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateAbbreviation) {
@@ -138,9 +145,7 @@ public class ExternalDataServiceSingleStateImpl implements IExternalDataConnecti
 		boolean compareToAnchorCases = false;
 		boolean compareToAnchorDeaths = false;
 		boolean compareToAnchorVacc = false;
-		
-		boolean cleanNegativeChangesFromTotals = true;
-		
+				
 		for(Integer caseDate : allCaseDates) {
 			if(caseDeathVacc.get(caseDate).getTotalCases() < 100) {
 				continue;
@@ -150,7 +155,7 @@ public class ExternalDataServiceSingleStateImpl implements IExternalDataConnecti
 			// CLEAN NEGATIVE CHANGES IN TOTALS FOR CASES, DEATHS, VACC, AND HOSP
 			// This works by setting the anchor value to the last good value, then continuing
 			// through the loop until the daily change in total value becomes positive.
-			if(cleanNegativeChangesFromTotals) {
+			if(toCleanNegativeChangesFromTotals) {
 				int totalCasesToday = usd.getTotalPositiveCases();
 				int totalDeathsToday = usd.getTotalDeaths();
 				int totalVaccToday = usd.getTotalVaccCompleted();
@@ -217,4 +222,6 @@ public class ExternalDataServiceSingleStateImpl implements IExternalDataConnecti
 		}
 		return usd;
 	}
+
+	
 }

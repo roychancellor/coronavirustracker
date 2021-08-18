@@ -30,6 +30,13 @@ public class ExternalDataServiceSingleCountryImpl implements IExternalDataConnec
 	private static final int MINIMUM_TOTAL_CASES_FOR_INCLUSION = 100;
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleCountryImpl.class);
 	
+	private boolean toCleanNegativeChangesFromTotals;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WorldData> makeDataListFromExternalSource(String countryThreeLetterCode) {

@@ -28,6 +28,13 @@ public class ExternalDataServiceUSAImpl implements IExternalDataConnectionServic
 	@Autowired
 	private IExternalDataServiceFactory dataService;
 
+	private boolean toCleanNegativeChangesFromTotals;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
 	@Override
@@ -36,6 +43,7 @@ public class ExternalDataServiceUSAImpl implements IExternalDataConnectionServic
 		List<UnitedStatesData> usaData = safeGetDataFromCache(cacheKey);
 		if(usaData == null || usaData.isEmpty()) {
 			log.info("US Data not in cache. Getting the USA data from its source (via multi-region).");
+			multiRegionDataService.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
 			usaData = multiRegionDataService.getMultiRegionDataFromExternalSource(
 					IDashboardConfigService.ALL_STATES_AS_CSV,
 					dataService.getExternalDataService("MULTI")

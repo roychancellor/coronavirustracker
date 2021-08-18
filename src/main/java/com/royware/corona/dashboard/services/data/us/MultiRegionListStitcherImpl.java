@@ -9,8 +9,6 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.DataFields;
@@ -21,14 +19,14 @@ import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 @Component
 public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 	private static final Logger log = LoggerFactory.getLogger(MultiRegionListStitcherImpl.class);
-	
-//	@Autowired
-//	private Environment appConfig;
-	
-	//private boolean cleanNegativeChangesFromTotals = Boolean.parseBoolean(appConfig.getProperty("corona.filter.data"));
-	private boolean cleanNegativeChangesFromTotals = true;
+		
+	private boolean toCleanNegativeChangesFromTotals;
 	
 	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	public List<UnitedStatesData> stitchMultiStateListsIntoOneList(Map<String, List<UnitedStatesData>> mapOfStateDataLists, String[] states) {
 		Map<Integer, Integer> sumPositiveCases = new TreeMap<>();
 		Map<Integer, Integer> sumNegativeCases = new TreeMap<>();
@@ -126,7 +124,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 			
 			// This works by setting the anchor value to the last good value, then continuing
 			// through the loop until the daily change in total value becomes positive.
-			if(cleanNegativeChangesFromTotals) {
+			if(toCleanNegativeChangesFromTotals) {
 				int totalCasesToday = thisDateForRegion.getTotalPositiveCases();
 				int totalDeathsToday = thisDateForRegion.getTotalDeaths();
 				int totalVaccToday = thisDateForRegion.getTotalVaccCompleted();
@@ -168,7 +166,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 			
 			multiRegionDataListToReturn.add(thisDateForRegion);
 		}
-		log.debug("Finished making the " + (cleanNegativeChangesFromTotals ? "CLEANED" : "ORIGINAL") + " region data list and ready to return it.");
+		log.debug("Finished making the " + (toCleanNegativeChangesFromTotals ? "CLEANED" : "ORIGINAL") + " region data list and ready to return it.");
 		
 		return multiRegionDataListToReturn;
 	}
@@ -205,6 +203,10 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 		//Make a map where the key is the state and the value is the list of data for the state
 		log.debug("The array of states for getting data is:");
 		int i = 1;
+		
+		// Don't clean the individual state data; only filter the stitched list
+		dataService.setCleanNegativeChangesFromTotals(false);
+		
 		for(String state : states) {
 			log.info("(" + i + ") " + state);
 			i++;

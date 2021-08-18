@@ -14,4 +14,5 @@ public interface ICacheActions {
 	public void evictCache();
 	public <T extends ICanonicalCaseDeathData> void populateCacheFromDataList(String cacheName, List<T> newCacheData);
 	public void populateCacheFromSource(String cacheName);
+	public void setCleanData(boolean cleanData);
 }

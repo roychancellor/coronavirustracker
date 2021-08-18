@@ -28,6 +28,13 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 	@Autowired
 	private IMultiRegionListStitcher listStitcher;
 	
+	private boolean toCleanNegativeChangesFromTotals = false;
+	
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+	
 	@Override
 	public String getStatesFromMultiRegionString(String region) {
 		String regionsOnly = region.substring(region.indexOf(':') + 1);
@@ -89,6 +96,9 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 		
 		log.info("Getting the multi-region data from an external source");
 		String[] states = makeUniqueArrayOfStates(fullRegionName);
+		
+		// Set the switch to filter negative changes from the final stitched list
+		listStitcher.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
 		
 		mapOfStateDataLists = listStitcher.makeMapOfStateDataLists(dataService, states);
 		

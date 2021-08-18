@@ -1,7 +1,6 @@
 package com.royware.corona.dashboard.services.chart.list.makers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,89 +104,4 @@ public class ChartListMakerUtilities {
 		
 		return movingAverageList;
 	}
-
-	public static List<Map<Object, Object>> filterJumpsFromList(List<Map<Object, Object>> toFilter) {
-		// Method that takes out "large" jumps from day to day that are the result of bad data in the provided data sets
-		List<Map<Object, Object>> filteredList = new ArrayList<>(toFilter);
-		
-		if(filteredList.size() == 2) {
-			return filteredList;
-		}
-		
-		List<Double> yValues = new ArrayList<>();
-		for (Map<Object, Object> yValue : filteredList) {
-			yValues.add(Double.valueOf(yValue.get("y").toString()));
-		}
-		Collections.sort(yValues);
-		
-		int size = yValues.size();
-		boolean sizeIsEven = size % 2 == 0;
-//		double median = 0.0;
-		double Q1 = 0.0;
-		double Q3 = 0.0;
-		int iMedian = size / 2;
-		int iQ1 = 0;
-		int iQ3 = 0;
-		double IQR = 0.0;
-		double upper = 0.0;
-		double lower = 0.0;
-		if(sizeIsEven) {
-			//median = (yValues.get(iMedian - 1) + yValues.get(iMedian)) / 2.0;
-			iQ1 = (iMedian - 1) / 2;
-			iQ3 = 3 * iMedian / 2;
-			Q1 = yValues.get(iQ1);
-			Q3 = yValues.get(iQ3);
-		} else {
-			//median = yValues.get(iMedian);
-			iQ1 = iMedian / 2;
-			iQ3 = 3 * iMedian / 2;
-			Q1 = (yValues.get(iQ1) + yValues.get(iQ1 - 1)) / 2.0;
-			Q3 = (yValues.get(iQ3) + yValues.get( + 1)) / 2.0;
-		}
-		IQR = Q3 - Q1;
-		upper = Q3 + 1.5 * IQR;
-		lower = Q1 - 1.5 * IQR;
-		
-		log.info("Making the filtered list with lower = " + lower + " and upper = " + upper);
-		
-//		double absChangePct = 0.0;
-//		Object prevDayValue = 0.0;
-		Double todayValue = 0.0;
-//		Object prevOriginalValue = 0.0;
-		
-		for(int dayIndex = 1; dayIndex < filteredList.size(); dayIndex++) {
-			// Look for outliers
-			todayValue = yValues.get(dayIndex);
-//			todayValue = Double.valueOf(filteredList.get(dayIndex).get("y").toString());
-			if(todayValue < lower || todayValue > upper) {
-				log.info("Removing value: " + todayValue);
-				filteredList.remove(dayIndex);
-			}
-			
-			// Look for data points where the change from the previous day is greater than X%			
-//			todayValue = Double.valueOf(filteredList.get(dayIndex).get("y").toString());
-//			prevDayValue = Double.valueOf(filteredList.get(dayIndex - 1).get("y").toString());
-//			prevOriginalValue = filteredList.get(dayIndex - 1).get("y");
-//			absChangePct = Math.abs(((Double)todayValue / (Double)prevDayValue - 1) * 100.0);
-//			if(absChangePct > ChartListConstants.JUMP_FILTER_PERCENT_THRESHOLD_PCT.getValue()) {
-//				log.info("Removing value: " + todayValue);
-//				filteredList.get(dayIndex).put("y", prevOriginalValue);
-//				continue;
-//			}
-		}
-			
-		return filteredList;
-	}
-	
-	public static <T extends ICanonicalCaseDeathData> List<T> cleanDataList(List<T> regionData) {
-		// Method will clean out data where the daily change in a total quantity is negative.
-		List<T> toReturn = new ArrayList<T>(regionData);
-		
-//		int today = toReturn.get(0).getTotalPositiveCases();
-//		for(int i = 1; i < toReturn.size(); i++) {
-//			
-//		}
-		
-		return toReturn;
-	}	
 }

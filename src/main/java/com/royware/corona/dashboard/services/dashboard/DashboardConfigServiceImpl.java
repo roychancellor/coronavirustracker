@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
@@ -37,6 +38,7 @@ public class DashboardConfigServiceImpl implements IDashboardConfigService {
 	@Autowired private IMultiRegionExternalDataService dashboardMultiRegionService;
 	@Autowired private IRegionDemographicDataGetterStore regionDemoDataStore;
 	@Autowired private IExternalDataGetterStore externalDataGetterStore;
+	@Autowired private Environment appConfig;
 	
 	private static final Logger log = LoggerFactory.getLogger(DashboardConfigServiceImpl.class);
 	
@@ -58,20 +60,19 @@ public class DashboardConfigServiceImpl implements IDashboardConfigService {
 		//////// GET ALL DATA FROM EXTERNAL SOURCE(S) ////////
 		//Need to get the data differently for a multi-region selection 
 		//As of 03/07/2021, there is no longer a single source of data available for the U.S., so need to treat it like a multi-region
+		boolean toValueOfAppConfigCleanData = Boolean.parseBoolean(appConfig.getProperty("corona.filter.data"));
 		if(isMultiRegion) {
 			fullRegionString = rawRegionString;
 			String regionsOnlyCsvString = dashboardMultiRegionService.getStatesFromMultiRegionString(rawRegionString);
 			regionPopulation = dashboardMultiRegionService.getMultiRegionPopulation(regionsOnlyCsvString);
+			dataService.setCleanNegativeChangesFromTotals(toValueOfAppConfigCleanData);
 			dataList = dashboardMultiRegionService.getMultiRegionDataFromExternalSource(regionsOnlyCsvString, dataService);
 		} else {
 			RegionsInDashboard region = RegionsInDashboard.valueOfEnum(rawRegionString);
 			fullRegionString = regionDemoDataStore.getRegionFullNameFor(region);
 			regionPopulation = regionDemoDataStore.getRegionPopulationFor(region);
+			dataService.setCleanNegativeChangesFromTotals(toValueOfAppConfigCleanData);
 			dataList = externalDataGetterStore.getDataFor(region, dataService);
-			
-//			fullRegionString = RegionsData.valueOf(rawRegionString).getRegionData().getFullName();
-//			regionPopulation = RegionsData.valueOf(rawRegionString).getRegionData().getPopulation();
-//			dataList = RegionsData.valueOf(rawRegionString).getCoronaVirusDataFromExternalSource(dataService);
 		}
 		log.debug("fullRegionString: " + fullRegionString + ", regionPopulation: " + regionPopulation + ", dataList size: " + dataList.size());
 		log.info("Finished making the data list...");
@@ -94,16 +95,12 @@ public class DashboardConfigServiceImpl implements IDashboardConfigService {
 			dashMeta.setRegionType("world");
 		} else if((rawRegionString.length() == 2 || isMultiRegion) && populateUSTotals) {
 			dashMeta.setRegionType("state");
-			//dashboardChartService.makeDashboardRowByUsTotals(regionPopulation, dashStats);
 			log.info("Making all the DASHBOARD STATISTICS FOR REGION - BY U.S. TOTALS");
 			log.debug("Getting U.S. data for populating By U.S. Totals row of dashboard...");
 			
 			List<UnitedStatesData> usaData = externalDataGetterStore.getDataFor(RegionsInDashboard.USA,
 					getExternalDataServiceFromFactory(RegionsInDashboard.USA.name()));
 
-//			List<UnitedStatesData> usaData = RegionsData.USA
-//				.getCoronaVirusDataFromExternalSource(getExternalDataServiceFromFactory(RegionsData.USA.name()));
-			
 			dashStats = dashStatsStore.produceDashboardStatsForType(DashStatsTypes.DASHSTATS_BY_US_TOTALS, dashStats, usaData, null, regionPopulation);
 		}
 		

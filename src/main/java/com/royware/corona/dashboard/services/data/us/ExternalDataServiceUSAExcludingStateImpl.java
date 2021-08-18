@@ -26,12 +26,20 @@ public class ExternalDataServiceUSAExcludingStateImpl implements IExternalDataCo
 	private IExternalDataConnectionService stateDataService;
 	
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAExcludingStateImpl.class);
-	
+		
+	private boolean toCleanNegativeChangesFromTotals;
+	@Override
+	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
+		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String stateToExclude) {
 		//call getAllUsData, then call the states API and subtract out the state numbers
 		log.info("***** ABOUT TO <<<FILTER OUT>>> STATE: " + stateToExclude + " ****");
+		usDataService.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
+		stateDataService.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
 		List<UnitedStatesData> usDataExcludingState = usDataService.makeDataListFromExternalSource(CacheKeys.CACHE_KEY_US.getName());
 		List<UnitedStatesData> stateDataToExclude = stateDataService.makeDataListFromExternalSource(stateToExclude);
 		
