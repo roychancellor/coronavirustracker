@@ -29,12 +29,16 @@ public class ApplicationStartup {
 	
 	@EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent() {
-		log.info("Application has successfully started in environment: {}", env.getProperty("ENVIRONMENT"));
+		log.info("======> Application is starting in environment: {}", env.getProperty("ENVIRONMENT"));
+		
 		log.info("About to initialize the WORLD cache with cacheActions object of class: {}", cacheActionsWorld.getClass().getSimpleName());
 		cacheActionsWorld.setCleanData(false);
 		cacheActionsWorld.populateCacheFromSource(CacheKeys.CACHE_KEY_WORLD.getName());
+		
 		log.info("About to initialize the USA cache with cacheActions object of class: {}", cacheActionsUS.getClass().getSimpleName());
 		cacheActionsUS.setCleanData(Boolean.parseBoolean(env.getProperty("corona.filter.data")));
 		cacheActionsUS.populateCacheFromSource(CacheKeys.CACHE_KEY_US.getName());
+		
+		log.info("<====== Application is successfully started and the world data and US data caches are loaded.");
 	}
 }

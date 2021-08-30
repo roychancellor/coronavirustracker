@@ -11,15 +11,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
 import com.royware.corona.dashboard.interfaces.data.ICacheActions;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
-import com.royware.corona.dashboard.services.data.world.ExternalDataServiceWorldImpl;
+import com.royware.corona.dashboard.services.data.source.connections.world.ExternalDataListGetterWorld;
 
 @Component("ca_us")
 public class CacheActionsUnitedStatesImpl implements ICacheActions {
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterWorld.class);
 	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_US.getName();
 	
 	private boolean cleanData;
@@ -31,7 +31,7 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 
 	@Autowired
 	@Qualifier(value = "us")
-	private IExternalDataConnectionService usaDataService;
+	private IExternalDataListGetter usaDataListGetter;
 		
 	@Override
 	@Scheduled(initialDelayString = "${spring.cache.refresh.period.usa}", fixedDelayString = "${spring.cache.refresh.period.usa}")
@@ -76,8 +76,8 @@ public class CacheActionsUnitedStatesImpl implements ICacheActions {
 	}
 	
 	private List<UnitedStatesData> getNewCacheDataFromSource() {
-		usaDataService.setCleanNegativeChangesFromTotals(cleanData);
-		return usaDataService.makeDataListFromExternalSource(CACHE_KEY);
+		usaDataListGetter.setCleanNegativeChangesFromTotals(cleanData);
+		return usaDataListGetter.makeDataListFromExternalSource(CACHE_KEY);
 	}
 
 	private <T extends ICanonicalCaseDeathData> void putDataIntoCache(String cacheKey, List<T> newCacheData) {

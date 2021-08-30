@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.us;
+package com.royware.corona.dashboard.services.data.getters.multiregion;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.DataFields;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
+import com.royware.corona.dashboard.interfaces.data.IMultiRegionDataGetterListStitcher;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
-public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
-	private static final Logger log = LoggerFactory.getLogger(MultiRegionListStitcherImpl.class);
+public class MultiRegionDataGetterListStitcher implements IMultiRegionDataGetterListStitcher {
+	private static final Logger log = LoggerFactory.getLogger(MultiRegionDataGetterListStitcher.class);
 		
 	private boolean toCleanNegativeChangesFromTotals;
 	
@@ -197,7 +197,7 @@ public class MultiRegionListStitcherImpl implements IMultiRegionListStitcher {
 	}
 
 	@Override
-	public Map<String, List<UnitedStatesData>> makeMapOfStateDataLists(IExternalDataConnectionService dataService, String[] states) {
+	public Map<String, List<UnitedStatesData>> makeMapOfStateDataLists(IExternalDataListGetter dataService, String[] states) {
 		Map<String, List<UnitedStatesData>> stateDataLists = new HashMap<>();
 		
 		//Make a map where the key is the state and the value is the list of data for the state
