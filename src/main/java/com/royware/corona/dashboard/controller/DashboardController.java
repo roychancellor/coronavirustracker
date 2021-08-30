@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.royware.corona.dashboard.enums.jsp.JspPageNames;
-import com.royware.corona.dashboard.enums.regions.RegionsData_OLD_DEL_ME;
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
 import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
 import com.royware.corona.dashboard.model.dashboard.DashboardChart;

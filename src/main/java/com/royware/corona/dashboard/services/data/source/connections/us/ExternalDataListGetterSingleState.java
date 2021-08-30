@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.us;
+package com.royware.corona.dashboard.services.data.source.connections.us;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.royware.corona.dashboard.enums.data.DataUrls;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
 import com.royware.corona.dashboard.model.data.us.CaseDeathVaccData_CovidActNow;
 import com.royware.corona.dashboard.model.data.us.CaseDeathVaccTimeSeries_CovActNow;
 import com.royware.corona.dashboard.model.data.us.HospitalDataCDC;
@@ -24,11 +24,11 @@ import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
  * Provides service methods for getting dashboard data from external sources
  */
 @Component("singleState")
-public class ExternalDataServiceSingleStateImpl implements IExternalDataConnectionService {
+public class ExternalDataListGetterSingleState implements IExternalDataListGetter {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceSingleStateImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterSingleState.class);
 	
 	private boolean toCleanNegativeChangesFromTotals;
 	

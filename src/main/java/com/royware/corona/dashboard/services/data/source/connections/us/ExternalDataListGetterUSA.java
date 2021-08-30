@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.us;
+package com.royware.corona.dashboard.services.data.source.connections.us;
 
 import java.util.List;
 
@@ -10,23 +10,23 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.interfaces.dashboard.IDashboardConfigService;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataServiceFactory;
-import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetterFactory;
+import com.royware.corona.dashboard.interfaces.data.IMultiRegionDataGetter;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
 @Component("us")
-public class ExternalDataServiceUSAImpl implements IExternalDataConnectionService {
+public class ExternalDataListGetterUSA implements IExternalDataListGetter {
 	
 	private ConcurrentMapCache cacheManager;
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterUSA.class);
 	
 	@Autowired
-	private IMultiRegionExternalDataService multiRegionDataService;
+	private IMultiRegionDataGetter multiRegionDataGetter;
 	
 	@Autowired
-	private IExternalDataServiceFactory dataService;
+	private IExternalDataListGetterFactory externalDataSourceFactory;
 
 	private boolean toCleanNegativeChangesFromTotals;
 	
@@ -35,19 +35,20 @@ public class ExternalDataServiceUSAImpl implements IExternalDataConnectionServic
 		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
 	}
 
-	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UnitedStatesData> makeDataListFromExternalSource(String cacheKey) {
+		// This method will always pull data from the cache first. If the cache is empty, it will call
+		// the external data getter for multi-region to populate the cache.
 		cacheManager = CacheManagerProvider.getManager();
 		List<UnitedStatesData> usaData = safeGetDataFromCache(cacheKey);
 		if(usaData == null || usaData.isEmpty()) {
 			log.info("US Data not in cache. Getting the USA data from its source (via multi-region).");
-			multiRegionDataService.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
-			usaData = multiRegionDataService.getMultiRegionDataFromExternalSource(
+			multiRegionDataGetter.setCleanNegativeChangesFromTotals(toCleanNegativeChangesFromTotals);
+			usaData = multiRegionDataGetter.getDataFor(
 					IDashboardConfigService.ALL_STATES_AS_CSV,
-					dataService.getExternalDataService("MULTI")
-			);
+					externalDataSourceFactory.create("MULTI") // which is just a wrapper for a single state external data source
+				);
 		} else {
 			log.info("Returning the cached version of the USA data.");
 		}

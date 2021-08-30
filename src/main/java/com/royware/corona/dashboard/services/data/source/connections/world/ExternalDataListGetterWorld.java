@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.world;
+package com.royware.corona.dashboard.services.data.source.connections.world;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.royware.corona.dashboard.enums.data.DataUrls;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
 import com.royware.corona.dashboard.interfaces.data.IWorldDataServiceCaller;
 import com.royware.corona.dashboard.model.data.world.WorldData;
 import com.royware.corona.dashboard.model.data.world.WorldDataOWID;
@@ -33,7 +33,7 @@ import com.royware.corona.dashboard.model.data.world.WorldDataSourceOurWorldInDa
 import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
 @Component
-public class ExternalDataServiceWorldImpl implements IExternalDataConnectionService, IWorldDataServiceCaller {
+public class ExternalDataListGetterWorld implements IExternalDataListGetter, IWorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -41,8 +41,9 @@ public class ExternalDataServiceWorldImpl implements IExternalDataConnectionServ
 	private Environment env;
 		
 	private ConcurrentMapCache cacheManager;
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterWorld.class);
 
+	@SuppressWarnings("unused")
 	private boolean toCleanNegativeChangesFromTotals = false;
 	
 	@Override

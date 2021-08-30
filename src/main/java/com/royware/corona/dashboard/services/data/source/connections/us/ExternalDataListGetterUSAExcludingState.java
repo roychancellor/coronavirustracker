@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.us;
+package com.royware.corona.dashboard.services.data.source.connections.us;
 
 import java.util.List;
 
@@ -9,23 +9,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.data.CacheKeys;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 /**
  * Provides service methods for getting dashboard data from external sources
  */
 @Component("usExcludingState")
-public class ExternalDataServiceUSAExcludingStateImpl implements IExternalDataConnectionService {
+public class ExternalDataListGetterUSAExcludingState implements IExternalDataListGetter {
 	@Autowired
 	@Qualifier(value = "us")
-	private IExternalDataConnectionService usDataService;
+	private IExternalDataListGetter usDataService;
 	
 	@Autowired
 	@Qualifier(value = "singleState")
-	private IExternalDataConnectionService stateDataService;
+	private IExternalDataListGetter stateDataService;
 	
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceUSAExcludingStateImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterUSAExcludingState.class);
 		
 	private boolean toCleanNegativeChangesFromTotals;
 	@Override

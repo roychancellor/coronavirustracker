@@ -10,8 +10,5 @@ import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
 @Service
 public interface IChartConfigStore {
-	public DashboardChartConfig produceChartConfigFromList(
-			ChartTypes type,
-			List<List<Map<Object, Object>>> chartList,
-			String forRegion);
+	public DashboardChartConfig produceChartConfigFromList(ChartTypes chartType, List<List<Map<Object, Object>>> chartList, String forRegion);
 }

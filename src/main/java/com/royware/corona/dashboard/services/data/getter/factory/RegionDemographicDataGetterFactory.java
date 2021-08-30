@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.external.factory;
+package com.royware.corona.dashboard.services.data.getter.factory;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.royware.corona.dashboard.services.data.us;
+package com.royware.corona.dashboard.services.data.getters.multiregion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,20 +15,22 @@ import org.springframework.stereotype.Component;
 
 import com.royware.corona.dashboard.enums.regions.UsGeoRegions;
 import com.royware.corona.dashboard.enums.regions.RegionsInDashboard;
-import com.royware.corona.dashboard.interfaces.data.IExternalDataConnectionService;
-import com.royware.corona.dashboard.interfaces.data.IMultiRegionExternalDataService;
-import com.royware.corona.dashboard.interfaces.data.IMultiRegionListStitcher;
+import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
+import com.royware.corona.dashboard.interfaces.data.IMultiRegionDataGetter;
+import com.royware.corona.dashboard.interfaces.data.IMultiRegionDataGetterListStitcher;
 import com.royware.corona.dashboard.model.data.us.UnitedStatesData;
 
 @Component
-public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalDataService {
+public class MultiRegionDataGetter implements IMultiRegionDataGetter {
 
-	private static final Logger log = LoggerFactory.getLogger(MultiRegionExternalDataServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(MultiRegionDataGetter.class);
 	
 	@Autowired
-	private IMultiRegionListStitcher listStitcher;
+	private IMultiRegionDataGetterListStitcher listStitcher;
 	
 	private boolean toCleanNegativeChangesFromTotals = false;
+	
+	private String multiRegionCSV;
 	
 	@Override
 	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
@@ -56,7 +58,8 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 					sb.append(",");
 				}
 			}
-			return sb.toString();
+			multiRegionCSV = sb.toString();
+			return multiRegionCSV;
 		} else {
 			//Determine if it's a single state picked from the drop-down or a pre-defined geographical region
 			if(regionsOnly.length() == 2) {
@@ -90,7 +93,7 @@ public class MultiRegionExternalDataServiceImpl implements IMultiRegionExternalD
 	}
 	
 	@Override
-	public List<UnitedStatesData> getMultiRegionDataFromExternalSource(String fullRegionName, IExternalDataConnectionService dataService) {
+	public List<UnitedStatesData> getDataFor(String fullRegionName, IExternalDataListGetter dataService) {
 		List<UnitedStatesData> multiRegionDataList = new ArrayList<>();
 		Map<String, List<UnitedStatesData>> mapOfStateDataLists = new HashMap<String, List<UnitedStatesData>>();
 		

@@ -14,16 +14,17 @@ import com.royware.corona.dashboard.interfaces.data.ICacheActions;
 import com.royware.corona.dashboard.interfaces.data.IWorldDataServiceCaller;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 import com.royware.corona.dashboard.model.data.world.WorldData;
-import com.royware.corona.dashboard.services.data.world.ExternalDataServiceWorldImpl;
+import com.royware.corona.dashboard.services.data.source.connections.world.ExternalDataListGetterWorld;
 
 @Component("ca_world")
 public class CacheActionsWorldImpl implements ICacheActions {
-	private static final Logger log = LoggerFactory.getLogger(ExternalDataServiceWorldImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterWorld.class);
 	private static final String CACHE_KEY = CacheKeys.CACHE_KEY_WORLD.getName();
 	
 	@Autowired
 	private IWorldDataServiceCaller worldDataServiceCaller;
 	
+	@SuppressWarnings("unused")
 	private boolean cleanData;
 	
 	@Override

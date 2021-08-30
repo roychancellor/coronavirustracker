@@ -1,6 +1,7 @@
 package com.royware.corona.dashboard.enums.regions;
 
 public enum RegionsInDashboard {
+	NULL(0, RegionTypes.NULL, "NULL"),
 	USA(328200000, RegionTypes.COUNTRY, "United States"),
 	USA_NO_NY(328200000 - 19450000, RegionTypes.COUNTRY, "U.S. w/o N.Y."),
 	AUS(24990000, RegionTypes.COUNTRY, "Australia"),
