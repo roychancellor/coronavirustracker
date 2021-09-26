@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.chart.config.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.enums.data.ChartListConstants;
+import com.royware.corona.dashboard.enums.data.DataTransformConstants;
 import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
@@ -22,7 +22,7 @@ public class ChartConfigRateOfChangeOfDeaths implements IChartConfigMaker {
 		chartConfig.setxAxisTitle("Days Since Deaths > 0");
 		chartConfig.setyAxisTitle("Percent Change in New Deaths");
 		chartConfig.setDataSeries1Name("% change in deaths");
-		chartConfig.setDataSeries2Name(ChartListConstants.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
+		chartConfig.setDataSeries2Name(DataTransformConstants.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average");
 		
 		chartConfig.setyAxisNumberSuffix("%");
 		chartConfig.setxAxisPosition("bottom");

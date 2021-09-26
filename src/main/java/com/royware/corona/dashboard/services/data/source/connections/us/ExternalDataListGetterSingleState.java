@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.royware.corona.dashboard.enums.data.DataTransformConstants;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
 import com.royware.corona.dashboard.model.data.us.CaseDeathVaccData_CovidActNow;
@@ -86,7 +87,7 @@ public class ExternalDataListGetterSingleState implements IExternalDataListGette
 		List<UnitedStatesData> stateDataList = buildUnitedStatesDataList(stateAbbreviation, hospitalizationDataArray, caseDeathVaccArray);
 		log.debug("The size of the pre-filtered state data list for " + stateAbbreviation + " is: " + stateDataList.size());
 		
-		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < US_CUTOFF_DATE));
+		stateDataList.removeIf(unitedStatesCase -> (unitedStatesCase.getDateInteger() < DataTransformConstants.US_CUTOFF_DATE.getValue()));
 		
 		log.debug("FINISHED GETTING DATA FOR STATE: " + stateAbbreviation);
 		

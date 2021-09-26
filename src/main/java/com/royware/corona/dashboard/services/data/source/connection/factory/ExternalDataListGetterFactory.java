@@ -28,9 +28,9 @@ public class ExternalDataListGetterFactory implements IExternalDataListGetterFac
 	@Qualifier(value = "usExcludingState")
 	private IExternalDataListGetter usExcludingStateDataListGetter;
 	
-	/*@Autowired
+	@Autowired
 	@Qualifier(value = "singleCountry")
-	private IExternalDataListGetter singleCountryDataSource;*/
+	private IExternalDataListGetter singleCountryDataSource;
 	
 	private static final Logger log = LoggerFactory.getLogger(ExternalDataListGetterFactory.class);
 	
@@ -46,9 +46,9 @@ public class ExternalDataListGetterFactory implements IExternalDataListGetterFac
 			dataService = usExcludingStateDataListGetter;
 		} else if(regionOfService.length() == 2) {
 			dataService = singleStateDataListGetter;
-		} /*else if(regionOfService.length() == 3){
+		} else if(regionOfService.length() == 3){
 			dataService = singleCountryDataSource;
-		}*/ else if(regionOfService.substring(0,5).equalsIgnoreCase("MULTI")) {
+		} else if(regionOfService.substring(0,5).equalsIgnoreCase("MULTI")) {
 			dataService = multiStateDataListGetter;
 		} else {
 			log.error("getExternalDataService NO MATCHES to regionOfService: '" + regionOfService + "'. Throwing exception!!!");

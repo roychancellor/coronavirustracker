@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.royware.corona.dashboard.enums.data.ChartListConstants;
+import com.royware.corona.dashboard.enums.data.DataTransformConstants;
 import com.royware.corona.dashboard.interfaces.chartlist.IChartListMaker;
 import com.royware.corona.dashboard.interfaces.model.ICanonicalCaseDeathData;
 
@@ -55,7 +55,7 @@ public class DailyRateOfChangeOfDeathsWithMovingAverageChartList implements ICha
 		scatterChartDataLists.add(
 				ChartListMakerUtilities.makeMovingAverageList(
 					dailyPctChgDeaths,
-					startDayIndex + ChartListConstants.MOVING_AVERAGE_SIZE.getValue(),
+					startDayIndex + DataTransformConstants.MOVING_AVERAGE_SIZE.getValue(),
 					regionDataList.size()
 				));
 

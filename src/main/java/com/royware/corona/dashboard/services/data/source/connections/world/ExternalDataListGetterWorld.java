@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.royware.corona.dashboard.enums.data.CacheKeys;
+import com.royware.corona.dashboard.enums.data.DataTransformConstants;
 import com.royware.corona.dashboard.enums.data.DataUrls;
 import com.royware.corona.dashboard.interfaces.data.IExternalDataListGetter;
 import com.royware.corona.dashboard.interfaces.data.IWorldDataServiceCaller;
@@ -32,7 +35,7 @@ import com.royware.corona.dashboard.model.data.world.WorldDataSourceEuroCDC;
 import com.royware.corona.dashboard.model.data.world.WorldDataSourceOurWorldInData;
 import com.royware.corona.dashboard.services.data.cache.CacheManagerProvider;
 
-@Component
+@Component("singleCountry")
 public class ExternalDataListGetterWorld implements IExternalDataListGetter, IWorldDataServiceCaller {
 	@Autowired
 	private RestTemplate restTemplate;
@@ -50,22 +53,23 @@ public class ExternalDataListGetterWorld implements IExternalDataListGetter, IWo
 	public void setCleanNegativeChangesFromTotals(boolean cleanNegativeChangesFromTotals) {
 		this.toCleanNegativeChangesFromTotals = cleanNegativeChangesFromTotals;
 	}
-
+	
 	//Pull data directly from the cache always
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<WorldData> makeDataListFromExternalSource(String cacheKey) {
+	public List<WorldData> makeDataListFromExternalSource(String regionString) {
+		String cacheKey = CacheKeys.CACHE_KEY_WORLD.getName();
 		cacheManager = CacheManagerProvider.getManager();
-		List<WorldData> worldData = safeGetDataFromCache(cacheKey);
-		if(worldData == null || worldData.isEmpty()) {
-			log.info("World data not in cache. Getting the world data from its source.");
-			worldData = getDataFromWorldSource();
+		List<WorldData> allCountriesInWorldData = safeGetDataFromCache(cacheKey);
+		if(allCountriesInWorldData == null || allCountriesInWorldData.isEmpty()) {
+			log.info("World data not in cache with key {}. Getting the world data from its source.", cacheKey);
+			allCountriesInWorldData = getDataFromWorldSource();
 		} else {
 			log.info("Returning the cached version of the world data.");
 		}
-		return worldData;
+		return filterByCountry(allCountriesInWorldData, regionString);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	private List<WorldData> safeGetDataFromCache(String cacheKey) {
 		ValueWrapper springCacheValueWrapper = cacheManager.get(cacheKey);
@@ -75,6 +79,21 @@ public class ExternalDataListGetterWorld implements IExternalDataListGetter, IWo
 		return (List<WorldData>)springCacheValueWrapper.get();
 	}
 	
+	private List<WorldData> filterByCountry(List<WorldData> allWorldData, String country){
+		log.info("Filtering the all country world data list for country: {}", country);
+		return allWorldData
+			.stream()
+			.filter(wc -> {
+					if(wc.getRegionString() == null || wc.getDailyNewCases() < 0) {
+						log.error("In the .filter, region string is null or daily new cases < 0");
+						return false;
+					}
+					return wc.getRegionString().equalsIgnoreCase(country) &&
+						   wc.getDailyNewCases() >= DataTransformConstants.MINIMUM_NUMBER_OF_DAILY_CASES_FOR_INCLUSION.getValue();
+				})
+			.collect(Collectors.toList());
+	}
+
 	//This only gets called when the cache is initialized and when it is evicted/refreshed
 	@Override
 	public List<WorldData> getDataFromWorldSource() {
@@ -113,7 +132,9 @@ public class ExternalDataListGetterWorld implements IExternalDataListGetter, IWo
 			return new ArrayList<WorldData>();
 		}
 		log.info("The size of the raw world data list is: " + worldData.getRecords().length);
-		return Arrays.asList(worldData.getRecords());
+		List<WorldData> toReturn = Arrays.asList(worldData.getRecords());
+		Collections.reverse(toReturn);
+		return toReturn;
 	}
 	
 	private List<WorldData> getDataFromOurWorldInData() {
@@ -170,13 +191,6 @@ public class ExternalDataListGetterWorld implements IExternalDataListGetter, IWo
 			}
 		}
 		
-		//Need to reverse the list here because in the ExternalDataServiceSingleCountryImpl class,
-		//the method reverses the list because it assumes it came from Euro CDC that is in newest to oldest order.
-		//Since the OWID data comes in oldest to newest order, the reverse isn't necessary, but until
-		//it is removed from that class, this reverse is necessary (essentially creating a double reverse
-		//which is wasteful, but necessary until fixed)
-		//TODO: Fix the need for a double reverse
-		Collections.reverse(worldDataList);
 		return worldDataList;
 	}
 	
