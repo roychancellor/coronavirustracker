@@ -3,7 +3,7 @@ package com.royware.corona.dashboard.services.chart.config.makers;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.enums.data.ChartListConstants;
+import com.royware.corona.dashboard.enums.data.DataTransformConstants;
 import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
@@ -22,7 +22,7 @@ public class ChartConfigCurrentHospitalizationsByTime implements IChartConfigMak
 		chartConfig.setxAxisTitle("Days Since Cases > 0");
 		chartConfig.setyAxisTitle("Current Hospitalizations");
 		chartConfig.setDataSeries1Name("Current Hospitalizations");
-		chartConfig.setDataSeries2Name(ChartListConstants.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
+		chartConfig.setDataSeries2Name(DataTransformConstants.MOVING_AVERAGE_SIZE.getValue() + "-day Moving Average of New Hospitalizations");
 		
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");

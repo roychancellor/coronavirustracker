@@ -4,7 +4,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
-import com.royware.corona.dashboard.enums.data.ChartListConstants;
+import com.royware.corona.dashboard.enums.data.DataTransformConstants;
 import com.royware.corona.dashboard.interfaces.chartconfig.IChartConfigMaker;
 import com.royware.corona.dashboard.model.dashboard.DashboardChartConfig;
 
@@ -18,11 +18,11 @@ public class ChartConfigTotalCurrentCases implements IChartConfigMaker {
 
 		chartConfig.setChartTitle("Time History of Positivity Rate in " + region);
 		chartConfig.setxAxisTitle("Days Since Cases > 0");
-		chartConfig.setyAxisTitle("Positives per " + NumberFormat.getNumberInstance().format(ChartListConstants.PER_CAPITA_BASIS.getValue()));
-		chartConfig.setDataSeries1Name("Positives per " + NumberFormat.getNumberInstance().format(ChartListConstants.PER_CAPITA_BASIS.getValue())
-				+ " (Last " + ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
-		chartConfig.setDataSeries2Name("Positives per " + NumberFormat.getNumberInstance().format(ChartListConstants.PER_CAPITA_BASIS.getValue())
-				+ " (Last " + ChartListConstants.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
+		chartConfig.setyAxisTitle("Positives per " + NumberFormat.getNumberInstance().format(DataTransformConstants.PER_CAPITA_BASIS.getValue()));
+		chartConfig.setDataSeries1Name("Positives per " + NumberFormat.getNumberInstance().format(DataTransformConstants.PER_CAPITA_BASIS.getValue())
+				+ " (Last " + DataTransformConstants.CURRENT_POSITIVES_QUEUE_SIZE_PRIMARY.getValue() + " days)");
+		chartConfig.setDataSeries2Name("Positives per " + NumberFormat.getNumberInstance().format(DataTransformConstants.PER_CAPITA_BASIS.getValue())
+				+ " (Last " + DataTransformConstants.CURRENT_POSITIVES_QUEUE_SIZE_SECONDARY.getValue() + " days)");
 
 		chartConfig.setyAxisNumberSuffix("");
 		chartConfig.setxAxisPosition("bottom");
